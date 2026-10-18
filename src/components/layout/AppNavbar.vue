@@ -373,17 +373,21 @@ function markAsRead(id: string) {
       </div>
 
       <!-- User Profile Pill -->
-      <div class="hidden sm:flex items-center gap-2.5 pl-2 ml-1 border-l border-base-300/80">
+      <RouterLink
+        to="/profile"
+        class="hidden sm:flex items-center gap-2.5 pl-2.5 pr-2 py-1 ml-1 border-l border-base-300/80 rounded-r-btn hover:bg-base-200/70 transition-colors"
+        title="Buka Profil Pengguna"
+      >
         <div
           class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-xs font-bold text-white shadow-xs"
         >
-          BJ
+          AP
         </div>
         <div class="hidden lg:flex flex-col leading-tight">
-          <span class="text-xs font-bold text-base-content">BeeJir Admin</span>
-          <span class="text-[10px] text-base-content/55">Maintainer</span>
+          <span class="text-xs font-bold text-base-content">Arif Pratama</span>
+          <span class="text-[10px] text-base-content/55">Lead Architect</span>
         </div>
-      </div>
+      </RouterLink>
     </div>
   </header>
 </template>

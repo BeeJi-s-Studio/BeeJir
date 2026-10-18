@@ -1,6 +1,8 @@
 export type ThemeId =
   | 'daybreak'
   | 'midnight'
+  | 'aurora'
+  | 'nebula'
   | 'sunset'
   | 'ocean'
   | 'matcha'

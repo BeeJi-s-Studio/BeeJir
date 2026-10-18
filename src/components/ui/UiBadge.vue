@@ -47,7 +47,7 @@ const classes = computed(() => {
   <span :class="classes">
     <span
       v-if="dot"
-      class="h-1.5 w-1.5 rounded-full bg-current opacity-85"
+      class="h-1.5 w-1.5 rounded-full bg-current opacity-75"
     />
     <slot />
   </span>

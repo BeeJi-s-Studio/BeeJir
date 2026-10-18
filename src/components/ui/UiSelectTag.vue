@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<UiSelectTagProps>(), {
   disabled: false,
   maxTags: undefined,
   defaultTagVariant: 'primary',
-  solid: true,
+  solid: false,
 })
 
 const emit = defineEmits<{
@@ -199,18 +199,18 @@ onUnmounted(() => {
 
     <!-- Input Box with Chips & Search Input -->
     <div
-      class="min-h-[42px] w-full rounded-btn border border-base-300 bg-base-100 p-1.5 flex flex-wrap items-center gap-1.5 transition-all duration-150 cursor-text"
+      class="min-h-[42px] w-full form-surface p-1.5 flex flex-wrap items-center gap-1.5 cursor-text"
       :class="[
-        isOpen ? 'ring-2 ring-primary/25 border-primary' : '',
+        isOpen ? 'form-surface-active' : '',
         disabled ? 'opacity-50 cursor-not-allowed bg-base-200/50' : '',
       ]"
       @click="inputRef?.focus(); isOpen = true"
     >
-      <!-- Selected Tag Chips (Solid Background) -->
+      <!-- Selected Tag Chips -->
       <span
         v-for="tag in selectedTags"
         :key="tag.value"
-        class="badge badge-sm gap-1.5 pl-2.5 pr-1 py-1 font-semibold transition-all shadow-xs"
+        class="badge badge-sm gap-1 pl-2.5 pr-1 py-0.5 font-medium transition-colors"
         :class="[
           `badge-${tag.variant || 'primary'}`,
           solid ? '' : 'badge-soft',
@@ -219,8 +219,7 @@ onUnmounted(() => {
         <span>{{ tag.label }}</span>
         <button
           type="button"
-          class="rounded-full p-0.5 transition-colors"
-          :class="solid ? 'hover:bg-black/20 text-current' : 'hover:opacity-75'"
+          class="rounded-full p-0.5 transition-colors opacity-65 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10"
           :disabled="disabled"
           @click.stop="removeTag(tag.value)"
         >

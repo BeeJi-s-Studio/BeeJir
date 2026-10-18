@@ -5,6 +5,10 @@ import {
   UserPlus,
   Trash2,
   CheckCircle2,
+  Eye,
+  Pencil,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-vue-next'
 import UiCard from '@/components/ui/UiCard.vue'
 import UiButton from '@/components/ui/UiButton.vue'
@@ -277,14 +281,30 @@ function removeUser(id: number) {
                 {{ user.joinedAt }}
               </td>
               <td class="text-right">
-                <button
-                  type="button"
-                  class="btn btn-ghost btn-xs text-error hover:bg-error/10"
-                  title="Hapus pengguna"
-                  @click="removeUser(user.id)"
-                >
-                  <Trash2 class="h-3.5 w-3.5" />
-                </button>
+                <div class="inline-flex items-center justify-end gap-1.5">
+                  <button
+                    type="button"
+                    class="btn btn-square btn-xs btn-ghost text-base-content/65 hover:text-info hover:bg-info/10"
+                    title="Lihat detail pengguna"
+                  >
+                    <Eye class="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-square btn-xs btn-soft btn-primary"
+                    title="Edit pengguna"
+                  >
+                    <Pencil class="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-square btn-xs btn-soft btn-error"
+                    title="Hapus pengguna"
+                    @click="removeUser(user.id)"
+                  >
+                    <Trash2 class="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </td>
             </tr>
             <tr v-if="filteredUsers.length === 0">
@@ -299,10 +319,24 @@ function removeUser(id: number) {
       <template #footer>
         <div class="flex w-full items-center justify-between text-xs text-base-content/60">
           <span>Menampilkan {{ filteredUsers.length }} dari {{ users.length }} pengguna</span>
-          <div class="flex items-center gap-1">
-            <button type="button" class="btn btn-xs btn-ghost" disabled>Prev</button>
-            <button type="button" class="btn btn-xs btn-primary">1</button>
-            <button type="button" class="btn btn-xs btn-ghost" disabled>Next</button>
+          <div class="flex items-center gap-1.5">
+            <button
+              type="button"
+              class="btn btn-square btn-xs btn-outline"
+              disabled
+              title="Halaman sebelumnya"
+            >
+              <ChevronLeft class="h-3.5 w-3.5" />
+            </button>
+            <button type="button" class="btn btn-square btn-xs btn-primary font-bold">1</button>
+            <button type="button" class="btn btn-square btn-xs btn-ghost">2</button>
+            <button
+              type="button"
+              class="btn btn-square btn-xs btn-outline"
+              title="Halaman berikutnya"
+            >
+              <ChevronRight class="h-3.5 w-3.5" />
+            </button>
           </div>
         </div>
       </template>

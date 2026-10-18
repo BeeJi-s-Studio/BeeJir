@@ -11,9 +11,12 @@ export interface UiButtonProps {
   block?: boolean
   circle?: boolean
   square?: boolean
+  iconOnly?: boolean
+  icon?: any
   loading?: boolean
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
+  title?: string
 }
 
 const props = withDefaults(defineProps<UiButtonProps>(), {
@@ -24,14 +27,33 @@ const props = withDefaults(defineProps<UiButtonProps>(), {
   block: false,
   circle: false,
   square: false,
+  iconOnly: false,
+  icon: undefined,
   loading: false,
   disabled: false,
   type: 'button',
+  title: undefined,
 })
 
 const emit = defineEmits<{
   click: [event: MouseEvent]
 }>()
+
+const isIconButton = computed(() => props.circle || props.square || props.iconOnly)
+
+const iconSizeClass = computed(() => {
+  switch (props.size) {
+    case 'xs':
+      return 'h-3.5 w-3.5'
+    case 'sm':
+      return 'h-4 w-4'
+    case 'lg':
+      return 'h-5 w-5'
+    case 'md':
+    default:
+      return 'h-4.5 w-4.5'
+  }
+})
 
 const classes = computed(() => {
   const variantMap: Record<string, string> = {
@@ -55,11 +77,12 @@ const classes = computed(() => {
 
   return [
     'btn',
+    isIconButton.value ? 'btn-icon' : '',
     props.variant ? variantMap[props.variant] : '',
     sizeMap[props.size],
     props.soft ? 'btn-soft' : '',
     props.outline ? 'btn-outline' : '',
-    props.block ? 'btn-block' : '',
+    props.block && !isIconButton.value ? 'btn-block' : '',
     props.circle ? 'btn-circle' : '',
     props.square ? 'btn-square' : '',
   ]
@@ -73,11 +96,16 @@ const classes = computed(() => {
     :type="type"
     :class="classes"
     :disabled="disabled || loading"
+    :title="title"
+    :aria-label="title"
     @click="emit('click', $event)"
   >
-    <Loader2 v-if="loading" class="h-4 w-4 animate-spin shrink-0" />
-    <slot name="icon-left" />
-    <slot />
-    <slot name="icon-right" />
+    <Loader2 v-if="loading" class="animate-spin shrink-0" :class="iconSizeClass" />
+    <template v-else>
+      <slot name="icon-left" />
+      <component :is="icon" v-if="icon" :class="iconSizeClass" class="shrink-0" />
+      <slot />
+      <slot name="icon-right" />
+    </template>
   </button>
 </template>

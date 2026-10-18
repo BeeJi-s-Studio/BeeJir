@@ -20,17 +20,20 @@
   /* Solid Color Variants */
   .btn-primary {
     @apply border-primary bg-primary text-primary-content shadow-sm shadow-primary/25
-           hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30;
+           hover:bg-primary/90 hover:shadow-md hover:shadow-primary/35
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_18px_-2px_rgb(var(--p)/0.5)];
   }
 
   .btn-secondary {
     @apply border-secondary bg-secondary text-secondary-content shadow-sm shadow-secondary/25
-           hover:bg-secondary/90 hover:shadow-md hover:shadow-secondary/30;
+           hover:bg-secondary/90 hover:shadow-md hover:shadow-secondary/35
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_18px_-2px_rgb(var(--s)/0.5)];
   }
 
   .btn-accent {
     @apply border-accent bg-accent text-accent-content shadow-sm shadow-accent/25
-           hover:bg-accent/90 hover:shadow-md hover:shadow-accent/30;
+           hover:bg-accent/90 hover:shadow-md hover:shadow-accent/35
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_18px_-2px_rgb(var(--a)/0.5)];
   }
 
   .btn-neutral {
@@ -40,22 +43,26 @@
 
   .btn-info {
     @apply border-info bg-info text-info-content shadow-sm shadow-info/25
-           hover:bg-info/90;
+           hover:bg-info/90
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_16px_-2px_rgb(var(--in)/0.45)];
   }
 
   .btn-success {
     @apply border-success bg-success text-success-content shadow-sm shadow-success/25
-           hover:bg-success/90;
+           hover:bg-success/90
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_16px_-2px_rgb(var(--su)/0.45)];
   }
 
   .btn-warning {
     @apply border-warning bg-warning text-warning-content shadow-sm shadow-warning/25
-           hover:bg-warning/90;
+           hover:bg-warning/90
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_4px_16px_-2px_rgb(var(--wa)/0.45)];
   }
 
   .btn-error {
     @apply border-error bg-error text-error-content shadow-sm shadow-error/25
-           hover:bg-error/90;
+           hover:bg-error/90
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_16px_-2px_rgb(var(--er)/0.45)];
   }
 
   /* Soft Pastel Variants (Clean & Colorful Signature Style) */
@@ -63,25 +70,32 @@
     @apply border-transparent bg-base-300/60 text-base-content shadow-none hover:bg-base-300;
   }
   .btn-soft.btn-primary {
-    @apply border-primary/15 bg-primary/12 text-primary shadow-none hover:bg-primary/20 hover:shadow-none;
+    @apply border-primary/15 bg-primary/12 text-primary shadow-none hover:bg-primary/20 hover:shadow-none
+           dark:border-primary/35 dark:bg-primary/20 dark:hover:bg-primary/30;
   }
   .btn-soft.btn-secondary {
-    @apply border-secondary/15 bg-secondary/12 text-secondary shadow-none hover:bg-secondary/20 hover:shadow-none;
+    @apply border-secondary/15 bg-secondary/12 text-secondary shadow-none hover:bg-secondary/20 hover:shadow-none
+           dark:border-secondary/35 dark:bg-secondary/20 dark:hover:bg-secondary/30;
   }
   .btn-soft.btn-accent {
-    @apply border-accent/15 bg-accent/12 text-accent shadow-none hover:bg-accent/20 hover:shadow-none;
+    @apply border-accent/15 bg-accent/12 text-accent shadow-none hover:bg-accent/20 hover:shadow-none
+           dark:border-accent/35 dark:bg-accent/20 dark:hover:bg-accent/30;
   }
   .btn-soft.btn-info {
-    @apply border-info/15 bg-info/12 text-info shadow-none hover:bg-info/20 hover:shadow-none;
+    @apply border-info/15 bg-info/12 text-info shadow-none hover:bg-info/20 hover:shadow-none
+           dark:border-info/35 dark:bg-info/20 dark:hover:bg-info/30;
   }
   .btn-soft.btn-success {
-    @apply border-success/15 bg-success/12 text-success shadow-none hover:bg-success/20 hover:shadow-none;
+    @apply border-success/15 bg-success/12 text-success shadow-none hover:bg-success/20 hover:shadow-none
+           dark:border-success/35 dark:bg-success/20 dark:hover:bg-success/30;
   }
   .btn-soft.btn-warning {
-    @apply border-warning/15 bg-warning/12 text-warning shadow-none hover:bg-warning/20 hover:shadow-none;
+    @apply border-warning/15 bg-warning/12 text-warning shadow-none hover:bg-warning/20 hover:shadow-none
+           dark:border-warning/35 dark:bg-warning/20 dark:hover:bg-warning/30;
   }
   .btn-soft.btn-error {
-    @apply border-error/15 bg-error/12 text-error shadow-none hover:bg-error/20 hover:shadow-none;
+    @apply border-error/15 bg-error/12 text-error shadow-none hover:bg-error/20 hover:shadow-none
+           dark:border-error/35 dark:bg-error/20 dark:hover:bg-error/30;
   }
 
   /* Outline Variants */
@@ -132,11 +146,76 @@
   .btn-block {
     @apply w-full flex;
   }
-  .btn-square {
-    @apply p-2.5 aspect-square;
-  }
+
+  /* ------------------------------------------------------------------------
+     ICON BUTTONS (.btn-icon, .btn-square, .btn-circle)
+     Strict 1:1 aspect ratio, centered icons, and guaranteed dimensional tiers
+     ------------------------------------------------------------------------ */
+  .btn-icon,
+  .btn-square,
   .btn-circle {
-    @apply p-2.5 aspect-square rounded-full;
+    @apply inline-flex items-center justify-center p-0 shrink-0 aspect-square select-none leading-none;
+  }
+
+  .btn-square {
+    @apply rounded-btn;
+  }
+
+  .btn-circle {
+    @apply rounded-full;
+  }
+
+  /* Strict Size Tiers for Icon Buttons (Guaranteed 1:1 square/circle without padding distortion) */
+  .btn-icon.btn-xs,
+  .btn-square.btn-xs,
+  .btn-circle.btn-xs {
+    @apply h-7 w-7 min-h-7 min-w-7 max-h-7 max-w-7 p-0 text-xs;
+  }
+
+  .btn-icon.btn-sm,
+  .btn-square.btn-sm,
+  .btn-circle.btn-sm {
+    @apply h-[34px] w-[34px] min-h-[34px] min-w-[34px] max-h-[34px] max-w-[34px] p-0 text-sm;
+  }
+
+  .btn-icon,
+  .btn-icon.btn-md,
+  .btn-square,
+  .btn-square.btn-md,
+  .btn-circle,
+  .btn-circle.btn-md {
+    @apply h-10 w-10 min-h-10 min-w-10 max-h-10 max-w-10 p-0 text-base;
+  }
+
+  .btn-icon.btn-lg,
+  .btn-square.btn-lg,
+  .btn-circle.btn-lg {
+    @apply h-12 w-12 min-h-12 min-w-12 max-h-12 max-w-12 p-0 text-lg;
+  }
+
+  /* Icon Button Stylistic Concepts:
+     1. Ghost: Default micro-actions & toolbar controls */
+  .btn-icon.btn-ghost,
+  .btn-square.btn-ghost,
+  .btn-circle.btn-ghost {
+    @apply text-base-content/75 hover:text-base-content hover:bg-base-200/80 active:bg-base-300/80
+           dark:text-base-content/75 dark:hover:bg-white/[0.08] dark:hover:text-base-content active:scale-95;
+  }
+
+  /* 2. Soft: Signature BeeJir table row actions & colored status toggles */
+  .btn-icon.btn-soft,
+  .btn-square.btn-soft,
+  .btn-circle.btn-soft {
+    @apply border-transparent active:scale-95;
+  }
+
+  /* 3. Outline: Tactile surface icon buttons for filters & pagination */
+  .btn-icon.btn-outline,
+  .btn-square.btn-outline,
+  .btn-circle.btn-outline {
+    @apply border border-base-300/90 bg-base-100 text-base-content/80 shadow-xs
+           hover:border-primary/50 hover:text-primary hover:bg-base-200/60
+           dark:border-white/12 dark:bg-base-200/80 dark:text-base-content/80 dark:hover:border-primary/50 dark:hover:text-primary active:scale-95;
   }
 
   /* ------------------------------------------------------------------------
@@ -144,19 +223,26 @@
      ------------------------------------------------------------------------ */
   .card {
     @apply relative flex flex-col bg-base-100 text-base-content rounded-box
-           shadow-sm transition-all duration-200;
+           bg-gradient-to-b from-base-100 via-base-100 to-base-200/35
+           shadow-[0_1px_2px_rgba(15,23,42,0.05),0_8px_24px_-4px_rgba(15,23,42,0.06),inset_0_1px_0_0_rgba(255,255,255,0.9)]
+           transition-all duration-200
+           dark:bg-base-100
+           dark:bg-[linear-gradient(155deg,rgba(255,255,255,0.065)_0%,rgba(255,255,255,0.015)_45%,rgba(0,0,0,0.28)_100%)]
+           dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.16),inset_0_0_24px_0_rgb(var(--p)/0.05),0_16px_38px_-8px_rgba(0,0,0,0.7),0_4px_12px_-2px_rgba(0,0,0,0.5)];
   }
 
   .card-bordered {
-    @apply border border-base-300/80;
+    @apply border border-base-300/85 dark:border-white/[0.12];
   }
 
   .card-hover {
-    @apply hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30;
+    @apply hover:-translate-y-0.5 hover:shadow-md hover:border-primary/40
+           dark:hover:border-primary/55
+           dark:hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.22),inset_0_0_28px_0_rgb(var(--p)/0.09),0_18px_42px_-8px_rgb(var(--p)/0.3)];
   }
 
   .card-body {
-    @apply flex flex-1 flex-col p-6 gap-4;
+    @apply relative z-10 flex flex-1 flex-col p-6 gap-4;
   }
 
   .card-compact .card-body {
@@ -164,7 +250,7 @@
   }
 
   .card-title {
-    @apply flex items-center gap-2 text-lg font-bold text-base-content tracking-tight;
+    @apply flex items-center gap-2 text-lg font-extrabold text-base-content tracking-tight;
   }
 
   .card-actions {
@@ -176,11 +262,12 @@
      ------------------------------------------------------------------------ */
   .badge {
     @apply inline-flex items-center justify-center gap-1.5 rounded-badge
-           px-2.5 py-0.5 text-xs font-semibold leading-5
+           px-2.5 py-0.5 text-xs font-medium leading-5
            border border-base-300 bg-base-200 text-base-content
            transition-colors duration-150;
   }
 
+  /* Solid Badges (Clean, aligned with theme) */
   .badge-primary {
     @apply border-primary bg-primary text-primary-content;
   }
@@ -206,27 +293,34 @@
     @apply border-error bg-error text-error-content;
   }
 
-  /* Soft Pastel Badges */
+  /* Soft Pastel Badges (Subtle, elegant background tint) */
   .badge-soft.badge-primary {
-    @apply border-primary/20 bg-primary/12 text-primary;
+    @apply border-primary/20 bg-primary/10 text-primary
+           dark:border-primary/30 dark:bg-primary/15 dark:text-primary;
   }
   .badge-soft.badge-secondary {
-    @apply border-secondary/20 bg-secondary/12 text-secondary;
+    @apply border-secondary/20 bg-secondary/10 text-secondary
+           dark:border-secondary/30 dark:bg-secondary/15 dark:text-secondary;
   }
   .badge-soft.badge-accent {
-    @apply border-accent/20 bg-accent/12 text-accent;
+    @apply border-accent/20 bg-accent/10 text-accent
+           dark:border-accent/30 dark:bg-accent/15 dark:text-accent;
   }
   .badge-soft.badge-info {
-    @apply border-info/20 bg-info/12 text-info;
+    @apply border-info/20 bg-info/10 text-info
+           dark:border-info/30 dark:bg-info/15 dark:text-info;
   }
   .badge-soft.badge-success {
-    @apply border-success/20 bg-success/12 text-success;
+    @apply border-success/20 bg-success/10 text-success
+           dark:border-success/30 dark:bg-success/15 dark:text-success;
   }
   .badge-soft.badge-warning {
-    @apply border-warning/20 bg-warning/15 text-warning;
+    @apply border-warning/20 bg-warning/15 text-warning
+           dark:border-warning/30 dark:bg-warning/20 dark:text-warning;
   }
   .badge-soft.badge-error {
-    @apply border-error/20 bg-error/12 text-error;
+    @apply border-error/20 bg-error/10 text-error
+           dark:border-error/30 dark:bg-error/15 dark:text-error;
   }
 
   /* Outline Badges */
@@ -234,47 +328,74 @@
     @apply bg-transparent;
   }
   .badge-outline.badge-primary {
-    @apply text-primary border-primary;
+    @apply text-primary border-primary/40;
   }
   .badge-outline.badge-secondary {
-    @apply text-secondary border-secondary;
+    @apply text-secondary border-secondary/40;
   }
   .badge-outline.badge-accent {
-    @apply text-accent border-accent;
+    @apply text-accent border-accent/40;
   }
   .badge-outline.badge-info {
-    @apply text-info border-info;
+    @apply text-info border-info/40;
   }
   .badge-outline.badge-success {
-    @apply text-success border-success;
+    @apply text-success border-success/40;
   }
   .badge-outline.badge-warning {
-    @apply text-warning border-warning;
+    @apply text-warning border-warning/40;
   }
   .badge-outline.badge-error {
-    @apply text-error border-error;
+    @apply text-error border-error/40;
   }
 
+  .badge-xs {
+    @apply px-1.5 py-0 text-[10px] leading-4;
+  }
   .badge-sm {
-    @apply px-2 py-0 text-[11px];
+    @apply px-2 py-0.5 text-[11px] leading-4;
   }
   .badge-lg {
     @apply px-3.5 py-1 text-sm;
   }
 
   /* ------------------------------------------------------------------------
-     4. FORM CONTROLS (.input, .select, .toggle, .checkbox)
+     4. FORM CONTROLS (.input, .select, .form-surface, .toggle, .checkbox)
      ------------------------------------------------------------------------ */
-  .input {
-    @apply w-full rounded-btn bg-base-100 px-3.5 py-2.5 text-sm text-base-content
-           placeholder:text-base-content/45
+  .form-surface {
+    @apply rounded-btn border border-base-300/95 bg-base-200/55 text-base-content
+           shadow-[inset_0_1px_2px_rgba(15,23,42,0.06),0_1px_0_rgba(255,255,255,0.85)]
            transition-all duration-150
-           focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary
+           hover:border-primary/45 hover:bg-base-200/80
+           dark:border-white/15 dark:bg-base-200/90
+           dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.07)]
+           dark:hover:border-primary/55 dark:hover:bg-base-200;
+  }
+
+  .form-surface-active {
+    @apply border-primary bg-base-100 ring-4 ring-primary/15
+           shadow-[inset_0_1px_2px_rgba(15,23,42,0.03),0_4px_14px_-2px_rgb(var(--p)/0.18)]
+           dark:border-primary dark:bg-base-100 dark:ring-primary/25
+           dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25),0_0_20px_-2px_rgb(var(--p)/0.4)];
+  }
+
+  .input {
+    @apply w-full rounded-btn bg-base-200/55 px-3.5 py-2.5 text-sm text-base-content
+           placeholder:text-base-content/45
+           shadow-[inset_0_1px_2px_rgba(15,23,42,0.06),0_1px_0_rgba(255,255,255,0.85)]
+           transition-all duration-150
+           hover:border-primary/45 hover:bg-base-200/80
+           focus:outline-none focus:bg-base-100 focus:ring-4 focus:ring-primary/15 focus:border-primary
+           focus:shadow-[inset_0_1px_2px_rgba(15,23,42,0.03),0_4px_14px_-2px_rgb(var(--p)/0.18)]
+           dark:bg-base-200/90 dark:hover:bg-base-200 dark:focus:bg-base-100
+           dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.07)]
+           dark:hover:border-primary/55 dark:focus:ring-primary/25
+           dark:focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25),0_0_20px_-2px_rgb(var(--p)/0.4)]
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .input-bordered {
-    @apply border border-base-300;
+    @apply border border-base-300/95 dark:border-white/15;
   }
 
   .input-primary {
@@ -282,7 +403,7 @@
   }
 
   .input-error {
-    @apply border-error focus:border-error focus:ring-error/25;
+    @apply border-error focus:border-error focus:ring-error/25 dark:border-error;
   }
 
   .input-sm {
@@ -294,9 +415,16 @@
   }
 
   .select {
-    @apply w-full rounded-btn bg-base-100 px-3.5 py-2.5 text-sm text-base-content
-           border border-base-300 transition-all duration-150
-           focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary;
+    @apply w-full rounded-btn bg-base-200/55 px-3.5 py-2.5 text-sm text-base-content
+           border border-base-300/95
+           shadow-[inset_0_1px_2px_rgba(15,23,42,0.06),0_1px_0_rgba(255,255,255,0.85)]
+           transition-all duration-150
+           hover:border-primary/45 hover:bg-base-200/80
+           focus:outline-none focus:bg-base-100 focus:ring-4 focus:ring-primary/15 focus:border-primary
+           dark:border-white/15 dark:bg-base-200/90 dark:hover:bg-base-200 dark:focus:bg-base-100
+           dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.07)]
+           dark:hover:border-primary/55 dark:focus:ring-primary/25
+           dark:focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25),0_0_20px_-2px_rgb(var(--p)/0.4)];
   }
 
   .select-sm {
@@ -306,27 +434,31 @@
   /* Custom Toggle Switch */
   .toggle {
     @apply relative inline-flex h-6 w-11 shrink-0 cursor-pointer appearance-none
-           rounded-full border-2 border-transparent bg-base-300
-           transition-colors duration-200 ease-in-out
+           rounded-full border border-base-300 bg-base-300
+           shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)]
+           transition-all duration-200 ease-in-out
            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
-           checked:bg-primary;
+           dark:border-white/15 dark:bg-base-200 dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.65)]
+           checked:border-primary checked:bg-primary
+           checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_2px_10px_rgb(var(--p)/0.45)]
+           dark:checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_14px_rgb(var(--p)/0.65)];
   }
   .toggle::after {
     content: '';
     @apply pointer-events-none inline-block h-5 w-5 translate-x-0 transform
-           rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out;
+           rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out;
   }
   .toggle:checked::after {
     @apply translate-x-5;
   }
   .toggle-secondary:checked {
-    @apply bg-secondary;
+    @apply border-secondary bg-secondary checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_2px_10px_rgb(var(--s)/0.45)] dark:checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_14px_rgb(var(--s)/0.65)];
   }
   .toggle-accent:checked {
-    @apply bg-accent;
+    @apply border-accent bg-accent checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_2px_10px_rgb(var(--a)/0.45)] dark:checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_14px_rgb(var(--a)/0.65)];
   }
   .toggle-success:checked {
-    @apply bg-success;
+    @apply border-success bg-success checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_2px_10px_rgb(var(--su)/0.45)] dark:checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_14px_rgb(var(--su)/0.65)];
   }
 
   /* ------------------------------------------------------------------------
@@ -335,9 +467,11 @@
   .checkbox {
     @apply relative inline-flex shrink-0 cursor-pointer appearance-none
            h-5 w-5 items-center justify-center rounded-[var(--rounded-badge,0.375rem)]
-           border-2 border-base-300/90 bg-base-100
-           text-primary shadow-xs transition-all duration-150 ease-out
-           hover:border-primary/60
+           border-2 border-base-300 bg-base-200/60
+           text-primary shadow-[inset_0_1px_2px_rgba(15,23,42,0.08)]
+           transition-all duration-150 ease-out
+           hover:border-primary/65
+           dark:border-white/20 dark:bg-base-200/90 dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]
            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-base-100
            disabled:cursor-not-allowed disabled:opacity-45 disabled:border-base-300 disabled:bg-base-200;
     /* Custom SVG Checkmark (uses currentColor for adaptive fill/stroke) */
@@ -349,13 +483,17 @@
 
   /* Checked State */
   .checkbox:checked {
-    @apply border-primary bg-primary shadow-sm shadow-primary/25;
+    @apply border-primary bg-primary
+           shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--p)/0.35)]
+           dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--p)/0.6)];
     background-size: 78% 78%;
   }
 
   /* Indeterminate State (Minus icon) */
   .checkbox:indeterminate {
-    @apply border-primary bg-primary shadow-sm shadow-primary/25;
+    @apply border-primary bg-primary
+           shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--p)/0.35)]
+           dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--p)/0.6)];
     background-size: 75% 75%;
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3e%3cline x1='3.5' y1='8' x2='12.5' y2='8'/%3e%3c/svg%3e");
   }
@@ -363,7 +501,7 @@
   /* Checkbox Color Variants */
   .checkbox-secondary:checked,
   .checkbox-secondary:indeterminate {
-    @apply border-secondary bg-secondary shadow-secondary/25;
+    @apply border-secondary bg-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--s)/0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--s)/0.6)];
   }
   .checkbox-secondary {
     @apply hover:border-secondary/60 focus-visible:ring-secondary/35;
@@ -371,7 +509,7 @@
 
   .checkbox-accent:checked,
   .checkbox-accent:indeterminate {
-    @apply border-accent bg-accent shadow-accent/25;
+    @apply border-accent bg-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--a)/0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--a)/0.6)];
   }
   .checkbox-accent {
     @apply hover:border-accent/60 focus-visible:ring-accent/35;
@@ -379,7 +517,7 @@
 
   .checkbox-success:checked,
   .checkbox-success:indeterminate {
-    @apply border-success bg-success shadow-success/25;
+    @apply border-success bg-success shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--su)/0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--su)/0.6)];
   }
   .checkbox-success {
     @apply hover:border-success/60 focus-visible:ring-success/35;
@@ -387,7 +525,7 @@
 
   .checkbox-warning:checked,
   .checkbox-warning:indeterminate {
-    @apply border-warning bg-warning shadow-warning/25;
+    @apply border-warning bg-warning shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_2px_8px_rgb(var(--wa)/0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_0_12px_rgb(var(--wa)/0.6)];
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%230f172a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3e%3cpolyline points='3.5 8.5 6.5 11.5 12.5 4.5'/%3e%3c/svg%3e");
   }
   .checkbox-warning {
@@ -396,7 +534,7 @@
 
   .checkbox-error:checked,
   .checkbox-error:indeterminate {
-    @apply border-error bg-error shadow-error/25;
+    @apply border-error bg-error shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--er)/0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--er)/0.6)];
   }
   .checkbox-error {
     @apply hover:border-error/60 focus-visible:ring-error/35;
@@ -404,7 +542,7 @@
 
   .checkbox-info:checked,
   .checkbox-info:indeterminate {
-    @apply border-info bg-info shadow-info/25;
+    @apply border-info bg-info shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgb(var(--in)/0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_0_12px_rgb(var(--in)/0.6)];
   }
   .checkbox-info {
     @apply hover:border-info/60 focus-visible:ring-info/35;
@@ -467,5 +605,58 @@
 
   .table-hover tbody tr {
     @apply transition-colors hover:bg-primary/[0.04];
+  }
+
+  /* ------------------------------------------------------------------------
+     7. PROGRESS BAR (.progress, .progress-primary, etc.)
+     ------------------------------------------------------------------------ */
+  .progress {
+    @apply w-full overflow-hidden rounded-full bg-base-300/75;
+  }
+
+  .progress-bar {
+    @apply h-full rounded-full transition-all duration-300 ease-out;
+  }
+
+  .progress-striped {
+    background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.2) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 1rem 1rem;
+  }
+
+  @keyframes progress-stripes {
+    0% {
+      background-position: 1rem 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+
+  .progress-animated {
+    animation: progress-stripes 1s linear infinite;
+  }
+
+  /* ------------------------------------------------------------------------
+     8. LIST GROUP (.list-group, .list-item)
+     ------------------------------------------------------------------------ */
+  .list-group {
+    @apply flex flex-col rounded-box border border-base-300 bg-base-100 overflow-hidden divide-y divide-base-300/70;
+  }
+
+  .list-item {
+    @apply flex items-center justify-between gap-3.5 px-4 py-3 text-sm text-base-content transition-colors;
+  }
+
+  .list-item-hover {
+    @apply hover:bg-base-200/70 cursor-pointer;
   }
 }

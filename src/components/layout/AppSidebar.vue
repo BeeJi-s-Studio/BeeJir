@@ -10,6 +10,10 @@ import {
   ChevronRight,
   X,
   Github,
+  Wand2,
+  UserCircle,
+  LogIn,
+  ShieldAlert,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 import type { ColorVariant } from '@/types/theme'
@@ -37,20 +41,52 @@ const mainNav: NavItem[] = [
     label: 'UI Components',
     to: '/components',
     icon: Layers,
-    badge: 'UI Kit',
+    badge: '22+ UI',
     badgeVariant: 'secondary',
+  },
+  {
+    label: 'Project Wizard',
+    to: '/project-wizard',
+    icon: Wand2,
+    badge: 'Demo',
+    badgeVariant: 'accent',
   },
   {
     label: 'Users & Data',
     to: '/users',
     icon: Users,
     badge: '128',
-    badgeVariant: 'accent',
+    badgeVariant: 'info',
+  },
+]
+
+const pagesNav: NavItem[] = [
+  {
+    label: 'User Profile',
+    to: '/profile',
+    icon: UserCircle,
+    badge: 'New',
+    badgeVariant: 'success',
+  },
+  {
+    label: 'Login & Register',
+    to: '/login',
+    icon: LogIn,
+    badge: 'Auth',
+    badgeVariant: 'primary',
+  },
+  {
+    label: 'Error 403 / 404 / 500',
+    to: '/error/404',
+    icon: ShieldAlert,
+    badge: 'HTTP',
+    badgeVariant: 'warning',
   },
 ]
 
 function isActive(path: string): boolean {
   if (path === '/') return route.path === '/'
+  if (path.startsWith('/error')) return route.path.startsWith('/error')
   return route.path.startsWith(path)
 }
 </script>
@@ -74,7 +110,7 @@ function isActive(path: string): boolean {
 
   <!-- Sidebar Panel -->
   <aside
-    class="fixed inset-y-0 left-0 z-40 flex flex-col border-r border-base-300/80 bg-base-100 transition-all duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:max-h-screen"
+    class="fixed inset-y-0 left-0 z-40 flex flex-col border-r border-base-300/80 bg-base-100 dark:bg-base-100/90 dark:backdrop-blur-xl transition-all duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:max-h-screen"
     :class="[
       themeStore.sidebarCollapsed ? 'lg:w-20' : 'lg:w-68',
       themeStore.mobileSidebarOpen
@@ -94,7 +130,7 @@ function isActive(path: string): boolean {
         @click="themeStore.mobileSidebarOpen = false"
       >
         <div
-          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-gradient-to-tr from-primary via-secondary to-accent text-white shadow-md shadow-primary/25"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-gradient-to-tr from-primary via-secondary to-accent text-white shadow-md shadow-primary/30 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.35),0_4px_18px_rgb(var(--p)/0.55)]"
         >
           <Sparkles class="h-5 w-5" />
         </div>
@@ -107,7 +143,7 @@ function isActive(path: string): boolean {
               Bee<span class="text-primary">Jir</span>
             </span>
             <span class="badge badge-sm badge-soft badge-primary font-mono text-[10px]">
-              v0.1
+              v0.3
             </span>
           </div>
           <span class="text-[11px] font-medium text-base-content/55 truncate">
@@ -131,6 +167,7 @@ function isActive(path: string): boolean {
       class="flex-1 min-h-0 overflow-y-auto py-5 space-y-6"
       :class="themeStore.sidebarCollapsed ? 'px-2' : 'px-3'"
     >
+      <!-- Group 1: Main Menu -->
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
@@ -149,8 +186,58 @@ function isActive(path: string): boolean {
                 ? 'justify-center h-11 w-11 mx-auto p-0'
                 : 'justify-start gap-3 px-3 py-2.5 w-full',
               isActive(item.to)
-                ? 'bg-primary text-primary-content shadow-sm shadow-primary/25'
-                : 'text-base-content/75 hover:bg-base-200 hover:text-base-content',
+                ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-content shadow-sm shadow-primary/25 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_4px_20px_-2px_rgb(var(--p)/0.55)]'
+                : 'text-base-content/75 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content',
+            ]"
+            :title="themeStore.sidebarCollapsed ? item.label : undefined"
+            @click="themeStore.mobileSidebarOpen = false"
+          >
+            <component
+              :is="item.icon"
+              class="h-5 w-5 shrink-0 transition-transform duration-150 group-hover:scale-105"
+            />
+            <span
+              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
+              class="flex-1 truncate"
+            >
+              {{ item.label }}
+            </span>
+            <span
+              v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
+              class="badge badge-sm"
+              :class="
+                isActive(item.to)
+                  ? 'border-white/25 bg-white/20 text-white'
+                  : `badge-soft badge-${item.badgeVariant || 'primary'}`
+              "
+            >
+              {{ item.badge }}
+            </span>
+          </RouterLink>
+        </nav>
+      </div>
+
+      <!-- Group 2: Demo Pages, Profile, Auth & Errors -->
+      <div>
+        <div
+          v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
+          class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-base-content/45"
+        >
+          Halaman & Autentikasi
+        </div>
+        <nav class="space-y-1.5">
+          <RouterLink
+            v-for="item in pagesNav"
+            :key="item.to"
+            :to="item.to"
+            class="group relative flex items-center rounded-btn text-sm font-semibold transition-all duration-150"
+            :class="[
+              themeStore.sidebarCollapsed
+                ? 'justify-center h-11 w-11 mx-auto p-0'
+                : 'justify-start gap-3 px-3 py-2.5 w-full',
+              isActive(item.to)
+                ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-content shadow-sm shadow-primary/25 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_4px_20px_-2px_rgb(var(--p)/0.55)]'
+                : 'text-base-content/75 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content',
             ]"
             :title="themeStore.sidebarCollapsed ? item.label : undefined"
             @click="themeStore.mobileSidebarOpen = false"
@@ -190,7 +277,7 @@ function isActive(path: string): boolean {
         </div>
         <button
           type="button"
-          class="group flex items-center rounded-btn text-sm font-semibold text-base-content/75 hover:bg-secondary/10 hover:text-secondary transition-all duration-150"
+          class="group flex items-center rounded-btn text-sm font-semibold text-base-content/75 hover:bg-secondary/10 dark:hover:bg-secondary/20 hover:text-secondary transition-all duration-150"
           :class="[
             themeStore.sidebarCollapsed
               ? 'justify-center h-11 w-11 mx-auto p-0'
@@ -210,9 +297,9 @@ function isActive(path: string): boolean {
             v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
             class="flex items-center gap-1"
           >
-            <span class="h-2.5 w-2.5 rounded-full bg-primary" />
-            <span class="h-2.5 w-2.5 rounded-full bg-secondary" />
-            <span class="h-2.5 w-2.5 rounded-full bg-accent" />
+            <span class="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_8px_rgb(var(--p)/0.7)]" />
+            <span class="h-2.5 w-2.5 rounded-full bg-secondary shadow-[0_0_8px_rgb(var(--s)/0.7)]" />
+            <span class="h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_8px_rgb(var(--a)/0.7)]" />
           </span>
         </button>
       </div>
@@ -225,7 +312,7 @@ function isActive(path: string): boolean {
     >
       <div
         v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-        class="rounded-box bg-gradient-to-br from-primary/12 via-secondary/10 to-accent/12 border border-primary/20 p-3.5"
+        class="rounded-box bg-gradient-to-br from-primary/12 via-secondary/10 to-accent/12 dark:from-primary/20 dark:via-secondary/15 dark:to-accent/20 border border-primary/20 dark:border-primary/35 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] p-3.5"
       >
         <div class="flex items-center justify-between mb-1">
           <span class="text-xs font-bold text-base-content">Open Source Ready</span>

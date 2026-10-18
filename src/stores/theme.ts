@@ -18,15 +18,41 @@ export const THEME_PRESETS: ThemePreset[] = [
   },
   {
     id: 'midnight',
-    name: 'Midnight Neon',
-    tagline: 'Deep obsidian dark dengan Electric Indigo & Cyan',
+    name: 'Midnight Cyber',
+    tagline: 'Deep obsidian dengan Electric Indigo, Hot Pink & Cyber Cyan',
     mode: 'dark',
     preview: {
-      bg: '#0b111e',
-      card: '#131c2e',
-      primary: '#818cf8',
-      secondary: '#f472b6',
-      accent: '#2dd4bf',
+      bg: '#080c18',
+      card: '#11192c',
+      primary: '#6366f1',
+      secondary: '#ec4899',
+      accent: '#06b6d4',
+    },
+  },
+  {
+    id: 'aurora',
+    name: 'Aurora Matrix',
+    tagline: 'Botanical night dengan Neon Emerald, Electric Cyan & Gold',
+    mode: 'dark',
+    preview: {
+      bg: '#06100d',
+      card: '#0d1f1a',
+      primary: '#10b981',
+      secondary: '#06b6d4',
+      accent: '#f59e0b',
+    },
+  },
+  {
+    id: 'nebula',
+    name: 'Cosmic Nebula',
+    tagline: 'Velvet plum dark dengan Electric Violet, Fuchsia & Coral',
+    mode: 'dark',
+    preview: {
+      bg: '#0b0716',
+      card: '#171029',
+      primary: '#8b5cf6',
+      secondary: '#d946ef',
+      accent: '#f43f5e',
     },
   },
   {
@@ -178,10 +204,14 @@ export const useThemeStore = defineStore('beejir-theme', () => {
   }
 
   function toggleDarkLight() {
-    if (activeTheme.value === 'midnight') {
-      setTheme('daybreak')
+    if (isDark.value) {
+      if (activeTheme.value === 'aurora') setTheme('matcha')
+      else if (activeTheme.value === 'nebula') setTheme('berry')
+      else setTheme('daybreak')
     } else {
-      setTheme('midnight')
+      if (activeTheme.value === 'matcha') setTheme('aurora')
+      else if (activeTheme.value === 'berry') setTheme('nebula')
+      else setTheme('midnight')
     }
   }
 

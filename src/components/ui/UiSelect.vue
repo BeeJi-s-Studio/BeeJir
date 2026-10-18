@@ -259,8 +259,21 @@ function handleKeyDown(event: KeyboardEvent) {
   }
 }
 
+const optionsListRef = ref<HTMLElement | null>(null)
+
+watch(currentPage, () => {
+  if (optionsListRef.value) {
+    optionsListRef.value.scrollTop = 0
+  }
+})
+
 function handleClickOutside(event: MouseEvent) {
-  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
+  const path = event.composedPath ? event.composedPath() : []
+  if (
+    containerRef.value &&
+    !containerRef.value.contains(event.target as Node) &&
+    !path.includes(containerRef.value)
+  ) {
     if (isOpen.value) {
       isOpen.value = false
       emit('close')
@@ -303,10 +316,10 @@ const sizeClasses = computed(() => {
     <!-- Multiselect Control Box -->
     <div
       tabindex="0"
-      class="relative w-full rounded-btn border border-base-300 bg-base-100 flex items-center justify-between gap-2 transition-all duration-150 cursor-pointer shadow-xs select-none"
+      class="relative w-full form-surface flex items-center justify-between gap-2 cursor-pointer select-none"
       :class="[
         sizeClasses,
-        isOpen ? 'ring-2 ring-primary/25 border-primary shadow-sm' : 'hover:border-base-300/80',
+        isOpen ? 'form-surface-active' : '',
         disabled ? 'opacity-50 cursor-not-allowed bg-base-200/50' : '',
         error ? 'border-error ring-1 ring-error/20' : '',
       ]"
@@ -320,12 +333,12 @@ const sizeClasses = computed(() => {
           <span
             v-for="opt in selectedOptionsList"
             :key="opt.value"
-            class="badge badge-sm badge-primary gap-1 pl-2 pr-1 py-0.5 font-semibold shadow-xs"
+            class="badge badge-sm badge-soft badge-primary gap-1 pl-2 pr-1 py-0.5 font-medium"
           >
             <span>{{ opt.label }}</span>
             <button
               type="button"
-              class="rounded-full p-0.5 hover:bg-black/20 text-current transition-colors"
+              class="rounded-full p-0.5 opacity-65 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
               :disabled="disabled"
               @click="removeSelected(opt.value, $event)"
             >
@@ -405,6 +418,8 @@ const sizeClasses = computed(() => {
       <div
         v-if="isOpen && !disabled"
         class="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
+        @click.stop
+        @mousedown.stop
       >
         <!-- Search Input Bar (when searchable = true) -->
         <div
@@ -428,7 +443,7 @@ const sizeClasses = computed(() => {
         </div>
 
         <!-- Options List -->
-        <div class="max-h-56 overflow-y-auto p-1.5 space-y-0.5">
+        <div ref="optionsListRef" class="max-h-56 overflow-y-auto p-1.5 space-y-0.5">
           <button
             v-for="(opt, idx) in paginatedOptions"
             :key="opt.value"
@@ -501,21 +516,23 @@ const sizeClasses = computed(() => {
               class="btn btn-ghost btn-xs btn-circle h-6 w-6"
               :disabled="currentPage <= 1"
               title="Halaman sebelumnya"
-              @click.stop="prevPage"
+              @click.stop="prevPage($event)"
+              @mousedown.stop.prevent
             >
               <ChevronLeft class="h-3.5 w-3.5" />
             </button>
 
             <!-- Page indicator pills for small totalPages, or compact numeric text -->
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1" @click.stop @mousedown.stop>
               <template v-if="totalPages <= 5">
                 <button
                   v-for="p in totalPages"
                   :key="`page-${p}`"
                   type="button"
-                  class="h-5 min-w-5 px-1.5 rounded text-[10px] font-bold transition-colors"
+                  class="h-5 min-w-5 px-1.5 rounded text-[10px] font-bold transition-colors cursor-pointer"
                   :class="currentPage === p ? 'bg-primary text-white shadow-xs' : 'text-base-content/70 hover:bg-base-200'"
-                  @click.stop="goToPage(p)"
+                  @click.stop="goToPage(p, $event)"
+                  @mousedown.stop.prevent
                 >
                   {{ p }}
                 </button>
@@ -530,7 +547,8 @@ const sizeClasses = computed(() => {
               class="btn btn-ghost btn-xs btn-circle h-6 w-6"
               :disabled="currentPage >= totalPages"
               title="Halaman berikutnya"
-              @click.stop="nextPage"
+              @click.stop="nextPage($event)"
+              @mousedown.stop.prevent
             >
               <ChevronRight class="h-3.5 w-3.5" />
             </button>

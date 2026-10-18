@@ -12,6 +12,20 @@ import {
   AlertTriangle,
   XCircle,
   Info,
+  FolderPlus,
+  Download,
+  Share2,
+  Trash2,
+  Settings,
+  Rocket,
+  FileText,
+  HelpCircle,
+  Plus,
+  Pencil,
+  Eye,
+  Copy,
+  Heart,
+  Bookmark,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 import { useToast } from '@/stores/toast'
@@ -26,6 +40,18 @@ import UiSelect from '@/components/ui/UiSelect.vue'
 import UiCheckbox from '@/components/ui/UiCheckbox.vue'
 import UiTable from '@/components/ui/UiTable.vue'
 import UiDataTable from '@/components/ui/UiDataTable.vue'
+import UiDatePicker from '@/components/ui/UiDatePicker.vue'
+import UiFileUpload, { type UploadedFileItem } from '@/components/ui/UiFileUpload.vue'
+import UiRichEditor from '@/components/ui/UiRichEditor.vue'
+import UiStepper, { type StepItem } from '@/components/ui/UiStepper.vue'
+import UiProgress from '@/components/ui/UiProgress.vue'
+import UiList, { type ListItem } from '@/components/ui/UiList.vue'
+import UiTimeline, { type TimelineItem } from '@/components/ui/UiTimeline.vue'
+import UiSpinner from '@/components/ui/UiSpinner.vue'
+import UiEmptyState from '@/components/ui/UiEmptyState.vue'
+import UiDropdown, { type DropdownItem } from '@/components/ui/UiDropdown.vue'
+import UiTooltip from '@/components/ui/UiTooltip.vue'
+import UiPopover from '@/components/ui/UiPopover.vue'
 import type { ColorVariant } from '@/types/theme'
 import type { TableColumn } from '@/types/table'
 
@@ -181,6 +207,135 @@ function handleBulkDelete(rows: any[]) {
   dataTableItems.value = dataTableItems.value.filter((item) => !idsToDelete.has(item.id))
   toast.success('Pilihan Berhasil Dihapus', `${rows.length} tugas telah dihapus dari tabel.`)
 }
+
+// Phase 3 New Components Demo State
+const demoDate = ref('2026-10-18')
+const demoRichText = ref(
+  '<h3>Catatan Rilis BeeJir v0.3</h3><p>Editor ini mendukung format <strong>tebal</strong>, <em>miring</em>, <u>garis bawah</u>, daftar poin, dan tampilan kode HTML langsung.</p><ul><li>Komponen Date Picker interaktif</li><li>Upload File Drag & Drop serta Galeri Multi-Foto</li><li>Wizard Stepper & Timeline</li></ul>'
+)
+
+const singleUploadFiles = ref<UploadedFileItem[]>([
+  {
+    id: 'f1',
+    name: 'Laporan-Keuangan-Q4-2026.pdf',
+    size: 2458000,
+    type: 'application/pdf',
+    progress: 100,
+    status: 'done',
+  },
+])
+
+const dropzoneFiles = ref<UploadedFileItem[]>([
+  {
+    id: 'f2',
+    name: 'Backup-Database-Cluster.zip',
+    size: 8420000,
+    type: 'application/zip',
+    progress: 100,
+    status: 'done',
+  },
+])
+
+const multiPhotoFiles = ref<UploadedFileItem[]>([
+  {
+    id: 'p1',
+    name: 'ui-dashboard-preview.jpg',
+    size: 540200,
+    type: 'image/jpeg',
+    url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
+    progress: 100,
+    status: 'done',
+  },
+  {
+    id: 'p2',
+    name: 'analytics-dark-theme.jpg',
+    size: 489100,
+    type: 'image/jpeg',
+    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80',
+    progress: 100,
+    status: 'done',
+  },
+])
+
+const demoStepIndex = ref(1)
+const demoSteps: StepItem[] = [
+  { id: 1, title: 'Konfigurasi Awal', subtitle: 'Pilih nama & region' },
+  { id: 2, title: 'Integrasi Database', subtitle: 'Koneksi PostgreSQL' },
+  { id: 3, title: 'Verifikasi & Deploy', subtitle: 'Siap diluncurkan' },
+]
+
+const demoProgressValue = ref(72)
+
+const demoListItems: ListItem[] = [
+  {
+    id: 1,
+    title: 'Deployment Cluster Asia-Southeast (Jakarta)',
+    subtitle: '8 Nodes aktif • Uptime 99.98% selama 30 hari terakhir',
+    badge: 'Healthy',
+    badgeVariant: 'success',
+    meta: '14ms',
+    icon: Rocket,
+    variant: 'primary',
+  },
+  {
+    id: 2,
+    title: 'Sinkronisasi Dokumentasi API OpenAPI 3.1',
+    subtitle: 'Diperbarui otomatis melalui GitHub Actions pipeline',
+    badge: 'Synced',
+    badgeVariant: 'info',
+    meta: '2m lalu',
+    icon: FileText,
+    variant: 'secondary',
+  },
+  {
+    id: 3,
+    title: 'Peringatan Kapasitas Penyimpanan Object Storage',
+    subtitle: 'Bucket media-assets mencapai 82% dari batas kuota bulanan',
+    badge: '82% Used',
+    badgeVariant: 'warning',
+    meta: '820 GB',
+    icon: AlertTriangle,
+    variant: 'warning',
+  },
+]
+
+const demoTimelineItems: TimelineItem[] = [
+  {
+    id: 1,
+    title: 'Komponen Baru Berhasil Ditambahkan',
+    description: 'Menambahkan DatePicker, FileUpload (3 mode), RichEditor, Stepper, Progress, List, Timeline, Spinner, EmptyState, Dropdown, Tooltip, dan Popover.',
+    time: 'Baru saja',
+    variant: 'primary',
+    badge: 'v0.3.0',
+    author: 'Arif Pratama',
+  },
+  {
+    id: 2,
+    title: 'Optimasi Kontras Tema Gelap & Terang',
+    description: 'Seluruh komponen telah diuji pada 6 preset warna di mode terang maupun gelap.',
+    time: '1 jam lalu',
+    variant: 'success',
+    badge: 'Verified',
+    author: 'Larasati Dewi',
+  },
+  {
+    id: 3,
+    title: 'Inisialisasi Repositori Open Source',
+    description: 'Membangun arsitektur dasar menggunakan Vue 3.5, Vite 6, Bun, dan TypeScript.',
+    time: 'Kemarin',
+    variant: 'secondary',
+    badge: 'Init',
+    author: 'Tim Inti BeeJir',
+  },
+]
+
+const demoDropdownItems: DropdownItem[] = [
+  { label: 'Unduh Laporan PDF', value: 'download', icon: Download, badge: 'PDF' },
+  { label: 'Bagikan ke Anggota Tim', value: 'share', icon: Share2 },
+  { label: 'Pengaturan Modul', value: 'settings', icon: Settings },
+  { divider: true },
+  { label: 'Hapus Permanen', value: 'delete', icon: Trash2, danger: true },
+]
 </script>
 
 <template>
@@ -581,6 +736,109 @@ function handleBulkDelete(rows: any[]) {
             </UiButton>
           </div>
         </div>
+
+        <!-- NEW: Dedicated Icon Button Concept System -->
+        <div class="pt-5 border-t border-base-300/80 dark:border-white/[0.08] space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-primary block">
+                Konsep Icon Button (.btn-icon, .btn-square, .btn-circle)
+              </span>
+              <p class="text-xs text-base-content/65 mt-0.5">
+                Rasio presisi 1:1 tanpa distorsi padding, ikon terpusat sempurna, dan 4 skala ukuran baku untuk UI modern.
+              </p>
+            </div>
+            <UiBadge variant="primary" soft size="sm">Terkonsep & Aligned</UiBadge>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Col 1: Shapes (Circle vs Square) -->
+            <div class="rounded-box border border-base-300 bg-base-200/35 p-3.5 space-y-3">
+              <span class="text-xs font-bold text-base-content block">1. Bentuk (Shapes)</span>
+              <div class="flex items-center gap-3">
+                <div class="text-center space-y-1">
+                  <UiButton circle variant="primary" size="sm" :icon="Plus" title="Circle Shape" />
+                  <span class="text-[10px] text-base-content/60 block">Circle (btn-circle)</span>
+                </div>
+                <div class="text-center space-y-1">
+                  <UiButton square variant="primary" size="sm" :icon="Plus" title="Square Shape" />
+                  <span class="text-[10px] text-base-content/60 block">Square (btn-square)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2: Size Scale (xs, sm, md, lg) -->
+            <div class="rounded-box border border-base-300 bg-base-200/35 p-3.5 space-y-3">
+              <span class="text-xs font-bold text-base-content block">2. Skala Ukuran (Sizes)</span>
+              <div class="flex items-center gap-2">
+                <div class="text-center">
+                  <UiButton square variant="secondary" size="xs" :icon="Settings" title="Extra Small (28px)" />
+                  <span class="text-[9px] font-mono text-base-content/50 block mt-1">28px (xs)</span>
+                </div>
+                <div class="text-center">
+                  <UiButton square variant="secondary" size="sm" :icon="Settings" title="Small (34px)" />
+                  <span class="text-[9px] font-mono text-base-content/50 block mt-1">34px (sm)</span>
+                </div>
+                <div class="text-center">
+                  <UiButton square variant="secondary" size="md" :icon="Settings" title="Medium (40px)" />
+                  <span class="text-[9px] font-mono text-base-content/50 block mt-1">40px (md)</span>
+                </div>
+                <div class="text-center">
+                  <UiButton square variant="secondary" size="lg" :icon="Settings" title="Large (48px)" />
+                  <span class="text-[9px] font-mono text-base-content/50 block mt-1">48px (lg)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 3: Styles (Ghost, Soft, Outline, Solid) -->
+            <div class="rounded-box border border-base-300 bg-base-200/35 p-3.5 space-y-3">
+              <span class="text-xs font-bold text-base-content block">3. Gaya Semantik (Styles)</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <UiButton circle variant="ghost" size="sm" :icon="Heart" title="Ghost" />
+                <UiButton circle variant="primary" soft size="sm" :icon="Bookmark" title="Soft Primary" />
+                <UiButton circle variant="error" soft size="sm" :icon="Trash2" title="Soft Error" />
+                <UiButton circle outline size="sm" :icon="Share2" title="Outline Surface" />
+                <UiButton circle variant="accent" size="sm" :icon="Sparkles" title="Solid Accent" />
+              </div>
+            </div>
+
+            <!-- Col 4: Real-world Table Action Groups -->
+            <div class="rounded-box border border-base-300 bg-base-200/35 p-3.5 space-y-3">
+              <span class="text-xs font-bold text-base-content block">4. Aksi Tabel & Toolbar</span>
+              <div class="flex items-center gap-1.5 p-1 rounded-btn bg-base-100 border border-base-300/80 w-fit">
+                <button
+                  type="button"
+                  class="btn btn-square btn-xs btn-ghost text-base-content/70 hover:text-info hover:bg-info/10"
+                  title="Detail"
+                >
+                  <Eye class="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-square btn-xs btn-soft btn-primary"
+                  title="Edit Data"
+                >
+                  <Pencil class="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-square btn-xs btn-soft btn-error"
+                  title="Hapus Data"
+                >
+                  <Trash2 class="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-square btn-xs btn-outline"
+                  title="Salin ID"
+                >
+                  <Copy class="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <span class="text-[11px] text-base-content/50 block">Grup tombol aksi seragam & konsisten</span>
+            </div>
+          </div>
+        </div>
       </div>
     </UiCard>
 
@@ -757,6 +1015,304 @@ function handleBulkDelete(rows: any[]) {
             </UiBadge>
           </div>
         </div>
+      </UiCard>
+    </div>
+
+    <!-- 9. Date Picker & Rich Text Editor (WYSIWYG) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <UiCard
+        title="9. Interactive Date Picker (<UiDatePicker>)"
+        subtitle="Kalender popup interaktif dengan navigasi bulan/tahun, tombol Hari Ini, dan format lokal"
+        accent-top="primary"
+      >
+        <div class="space-y-4">
+          <UiDatePicker
+            v-model="demoDate"
+            label="Pilih Tanggal Acara / Rilis"
+            hint="Klik input untuk membuka kalender popup"
+          />
+
+          <div class="rounded-box border border-base-300 bg-base-200/50 p-3.5 flex items-center justify-between text-xs">
+            <span class="text-base-content/70 font-medium">Nilai ISO (v-model):</span>
+            <span class="badge badge-primary font-mono">{{ demoDate || 'Kosong' }}</span>
+          </div>
+        </div>
+      </UiCard>
+
+      <div class="lg:col-span-2">
+        <UiCard
+          title="10. Rich Text Editor / WYSIWYG (<UiRichEditor>)"
+          subtitle="Editor visual kaya fitur dengan toolbar pemformatan lengkap, penghitung kata, dan mode kode HTML"
+          accent-top="secondary"
+        >
+          <UiRichEditor
+            v-model="demoRichText"
+            label="Konten Artikel / Dokumentasi"
+            min-height="170px"
+          />
+        </UiCard>
+      </div>
+    </div>
+
+    <!-- 11. File Upload Suite (3 Modes: File Preview, Drag & Drop, Multi-Photo Gallery) -->
+    <UiCard
+      title="11. File Upload Suite (<UiFileUpload> — 3 Mode Lengkap)"
+      subtitle="Mendukung upload dengan daftar preview terupload, Drag & Drop Zone, serta Multi-Photo Gallery dengan lightbox"
+      accent-top="accent"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Mode 1: Standard Button + Uploaded File Preview -->
+        <div class="rounded-box border border-base-300 bg-base-200/25 p-4">
+          <UiFileUpload
+            v-model="singleUploadFiles"
+            mode="file"
+            label="A. Upload Tombol + Preview File Terupload"
+            hint="Menampilkan nama, ukuran, progress bar, & status file"
+          />
+        </div>
+
+        <!-- Mode 2: Drag & Drop Zone -->
+        <div class="rounded-box border border-base-300 bg-base-200/25 p-4">
+          <UiFileUpload
+            v-model="dropzoneFiles"
+            mode="dropzone"
+            label="B. Upload Drag and Drop Zone"
+            hint="Seret file apa saja ke area garis putus-putus"
+          />
+        </div>
+
+        <!-- Mode 3: Multi-Photo Gallery Upload -->
+        <div class="rounded-box border border-base-300 bg-base-200/25 p-4">
+          <UiFileUpload
+            v-model="multiPhotoFiles"
+            mode="gallery"
+            multiple
+            label="C. Upload Banyak Foto Sekaligus (Gallery)"
+            hint="Hover pada foto untuk preview ukuran penuh atau hapus"
+          />
+        </div>
+      </div>
+    </UiCard>
+
+    <!-- 12. Wizard / Stepper -->
+    <UiCard
+      title="12. Wizard / Multi-Step Stepper (<UiStepper>)"
+      subtitle="Navigasi tahapan proses berurutan dengan status selesai, langkah aktif, dan tombol kontrol"
+      accent-top="primary"
+    >
+      <UiStepper
+        v-model="demoStepIndex"
+        :steps="demoSteps"
+        @finish="toast.success('Wizard Selesai!', 'Seluruh tahapan konfigurasi telah berhasil disimpan.')"
+      >
+        <template #default="{ currentStep, step }">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+            <div>
+              <span class="badge badge-primary badge-sm mb-2">Tahap {{ currentStep + 1 }}</span>
+              <h4 class="text-base font-extrabold text-base-content">{{ step?.title }}</h4>
+              <p class="text-xs text-base-content/65 mt-1">
+                Ini adalah area konten dinamis untuk langkah <strong>{{ step?.title }}</strong> ({{ step?.subtitle }}).
+                Klik indikator langkah di atas atau tombol di bawah untuk berpindah tahap.
+              </p>
+            </div>
+            <RouterLink to="/project-wizard" class="btn btn-soft btn-primary btn-sm shrink-0">
+              Buka Halaman Demo Wizard Penuh
+            </RouterLink>
+          </div>
+        </template>
+      </UiStepper>
+    </UiCard>
+
+    <!-- 13. Progress Bar & Spinners -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <UiCard
+        title="13. Progress Bars (<UiProgress>)"
+        subtitle="Indikator progres dalam berbagai warna semantik, ukuran, serta animasi garis belang (striped)"
+        accent-top="success"
+      >
+        <div class="space-y-4">
+          <UiProgress :value="demoProgressValue" variant="primary" label="Primary Animated Striped" show-value striped animated />
+          <UiProgress :value="88" variant="success" label="Success Completion" show-value size="sm" />
+          <UiProgress :value="64" variant="secondary" label="Secondary Upload" show-value size="sm" />
+          <UiProgress :value="45" variant="warning" label="Warning Storage Quota" show-value size="sm" striped />
+          <UiProgress :value="28" variant="error" label="Error Threshold" show-value size="xs" />
+
+          <div class="pt-2 flex items-center gap-2">
+            <button type="button" class="btn btn-xs btn-outline" @click="demoProgressValue = Math.max(0, demoProgressValue - 15)">
+              -15%
+            </button>
+            <button type="button" class="btn btn-xs btn-primary" @click="demoProgressValue = Math.min(100, demoProgressValue + 15)">
+              +15%
+            </button>
+          </div>
+        </div>
+      </UiCard>
+
+      <UiCard
+        title="14. Loading Spinners (<UiSpinner>)"
+        subtitle="3 gaya animasi pemuatan (Ring, Bouncing Dots, Pulse Ripple) dengan ukuran xs hingga xl"
+        accent-top="info"
+      >
+        <div class="space-y-5">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-base-content/50 block mb-2.5">
+              Varian Warna (Ring Spinner)
+            </span>
+            <div class="flex flex-wrap items-center gap-5">
+              <UiSpinner variant="primary" size="md" />
+              <UiSpinner variant="secondary" size="md" />
+              <UiSpinner variant="accent" size="md" />
+              <UiSpinner variant="success" size="md" />
+              <UiSpinner variant="warning" size="md" />
+              <UiSpinner variant="error" size="md" />
+              <UiSpinner variant="info" size="md" />
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-base-300/70">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-base-content/50 block mb-2.5">
+              Tipe & Label (Ring, Dots, Pulse)
+            </span>
+            <div class="flex flex-wrap items-center gap-6">
+              <UiSpinner type="ring" variant="primary" size="md" label="Memuat data..." />
+              <UiSpinner type="dots" variant="secondary" size="md" label="Menyinkronkan..." />
+              <UiSpinner type="pulse" variant="accent" size="md" label="Menunggu sinyal..." />
+            </div>
+          </div>
+        </div>
+      </UiCard>
+    </div>
+
+    <!-- 15. List & Timeline -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <UiCard
+        title="15. Structured List (<UiList>)"
+        subtitle="Daftar item interaktif dengan ikon/avatar, subjudul, badge status, dan event klik"
+        accent-top="secondary"
+      >
+        <UiList
+          :items="demoListItems"
+          @item-click="(item) => toast.info(item.title, item.subtitle)"
+        />
+      </UiCard>
+
+      <UiCard
+        title="16. Activity Timeline (<UiTimeline>)"
+        subtitle="Linimasa vertikal untuk menampilkan log aktivitas, riwayat rilis, dan tahapan peristiwa"
+        accent-top="primary"
+      >
+        <UiTimeline :items="demoTimelineItems" />
+      </UiCard>
+    </div>
+
+    <!-- 17. Dropdown, Tooltip, Popover & Empty State -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <UiCard
+        title="17. Dropdown, Tooltip & Popover"
+        subtitle="Komponen floating overlay interaktif untuk menu aksi, petunjuk singkat, dan panel informasi"
+        accent-top="warning"
+      >
+        <div class="space-y-6">
+          <!-- Dropdowns -->
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-base-content/50 block mb-2.5">
+              Dropdown Menu (&lt;UiDropdown&gt;)
+            </span>
+            <div class="flex flex-wrap items-center gap-3">
+              <UiDropdown
+                label="Menu Aksi Utama"
+                variant="primary"
+                size="sm"
+                :items="demoDropdownItems"
+                @select="(item) => toast.info('Dropdown Dipilih', `Anda memilih: ${item.label}`)"
+              />
+              <UiDropdown
+                label="Opsi Lainnya"
+                variant="soft"
+                size="sm"
+                :items="demoDropdownItems"
+                @select="(item) => toast.info('Dropdown Dipilih', `Anda memilih: ${item.label}`)"
+              />
+            </div>
+          </div>
+
+          <!-- Tooltips -->
+          <div class="pt-3 border-t border-base-300/70">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-base-content/50 block mb-2.5">
+              Directional Tooltips (&lt;UiTooltip&gt;) — Arahkan Kursor
+            </span>
+            <div class="flex flex-wrap items-center gap-3">
+              <UiTooltip text="Tooltip di bagian Atas (Top)" position="top" variant="neutral">
+                <button type="button" class="btn btn-xs btn-outline">Hover Top</button>
+              </UiTooltip>
+              <UiTooltip text="Tooltip dengan warna Primary" position="bottom" variant="primary">
+                <button type="button" class="btn btn-xs btn-soft btn-primary">Hover Bottom</button>
+              </UiTooltip>
+              <UiTooltip text="Tooltip di sebelah Kanan" position="right" variant="secondary">
+                <button type="button" class="btn btn-xs btn-soft btn-secondary">Hover Right</button>
+              </UiTooltip>
+            </div>
+          </div>
+
+          <!-- Popover -->
+          <div class="pt-3 border-t border-base-300/70">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-base-content/50 block mb-2.5">
+              Rich Interactive Popover (&lt;UiPopover&gt;) — Klik Tombol
+            </span>
+            <div class="flex flex-wrap items-center gap-3">
+              <UiPopover
+                title="Informasi Cluster Server"
+                subtitle="Region: ap-southeast-1 (Jakarta)"
+                position="top"
+              >
+                <template #trigger>
+                  <button type="button" class="btn btn-sm btn-secondary">
+                    <HelpCircle class="h-4 w-4" />
+                    Klik Buka Popover
+                  </button>
+                </template>
+                <template #default="{ close }">
+                  <div class="space-y-2.5">
+                    <p>Server berjalan normal dengan beban CPU rata-rata <strong>24%</strong>.</p>
+                    <UiProgress :value="24" variant="success" size="xs" />
+                    <div class="flex justify-end pt-1">
+                      <button type="button" class="btn btn-xs btn-primary" @click="close">
+                        Tutup Panel
+                      </button>
+                    </div>
+                  </div>
+                </template>
+              </UiPopover>
+            </div>
+          </div>
+        </div>
+      </UiCard>
+
+      <UiCard
+        title="18. Empty State (<UiEmptyState>)"
+        subtitle="Tampilan placeholder bersih ketika daftar data, hasil pencarian, atau folder masih kosong"
+        accent-top="error"
+      >
+        <UiEmptyState
+          title="Belum Ada Dokumen Tersimpan"
+          description="Mulai unggah dokumen proyek pertama Anda atau buat folder baru untuk mengelompokkan arsip tim."
+          :icon="FolderPlus"
+          variant="primary"
+          compact
+        >
+          <template #actions>
+            <UiButton
+              variant="primary"
+              size="sm"
+              @click="toast.success('Folder Dibuat', 'Folder proyek baru berhasil disiapkan.')"
+            >
+              <template #icon-left>
+                <FolderPlus class="h-4 w-4" />
+              </template>
+              Buat Folder Baru
+            </UiButton>
+          </template>
+        </UiEmptyState>
       </UiCard>
     </div>
 

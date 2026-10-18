@@ -37,27 +37,77 @@
 
 [data-theme="midnight"] {
   color-scheme: dark;
-  /* Electric Indigo-Blue + Neon Magenta + Cyber Cyan on Deep Obsidian Slate */
-  --p: 129 140 248;      /* Indigo 400 (#818cf8) */
-  --pc: 15 23 42;
-  --s: 244 114 182;      /* Pink 400 (#f472b6) */
-  --sc: 15 23 42;
-  --a: 45 212 191;       /* Teal 400 (#2dd4bf) */
-  --ac: 15 23 42;
-  --n: 51 65 85;         /* Slate 700 */
+  /* Electric Indigo + Hot Neon Pink + Cyber Cyan on Deep Luminous Obsidian */
+  --p: 99 102 241;       /* Electric Indigo (#6366f1) */
+  --pc: 255 255 255;     /* Crisp Pure White for high-energy punch */
+  --s: 236 72 153;       /* Hot Pink (#ec4899) */
+  --sc: 255 255 255;
+  --a: 6 182 212;        /* Cyber Cyan (#06b6d4) */
+  --ac: 255 255 255;
+  --n: 30 41 59;         /* Rich Slate 800 */
   --nc: 248 250 252;
-  --b1: 19 28 46;        /* Deep Navy Card Surface */
-  --b2: 11 17 30;        /* Midnight Canvas */
-  --b3: 33 45 69;        /* Subtle Dark Border */
-  --bc: 241 245 249;     /* Crisp Slate 100 Text */
+  --b1: 17 25 44;        /* Luminous Deep Navy Card Surface (#11192c) */
+  --b2: 8 12 24;         /* Deep Midnight Space Canvas (#080c18) */
+  --b3: 39 54 84;        /* Indigo-Tinted Specular Border (#273654) */
+  --bc: 248 250 252;     /* Bright Crisp White-Slate Text */
+  --in: 56 189 248;      /* Sky 400 */
+  --inc: 255 255 255;
+  --su: 16 185 129;      /* Emerald 500 */
+  --suc: 255 255 255;
+  --wa: 251 191 36;      /* Amber 400 */
+  --wac: 15 23 42;
+  --er: 244 63 94;       /* Rose 500 */
+  --erc: 255 255 255;
+}
+
+[data-theme="aurora"] {
+  color-scheme: dark;
+  /* Neon Emerald + Electric Cyan + Solar Amber on Deep Botanical Night */
+  --p: 16 185 129;       /* Neon Emerald (#10b981) */
+  --pc: 255 255 255;
+  --s: 6 182 212;        /* Electric Lagoon Cyan (#06b6d4) */
+  --sc: 255 255 255;
+  --a: 245 158 11;       /* Solar Gold (#f59e0b) */
+  --ac: 15 23 42;
+  --n: 20 45 38;
+  --nc: 240 253 244;
+  --b1: 13 31 26;        /* Deep Jade Card Surface (#0d1f1a) */
+  --b2: 6 16 13;         /* Obsidian Forest Canvas (#06100d) */
+  --b3: 28 64 53;        /* Glowing Emerald Rim Border (#1c4035) */
+  --bc: 240 253 248;     /* Crisp Mint-White Text */
   --in: 56 189 248;
-  --inc: 15 23 42;
-  --su: 52 211 153;
-  --suc: 15 23 42;
+  --inc: 255 255 255;
+  --su: 16 185 129;
+  --suc: 255 255 255;
   --wa: 251 191 36;
   --wac: 15 23 42;
-  --er: 251 113 133;
-  --erc: 15 23 42;
+  --er: 244 63 94;
+  --erc: 255 255 255;
+}
+
+[data-theme="nebula"] {
+  color-scheme: dark;
+  /* Vivid Electric Violet + Hot Fuchsia + Coral Rose on Cosmic Velvet Dark */
+  --p: 139 92 246;       /* Electric Violet (#8b5cf6) */
+  --pc: 255 255 255;
+  --s: 217 70 239;       /* Neon Fuchsia (#d946ef) */
+  --sc: 255 255 255;
+  --a: 244 63 94;        /* Sunset Coral (#f43f5e) */
+  --ac: 255 255 255;
+  --n: 46 29 74;
+  --nc: 250 245 255;
+  --b1: 23 16 41;        /* Cosmic Plum Card Surface (#171029) */
+  --b2: 11 7 22;         /* Deep Nebula Canvas (#0b0716) */
+  --b3: 56 38 97;        /* Violet Rim Border (#382661) */
+  --bc: 250 245 255;     /* Crisp Lavender-White Text */
+  --in: 56 189 248;
+  --inc: 255 255 255;
+  --su: 16 185 129;
+  --suc: 255 255 255;
+  --wa: 251 191 36;
+  --wac: 15 23 42;
+  --er: 244 63 94;
+  --erc: 255 255 255;
 }
 
 [data-theme="sunset"] {
