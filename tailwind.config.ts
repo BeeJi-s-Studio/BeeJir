@@ -1,0 +1,83 @@
+import type { Config } from 'tailwindcss'
+
+export default {
+  darkMode: 'class',
+  content: [
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      },
+      spacing: {
+        68: '17rem',
+      },
+      opacity: {
+        8: '0.08',
+        12: '0.12',
+        15: '0.15',
+        35: '0.35',
+        45: '0.45',
+        55: '0.55',
+        65: '0.65',
+        85: '0.85',
+      },
+      colors: {
+        primary: {
+          DEFAULT: 'rgb(var(--p) / <alpha-value>)',
+          content: 'rgb(var(--pc) / <alpha-value>)',
+        },
+        secondary: {
+          DEFAULT: 'rgb(var(--s) / <alpha-value>)',
+          content: 'rgb(var(--sc) / <alpha-value>)',
+        },
+        accent: {
+          DEFAULT: 'rgb(var(--a) / <alpha-value>)',
+          content: 'rgb(var(--ac) / <alpha-value>)',
+        },
+        neutral: {
+          DEFAULT: 'rgb(var(--n) / <alpha-value>)',
+          content: 'rgb(var(--nc) / <alpha-value>)',
+        },
+        base: {
+          100: 'rgb(var(--b1) / <alpha-value>)',
+          200: 'rgb(var(--b2) / <alpha-value>)',
+          300: 'rgb(var(--b3) / <alpha-value>)',
+          content: 'rgb(var(--bc) / <alpha-value>)',
+        },
+        info: {
+          DEFAULT: 'rgb(var(--in) / <alpha-value>)',
+          content: 'rgb(var(--inc) / <alpha-value>)',
+        },
+        success: {
+          DEFAULT: 'rgb(var(--su) / <alpha-value>)',
+          content: 'rgb(var(--suc) / <alpha-value>)',
+        },
+        warning: {
+          DEFAULT: 'rgb(var(--wa) / <alpha-value>)',
+          content: 'rgb(var(--wac) / <alpha-value>)',
+        },
+        error: {
+          DEFAULT: 'rgb(var(--er) / <alpha-value>)',
+          content: 'rgb(var(--erc) / <alpha-value>)',
+        },
+      },
+      borderRadius: {
+        xs: '0.125rem',
+        box: 'var(--rounded-box, 1rem)',
+        btn: 'var(--rounded-btn, 0.75rem)',
+        badge: 'var(--rounded-badge, 9999px)',
+      },
+      backdropBlur: {
+        xs: '2px',
+      },
+      boxShadow: {
+        xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+      },
+    },
+  },
+  plugins: [],
+} satisfies Config

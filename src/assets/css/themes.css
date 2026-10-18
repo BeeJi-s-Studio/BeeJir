@@ -1,0 +1,161 @@
+/* ==========================================================================
+   BeeJir Custom Theme Engine (Semantic Tokens with CSS Variables)
+   All color variables use space-separated RGB channels (R G B) so Tailwind's
+   alpha modifiers (e.g., bg-primary/15, ring-accent/30) work seamlessly.
+   ========================================================================== */
+
+:root,
+[data-theme="daybreak"] {
+  color-scheme: light;
+  /* Vibrant Indigo + Coral Pink + Mint Teal on Crisp Cool Slate-White */
+  --p: 99 102 241;       /* Indigo 500 (#6366f1) */
+  --pc: 255 255 255;
+  --s: 236 72 153;       /* Pink 500 (#ec4899) */
+  --sc: 255 255 255;
+  --a: 20 184 166;       /* Teal 500 (#14b8a6) */
+  --ac: 255 255 255;
+  --n: 30 41 59;         /* Slate 800 */
+  --nc: 248 250 252;
+  --b1: 255 255 255;     /* Pure White Card Surface */
+  --b2: 244 247 254;     /* Clean Airy Blue-Gray Canvas */
+  --b3: 226 232 240;     /* Slate 200 Borders & Dividers */
+  --bc: 15 23 42;        /* Slate 900 High-Contrast Text */
+  --in: 14 165 233;      /* Sky 500 */
+  --inc: 255 255 255;
+  --su: 16 185 129;      /* Emerald 500 */
+  --suc: 255 255 255;
+  --wa: 245 158 11;      /* Amber 500 */
+  --wac: 15 23 42;
+  --er: 244 63 94;       /* Rose 500 */
+  --erc: 255 255 255;
+
+  /* Adjustable Geometry Defaults */
+  --rounded-box: 1.25rem;
+  --rounded-btn: 0.75rem;
+  --rounded-badge: 9999px;
+}
+
+[data-theme="midnight"] {
+  color-scheme: dark;
+  /* Electric Indigo-Blue + Neon Magenta + Cyber Cyan on Deep Obsidian Slate */
+  --p: 129 140 248;      /* Indigo 400 (#818cf8) */
+  --pc: 15 23 42;
+  --s: 244 114 182;      /* Pink 400 (#f472b6) */
+  --sc: 15 23 42;
+  --a: 45 212 191;       /* Teal 400 (#2dd4bf) */
+  --ac: 15 23 42;
+  --n: 51 65 85;         /* Slate 700 */
+  --nc: 248 250 252;
+  --b1: 19 28 46;        /* Deep Navy Card Surface */
+  --b2: 11 17 30;        /* Midnight Canvas */
+  --b3: 33 45 69;        /* Subtle Dark Border */
+  --bc: 241 245 249;     /* Crisp Slate 100 Text */
+  --in: 56 189 248;
+  --inc: 15 23 42;
+  --su: 52 211 153;
+  --suc: 15 23 42;
+  --wa: 251 191 36;
+  --wac: 15 23 42;
+  --er: 251 113 133;
+  --erc: 15 23 42;
+}
+
+[data-theme="sunset"] {
+  color-scheme: light;
+  /* Warm Tangerine + Flamingo Rose + Golden Amber on Warm Ivory */
+  --p: 249 115 22;       /* Orange 500 (#f97316) */
+  --pc: 255 255 255;
+  --s: 225 29 72;        /* Rose 600 (#e11d48) */
+  --sc: 255 255 255;
+  --a: 139 92 246;       /* Violet 500 (#8b5cf6) */
+  --ac: 255 255 255;
+  --n: 41 37 36;         /* Stone 800 */
+  --nc: 250 250 249;
+  --b1: 255 255 255;     /* Warm White Surface */
+  --b2: 255 248 243;     /* Soft Peach-Cream Canvas */
+  --b3: 245 228 216;     /* Warm Sand Border */
+  --bc: 28 25 23;        /* Stone 900 Text */
+  --in: 14 165 233;
+  --inc: 255 255 255;
+  --su: 16 185 129;
+  --suc: 255 255 255;
+  --wa: 245 158 11;
+  --wac: 15 23 42;
+  --er: 239 68 68;
+  --erc: 255 255 255;
+}
+
+[data-theme="ocean"] {
+  color-scheme: light;
+  /* Azure Ocean + Lagoon Cyan + Coral Pop on Crisp Ice-Blue */
+  --p: 2 132 199;        /* Sky 600 (#0284c7) */
+  --pc: 255 255 255;
+  --s: 6 182 212;        /* Cyan 500 (#06b6d4) */
+  --sc: 255 255 255;
+  --a: 244 63 94;        /* Coral Rose 500 (#f43f5e) */
+  --ac: 255 255 255;
+  --n: 15 23 42;
+  --nc: 248 250 252;
+  --b1: 255 255 255;
+  --b2: 240 249 255;     /* Soft Sky 50 Canvas */
+  --b3: 214 234 248;     /* Ice Blue Border */
+  --bc: 12 45 72;        /* Deep Ocean Text */
+  --in: 59 130 246;
+  --inc: 255 255 255;
+  --su: 16 185 129;
+  --suc: 255 255 255;
+  --wa: 245 158 11;
+  --wac: 15 23 42;
+  --er: 239 68 68;
+  --erc: 255 255 255;
+}
+
+[data-theme="matcha"] {
+  color-scheme: light;
+  /* Botanical Emerald + Fresh Teal + Citrus Amber on Soft Mint-White */
+  --p: 5 150 105;        /* Emerald 600 (#059669) */
+  --pc: 255 255 255;
+  --s: 13 148 136;       /* Teal 600 (#0d9488) */
+  --sc: 255 255 255;
+  --a: 217 119 6;        /* Amber 600 (#d97706) */
+  --ac: 255 255 255;
+  --n: 20 40 30;
+  --nc: 245 252 248;
+  --b1: 255 255 255;
+  --b2: 242 250 246;     /* Soft Matcha Foam Canvas */
+  --b3: 214 235 224;     /* Sage Border */
+  --bc: 15 35 25;        /* Forest Charcoal Text */
+  --in: 14 165 233;
+  --inc: 255 255 255;
+  --su: 16 185 129;
+  --suc: 255 255 255;
+  --wa: 245 158 11;
+  --wac: 15 23 42;
+  --er: 244 63 94;
+  --erc: 255 255 255;
+}
+
+[data-theme="berry"] {
+  color-scheme: light;
+  /* Royal Violet + Berry Fuchsia + Sunny Amber on Soft Lavender-White */
+  --p: 124 58 237;       /* Violet 600 (#7c3aed) */
+  --pc: 255 255 255;
+  --s: 217 70 239;       /* Fuchsia 500 (#d946ef) */
+  --sc: 255 255 255;
+  --a: 245 158 11;       /* Amber 500 (#f59e0b) */
+  --ac: 255 255 255;
+  --n: 30 27 75;
+  --nc: 250 245 255;
+  --b1: 255 255 255;
+  --b2: 250 245 255;     /* Soft Lavender 50 Canvas */
+  --b3: 233 213 255;     /* Lavender 200 Border */
+  --bc: 30 17 54;        /* Deep Plum Text */
+  --in: 14 165 233;
+  --inc: 255 255 255;
+  --su: 16 185 129;
+  --suc: 255 255 255;
+  --wa: 245 158 11;
+  --wac: 15 23 42;
+  --er: 244 63 94;
+  --erc: 255 255 255;
+}

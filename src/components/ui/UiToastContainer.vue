@@ -1,0 +1,114 @@
+<script setup lang="ts">
+import {
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  Info,
+  Sparkles,
+  X,
+} from 'lucide-vue-next'
+import { useToastStore } from '@/stores/toast'
+import type { ToastVariant } from '@/types/toast'
+
+const toastStore = useToastStore()
+
+function getIcon(variant: ToastVariant) {
+  switch (variant) {
+    case 'success':
+      return CheckCircle2
+    case 'error':
+      return XCircle
+    case 'warning':
+      return AlertTriangle
+    case 'primary':
+      return Sparkles
+    case 'info':
+    default:
+      return Info
+  }
+}
+
+function getCardClasses(variant: ToastVariant) {
+  switch (variant) {
+    case 'success':
+      return 'border-success/30 bg-base-100 shadow-success/15'
+    case 'error':
+      return 'border-error/30 bg-base-100 shadow-error/15'
+    case 'warning':
+      return 'border-warning/30 bg-base-100 shadow-warning/15'
+    case 'primary':
+      return 'border-primary/30 bg-base-100 shadow-primary/15'
+    case 'info':
+    default:
+      return 'border-info/30 bg-base-100 shadow-info/15'
+  }
+}
+
+function getIconContainerClasses(variant: ToastVariant) {
+  switch (variant) {
+    case 'success':
+      return 'bg-success/15 text-success'
+    case 'error':
+      return 'bg-error/15 text-error'
+    case 'warning':
+      return 'bg-warning/15 text-warning'
+    case 'primary':
+      return 'bg-primary/15 text-primary'
+    case 'info':
+    default:
+      return 'bg-info/15 text-info'
+  }
+}
+</script>
+
+<template>
+  <div
+    class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"
+    role="region"
+    aria-label="Notifikasi Toast"
+  >
+    <TransitionGroup
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0 translate-y-2 scale-95"
+      enter-to-class="opacity-100 translate-y-0 scale-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100 translate-y-0 scale-100"
+      leave-to-class="opacity-0 translate-x-4 scale-95"
+    >
+      <div
+        v-for="toast in toastStore.toasts"
+        :key="toast.id"
+        class="pointer-events-auto flex items-start gap-3 rounded-box border p-3.5 shadow-lg backdrop-blur-md transition-all duration-200"
+        :class="getCardClasses(toast.variant)"
+      >
+        <div
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn mt-0.5"
+          :class="getIconContainerClasses(toast.variant)"
+        >
+          <component :is="getIcon(toast.variant)" class="h-4 w-4" />
+        </div>
+
+        <div class="flex-1 min-w-0 pr-1">
+          <h5 class="text-xs font-bold text-base-content leading-snug">
+            {{ toast.title }}
+          </h5>
+          <p
+            v-if="toast.message"
+            class="text-xs text-base-content/70 mt-0.5 leading-relaxed break-words"
+          >
+            {{ toast.message }}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-ghost btn-xs btn-circle text-base-content/50 hover:text-base-content shrink-0"
+          aria-label="Tutup notifikasi"
+          @click="toastStore.remove(toast.id)"
+        >
+          <X class="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </TransitionGroup>
+  </div>
+</template>
