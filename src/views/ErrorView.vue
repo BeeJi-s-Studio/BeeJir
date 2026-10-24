@@ -1,177 +1,146 @@
-<script setup lang="ts">
-import { computed } from 'vue'
+﻿<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  ShieldAlert,
-  FileSearch,
-  ServerCrash,
-  ArrowLeft,
   Home,
+  ArrowLeft,
+  ShieldAlert,
+  FileQuestion,
+  ServerCrash,
   RefreshCw,
 } from 'lucide-vue-next'
-import type { ColorVariant } from '@/types/theme'
-import UiButton from '@/components/ui/UiButton.vue'
-import UiBadge from '@/components/ui/UiBadge.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const currentCode = computed(() => {
-  const paramCode = String(route.params.code || '404')
-  if (['403', '404', '500'].includes(paramCode)) return paramCode
-  return '404'
-})
+type ErrorCode = '404' | '403' | '500'
 
-interface ErrorConfig {
-  code: string
-  badge: string
-  title: string
-  description: string
-  hint: string
-  variant: ColorVariant
-  icon: any
-}
+const activeCode = ref<ErrorCode>(
+  (['404', '403', '500'].includes(String(route.params.code))
+    ? String(route.params.code)
+    : '404') as ErrorCode,
+)
 
-const errorMap: Record<string, ErrorConfig> = {
-  '403': {
-    code: '403',
-    badge: 'Forbidden Access',
-    title: 'Akses ke Halaman Ini Dibatasi',
-    description:
-      'Maaf, akun Anda saat ini tidak memiliki izin (role/privilege) yang cukup untuk mengakses modul atau sumber daya ini.',
-    hint: 'Hubungi Administrator Workspace jika Anda memerlukan hak akses tambahan.',
-    variant: 'warning',
-    icon: ShieldAlert,
+watch(
+  () => route.params.code,
+  (val) => {
+    if (val && ['404', '403', '500'].includes(String(val))) {
+      activeCode.value = String(val) as ErrorCode
+    }
   },
+)
+
+const errorConfigs = {
   '404': {
     code: '404',
-    badge: 'Page Not Found',
-    title: 'Halaman Tidak Ditemukan',
-    description:
-      'Tautan yang Anda tuju mungkin telah dipindahkan, dihapus, atau alamat URL yang dimasukkan tidak tepat.',
-    hint: 'Periksa kembali ejaan URL di bilah alamat browser atau kembali ke beranda.',
-    variant: 'primary',
-    icon: FileSearch,
+    title: 'Page Not Found ⚠️',
+    subtitle: "We couldn't find the page you are looking for",
+    badge: 'HTTP 404 Not Found',
+    avatarClass: 'avatar-soft-primary',
+    icon: FileQuestion,
+  },
+  '403': {
+    code: '403',
+    title: 'You are not authorized! 🔐',
+    subtitle: "You don't have permission to access this page. Go Home!",
+    badge: 'HTTP 403 Forbidden',
+    avatarClass: 'avatar-soft-warning',
+    icon: ShieldAlert,
   },
   '500': {
     code: '500',
-    badge: 'Internal Server Error',
-    title: 'Terjadi Gangguan pada Server',
-    description:
-      'Sistem mengalami kendala tak terduga saat memproses permintaan Anda. Tim teknis kami telah menerima laporan otomatis.',
-    hint: 'Silakan coba muat ulang halaman beberapa saat lagi.',
-    variant: 'error',
+    title: 'Internal server error 👨🏻‍💻',
+    subtitle: 'Oops, something went wrong on our server. Please try again later.',
+    badge: 'HTTP 500 Server Error',
+    avatarClass: 'avatar-soft-error',
     icon: ServerCrash,
   },
 }
 
-const activeError = computed<ErrorConfig>(() => errorMap[currentCode.value] || errorMap['404'])
-
-function switchErrorCode(code: string) {
-  router.push(`/error/${code}`)
-}
+const currentError = computed(() => errorConfigs[activeCode.value])
 </script>
 
 <template>
-  <div class="space-y-6">
-    <!-- Quick Error State Switcher Banner -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-box border border-base-300 bg-base-100 p-4 shadow-2xs">
-      <div>
-        <span class="text-xs font-extrabold uppercase tracking-wider text-base-content/50 block">
-          Pratinjau Halaman Error HTTP
-        </span>
-        <p class="text-xs text-base-content/70 mt-0.5">
-          Pilih kode status di samping untuk melihat desain halaman error <strong>403</strong>, <strong>404</strong>, dan <strong>500</strong>:
-        </p>
-      </div>
+  <div class="relative min-h-screen flex flex-col items-center justify-center bg-base-200 p-6 text-center overflow-hidden">
+    <!-- Subtle Bottom Decorative Wave Mask (BeeJir misc-bg) -->
+    <svg
+      class="pointer-events-none absolute bottom-0 left-0 right-0 w-full h-44 text-base-300/60"
+      viewBox="0 0 1440 200"
+      fill="none"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M0 130 C 360 40, 720 180, 1080 95 C 1260 55, 1380 110, 1440 85 L 1440 200 L 0 200 Z"
+        fill="currentColor"
+      />
+    </svg>
 
-      <div class="flex items-center gap-2">
+    <div class="relative z-10 w-full max-w-lg space-y-6">
+      <!-- Switcher Pills for Previewing 404 / 403 / 500 -->
+      <div class="inline-flex items-center gap-1.5 rounded-full bg-base-100 p-1.5 shadow-sm border border-base-300/80">
         <button
-          v-for="code in ['403', '404', '500']"
+          v-for="code in (['404', '403', '500'] as ErrorCode[])"
           :key="code"
           type="button"
-          class="btn btn-sm font-mono font-extrabold"
-          :class="currentCode === code ? 'btn-primary' : 'btn-outline'"
-          @click="switchErrorCode(code)"
+          class="rounded-full px-4 py-1 text-xs font-semibold transition-all"
+          :class="
+            activeCode === code
+              ? 'bg-primary text-primary-content shadow-[0_2px_6px_0_rgb(var(--p)/0.45)]'
+              : 'text-base-content/65 hover:text-base-content'
+          "
+          @click="activeCode = code"
         >
           Error {{ code }}
         </button>
       </div>
-    </div>
 
-    <!-- Main Error Showcase Card -->
-    <div class="relative overflow-hidden rounded-box border border-base-300 bg-base-100 px-6 py-16 sm:py-24 text-center shadow-xs">
-      <!-- Background Decorative Glow -->
-      <div
-        class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full blur-3xl opacity-15"
-        :class="`bg-${activeError.variant}`"
-      />
-
-      <div class="relative z-10 mx-auto max-w-lg flex flex-col items-center">
-        <!-- Animated Icon Circle -->
-        <div
-          class="flex h-20 w-20 items-center justify-center rounded-3xl mb-6 shadow-lg transition-all duration-300"
-          :class="[
-            activeError.variant === 'warning'
-              ? 'bg-warning text-slate-950 shadow-warning/25'
-              : activeError.variant === 'error'
-                ? 'bg-error text-error-content shadow-error/25'
-                : 'bg-primary text-primary-content shadow-primary/25',
-          ]"
-        >
-          <component :is="activeError.icon" class="h-10 w-10" />
-        </div>
-
-        <!-- Status Code & Badge -->
-        <UiBadge :variant="activeError.variant" soft size="md" class="mb-3 font-mono">
-          HTTP ERROR {{ activeError.code }} • {{ activeError.badge }}
-        </UiBadge>
-
-        <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight font-mono text-base-content mb-3">
-          {{ activeError.code }}
+      <!-- Large BeeJir Error Code + Title + Subtitle -->
+      <div>
+        <h1 class="text-7xl sm:text-8xl font-extrabold tracking-tight text-base-content leading-none">
+          {{ currentError.code }}
         </h1>
-
-        <h2 class="text-xl sm:text-2xl font-extrabold text-base-content mb-2.5">
-          {{ activeError.title }}
-        </h2>
-
-        <p class="text-xs sm:text-sm text-base-content/65 leading-relaxed mb-4">
-          {{ activeError.description }}
+        <h4 class="mt-4 text-xl sm:text-2xl font-semibold text-base-content">
+          {{ currentError.title }}
+        </h4>
+        <p class="mt-2 text-sm text-base-content/60">
+          {{ currentError.subtitle }}
         </p>
+      </div>
 
-        <div class="rounded-btn bg-base-200/70 border border-base-300 px-4 py-2 text-xs text-base-content/60 mb-8">
-          💡 {{ activeError.hint }}
+      <!-- Clean Illustration Card -->
+      <div class="card mx-auto max-w-sm p-6 flex flex-col items-center">
+        <div
+          class="flex h-20 w-20 items-center justify-center rounded-2xl mb-4"
+          :class="currentError.avatarClass"
+        >
+          <component :is="currentError.icon" class="h-10 w-10" />
         </div>
+        <span class="badge badge-soft badge-primary rounded-full px-3 py-1 text-xs font-mono">
+          {{ currentError.badge }}
+        </span>
+        <p class="mt-2 text-xs text-base-content/50">
+          Request ID: <code class="font-mono">BJR-{{ activeCode }}-9821X</code>
+        </p>
+      </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <UiButton outline size="md" @click="router.back()">
-            <template #icon-left>
-              <ArrowLeft class="h-4 w-4" />
-            </template>
-            Halaman Sebelumnya
-          </UiButton>
-
-          <UiButton variant="primary" size="md" @click="router.push('/')">
-            <template #icon-left>
-              <Home class="h-4 w-4" />
-            </template>
-            Kembali ke Dashboard
-          </UiButton>
-
-          <UiButton
-            v-if="currentCode === '500'"
-            variant="secondary"
-            soft
-            size="md"
-            @click="switchErrorCode('500')"
-          >
-            <template #icon-left>
-              <RefreshCw class="h-4 w-4" />
-            </template>
-            Coba Muat Ulang
-          </UiButton>
-        </div>
+      <!-- Actions -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <button class="btn btn-outline bg-base-100 gap-2" @click="router.back()">
+          <ArrowLeft class="h-4 w-4" />
+          Go Back
+        </button>
+        <button
+          v-if="activeCode === '500'"
+          class="btn btn-soft btn-warning gap-2"
+          @click="router.go(0)"
+        >
+          <RefreshCw class="h-4 w-4" />
+          Retry
+        </button>
+        <RouterLink to="/" class="btn btn-primary gap-2">
+          <Home class="h-4 w-4" />
+          Back to home
+        </RouterLink>
       </div>
     </div>
   </div>

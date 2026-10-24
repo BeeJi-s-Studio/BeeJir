@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { X } from 'lucide-vue-next'
+import { animateModalIn, animateModalOut } from '@/utils/gsap'
 
 export interface UiModalProps {
   modelValue: boolean
@@ -15,12 +16,32 @@ const props = withDefaults(defineProps<UiModalProps>(), {
   maxWidth: 'md',
 })
 
+const modalBoxRef = ref<HTMLElement | null>(null)
+
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
+watch(
+  () => props.modelValue,
+  async (isOpen) => {
+    if (isOpen) {
+      await nextTick()
+      if (modalBoxRef.value) {
+        animateModalIn(modalBoxRef.value)
+      }
+    }
+  },
+)
+
 function close() {
-  emit('update:modelValue', false)
+  if (modalBoxRef.value) {
+    animateModalOut(modalBoxRef.value, () => {
+      emit('update:modelValue', false)
+    })
+  } else {
+    emit('update:modelValue', false)
+  }
 }
 
 function onKeydown(e: KeyboardEvent) {
@@ -56,7 +77,8 @@ const widthClass = {
         @click.self="close"
       >
         <div
-          class="card card-bordered w-full shadow-2xl animate-in zoom-in-95 duration-200"
+          ref="modalBoxRef"
+          class="card card-bordered w-full shadow-2xl"
           :class="widthClass[maxWidth]"
         >
           <div class="flex items-start justify-between gap-4 border-b border-base-300/70 px-6 py-4">

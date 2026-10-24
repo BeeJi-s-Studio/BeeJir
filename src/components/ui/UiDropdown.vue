@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 import type { ColorVariant } from '@/types/theme'
+import { animateDropdownIn, animateDropdownOut } from '@/utils/gsap'
 
 export interface DropdownItem {
   label?: string
@@ -77,7 +78,7 @@ onUnmounted(() => {
   <div
     ref="containerRef"
     class="relative inline-flex"
-    :class="isOpen ? 'z-30' : 'z-auto'"
+    :class="isOpen ? 'z-[90]' : 'z-auto'"
   >
     <!-- Trigger -->
     <div class="inline-flex" @click="toggle">
@@ -105,16 +106,13 @@ onUnmounted(() => {
 
     <!-- Menu Panel -->
     <Transition
-      enter-active-class="transition duration-150 ease-out"
-      enter-from-class="opacity-0 scale-95 -translate-y-1"
-      enter-to-class="opacity-100 scale-100 translate-y-0"
-      leave-active-class="transition duration-100 ease-in"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
+      :css="false"
+      @enter="(el, done) => animateDropdownIn(el, done)"
+      @leave="(el, done) => animateDropdownOut(el, done)"
     >
       <div
         v-if="isOpen"
-        class="absolute top-full mt-2 z-50 rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
+        class="absolute top-full mt-2 z-[100] rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
         :class="[align === 'right' ? 'right-0' : 'left-0', widthClass]"
         @click.stop
       >

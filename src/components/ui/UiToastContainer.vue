@@ -9,8 +9,35 @@ import {
 } from 'lucide-vue-next'
 import { useToastStore } from '@/stores/toast'
 import type { ToastVariant } from '@/types/toast'
+import gsap from 'gsap'
 
 const toastStore = useToastStore()
+
+function onToastEnter(el: Element, done: () => void) {
+  gsap.fromTo(
+    el,
+    { opacity: 0, x: 40, scale: 0.94 },
+    {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      duration: 0.35,
+      ease: 'back.out(1.8)',
+      onComplete: done,
+    },
+  )
+}
+
+function onToastLeave(el: Element, done: () => void) {
+  gsap.to(el, {
+    opacity: 0,
+    x: 30,
+    scale: 0.95,
+    duration: 0.2,
+    ease: 'power2.in',
+    onComplete: done,
+  })
+}
 
 function getIcon(variant: ToastVariant) {
   switch (variant) {
@@ -68,12 +95,9 @@ function getIconContainerClasses(variant: ToastVariant) {
     aria-label="Notifikasi Toast"
   >
     <TransitionGroup
-      enter-active-class="transition duration-300 ease-out"
-      enter-from-class="opacity-0 translate-y-2 scale-95"
-      enter-to-class="opacity-100 translate-y-0 scale-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="opacity-100 translate-y-0 scale-100"
-      leave-to-class="opacity-0 translate-x-4 scale-95"
+      :css="false"
+      @enter="onToastEnter"
+      @leave="onToastLeave"
     >
       <div
         v-for="toast in toastStore.toasts"

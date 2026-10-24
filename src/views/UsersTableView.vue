@@ -1,391 +1,682 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useToast } from '@/stores/toast'
 import {
   Search,
   UserPlus,
+  FileSpreadsheet,
+  FileText,
   Trash2,
-  CheckCircle2,
+  Edit3,
   Eye,
-  Pencil,
+  ArrowUpDown,
+  Users,
+  UserCheck,
+  Clock,
+  Crown,
+  Monitor,
+  PieChart,
+  User,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  Check,
 } from 'lucide-vue-next'
-import UiCard from '@/components/ui/UiCard.vue'
-import UiButton from '@/components/ui/UiButton.vue'
-import UiBadge from '@/components/ui/UiBadge.vue'
-import UiInput from '@/components/ui/UiInput.vue'
+import UiStatCard from '@/components/ui/UiStatCard.vue'
 import UiModal from '@/components/ui/UiModal.vue'
-import type { ColorVariant } from '@/types/theme'
+import UiEmptyState from '@/components/ui/UiEmptyState.vue'
+import UiSelect from '@/components/ui/UiSelect.vue'
+import { exportToXLSX, exportToPDF } from '@/utils/exportData'
+import { animateDropdownIn, animateDropdownOut } from '@/utils/gsap'
 
 interface UserRecord {
   id: number
   name: string
+  handle: string
   email: string
-  role: 'Maintainer' | 'Developer' | 'Designer' | 'Viewer'
-  status: 'Active' | 'Pending' | 'Suspended'
+  role: 'Admin' | 'Editor' | 'Author' | 'Maintainer' | 'Subscriber'
   department: string
+  plan: string
+  status: 'Active' | 'Pending' | 'Inactive'
   joinedAt: string
-  color: ColorVariant
+  avatarBg: string
 }
+
+const toast = useToast()
 
 const users = ref<UserRecord[]>([
-  {
-    id: 1,
-    name: 'Arif Pratama',
-    email: 'arif@beejir.dev',
-    role: 'Maintainer',
-    status: 'Active',
-    department: 'Core Platform',
-    joinedAt: '12 Jan 2026',
-    color: 'primary',
-  },
-  {
-    id: 2,
-    name: 'Larasati Dewi',
-    email: 'laras@beejir.dev',
-    role: 'Designer',
-    status: 'Active',
-    department: 'Design System',
-    joinedAt: '04 Feb 2026',
-    color: 'secondary',
-  },
-  {
-    id: 3,
-    name: 'Dimas Anggara',
-    email: 'dimas@komunitas.id',
-    role: 'Developer',
-    status: 'Active',
-    department: 'Frontend UI',
-    joinedAt: '19 Mar 2026',
-    color: 'accent',
-  },
-  {
-    id: 4,
-    name: 'Karina Putri',
-    email: 'karina@cloud.co.id',
-    role: 'Developer',
-    status: 'Pending',
-    department: 'API & Integrations',
-    joinedAt: '28 Apr 2026',
-    color: 'info',
-  },
-  {
-    id: 5,
-    name: 'Fajar Nugroho',
-    email: 'fajar@nusantara.io',
-    role: 'Viewer',
-    status: 'Suspended',
-    department: 'QA & Testing',
-    joinedAt: '15 Mei 2026',
-    color: 'warning',
-  },
-  {
-    id: 6,
-    name: 'Maya Kusuma',
-    email: 'maya@studio.id',
-    role: 'Designer',
-    status: 'Active',
-    department: 'Brand & Motion',
-    joinedAt: '02 Jun 2026',
-    color: 'success',
-  },
+  { id: 1, name: 'Arif Budiman', handle: '@arifb', email: 'arif.budiman@beejir.id', role: 'Admin', department: 'Engineering', plan: 'Enterprise', status: 'Active', joinedAt: '12 Jan 2024', avatarBg: 'avatar-soft-primary' },
+  { id: 2, name: 'Rina Kartika', handle: '@rinak', email: 'rina.kartika@beejir.id', role: 'Maintainer', department: 'Design Studio', plan: 'Team', status: 'Active', joinedAt: '04 Feb 2024', avatarBg: 'avatar-soft-info' },
+  { id: 3, name: 'Dimas Pratama', handle: '@dimasp', email: 'dimas.pratama@beejir.id', role: 'Editor', department: 'Engineering', plan: 'Company', status: 'Active', joinedAt: '19 Mar 2024', avatarBg: 'avatar-soft-warning' },
+  { id: 4, name: 'Nadia Putri', handle: '@nadiap', email: 'nadia.putri@beejir.id', role: 'Author', department: 'Product', plan: 'Basic', status: 'Pending', joinedAt: '28 Apr 2024', avatarBg: 'avatar-soft-error' },
+  { id: 5, name: 'Fajar Nugroho', handle: '@fajarn', email: 'fajar.nugroho@beejir.id', role: 'Subscriber', department: 'Marketing', plan: 'Basic', status: 'Active', joinedAt: '15 Mei 2024', avatarBg: 'avatar-soft-success' },
+  { id: 6, name: 'Siti Aminah', handle: '@sitia', email: 'siti.aminah@beejir.id', role: 'Admin', department: 'Finance', plan: 'Enterprise', status: 'Active', joinedAt: '02 Jun 2024', avatarBg: 'avatar-soft-primary' },
+  { id: 7, name: 'Hendra Wijaya', handle: '@hendraw', email: 'hendra.wijaya@beejir.id', role: 'Maintainer', department: 'Engineering', plan: 'Team', status: 'Inactive', joinedAt: '21 Jul 2024', avatarBg: 'avatar-soft-secondary' },
+  { id: 8, name: 'Maya Sari', handle: '@mayas', email: 'maya.sari@beejir.id', role: 'Editor', department: 'Customer Success', plan: 'Company', status: 'Active', joinedAt: '09 Agu 2024', avatarBg: 'avatar-soft-warning' },
+  { id: 9, name: 'Reza Rahadian', handle: '@rezar', email: 'reza.rahadian@beejir.id', role: 'Author', department: 'Design Studio', plan: 'Team', status: 'Active', joinedAt: '14 Sep 2024', avatarBg: 'avatar-soft-info' },
+  { id: 10, name: 'Larasati Dewi', handle: '@larasatid', email: 'larasati.dewi@beejir.id', role: 'Subscriber', department: 'Product', plan: 'Basic', status: 'Pending', joinedAt: '30 Okt 2024', avatarBg: 'avatar-soft-success' },
+  { id: 11, name: 'Bima Sakti', handle: '@bimas', email: 'bima.sakti@beejir.id', role: 'Editor', department: 'Engineering', plan: 'Enterprise', status: 'Active', joinedAt: '11 Nov 2024', avatarBg: 'avatar-soft-primary' },
+  { id: 12, name: 'Putri Ayu', handle: '@putria', email: 'putri.ayu@beejir.id', role: 'Subscriber', department: 'Marketing', plan: 'Basic', status: 'Inactive', joinedAt: '05 Des 2024', avatarBg: 'avatar-soft-error' },
 ])
 
+// Filters & Sorting
 const searchQuery = ref('')
-const selectedRole = ref<string>('ALL')
-const selectedStatus = ref<string>('ALL')
-const addModalOpen = ref(false)
+const roleFilter = ref<string>('ALL')
+const departmentFilter = ref<string>('ALL')
+const statusFilter = ref<string>('ALL')
+const sortField = ref<'name' | 'role' | 'department'>('name')
+const sortAsc = ref(true)
 
-// New User Form
-const newName = ref('')
-const newEmail = ref('')
-const newRole = ref<UserRecord['role']>('Developer')
-const newDept = ref('Frontend Engineering')
+const roleOptions = [
+  { label: 'Select Role (All)', value: 'ALL' },
+  { label: 'Admin', value: 'Admin' },
+  { label: 'Author', value: 'Author' },
+  { label: 'Editor', value: 'Editor' },
+  { label: 'Maintainer', value: 'Maintainer' },
+  { label: 'Subscriber', value: 'Subscriber' },
+]
+
+const departmentOptions = [
+  { label: 'Select Department (All)', value: 'ALL' },
+  { label: 'Engineering', value: 'Engineering' },
+  { label: 'Design Studio', value: 'Design Studio' },
+  { label: 'Product', value: 'Product' },
+  { label: 'Marketing', value: 'Marketing' },
+  { label: 'Finance', value: 'Finance' },
+  { label: 'Customer Success', value: 'Customer Success' },
+]
+
+const statusOptions = [
+  { label: 'Select Status (All)', value: 'ALL' },
+  { label: 'Active', value: 'Active' },
+  { label: 'Pending', value: 'Pending' },
+  { label: 'Inactive', value: 'Inactive' },
+]
+
+// Pagination & Selection
+const currentPage = ref(1)
+const pageSize = ref(7)
+const pageSizeOptions = [5, 7, 10, 25]
+const showPageSizeMenu = ref(false)
+const pageSizeRef = ref<HTMLElement | null>(null)
+const selectedIds = ref<number[]>([])
+
+function selectPageSize(size: number) {
+  pageSize.value = size
+  currentPage.value = 1
+  showPageSizeMenu.value = false
+}
+
+function handleClickOutside(e: MouseEvent) {
+  if (pageSizeRef.value && !pageSizeRef.value.contains(e.target as Node)) {
+    showPageSizeMenu.value = false
+  }
+}
+
+onMounted(() => document.addEventListener('click', handleClickOutside))
+onUnmounted(() => document.removeEventListener('click', handleClickOutside))
+
+const userExportCols = [
+  { key: 'name', label: 'Full Name' },
+  { key: 'handle', label: 'Username' },
+  { key: 'email', label: 'Email' },
+  { key: 'role', label: 'Role' },
+  { key: 'department', label: 'Department' },
+  { key: 'plan', label: 'Plan' },
+  { key: 'status', label: 'Status' },
+]
+
+function handleExportUsersXLSX() {
+  exportToXLSX(userExportCols, filteredUsers.value, {
+    filename: 'beejir-users-list',
+    sheetName: 'Users Directory',
+    title: 'BeeJir Enterprise Users Directory',
+  })
+  toast.success('Ekspor XLSX Berhasil', `${filteredUsers.value.length} data pengguna berhasil diekspor ke Excel.`)
+}
+
+function handleExportUsersPDF() {
+  exportToPDF(userExportCols, filteredUsers.value, {
+    title: 'BeeJir Enterprise Users Directory',
+  })
+  toast.info('Menyiapkan PDF', 'Jendela cetak laporan PDF telah dibuka.')
+}
 
 const filteredUsers = computed(() => {
-  return users.value.filter((u) => {
-    const matchesSearch =
-      u.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      u.department.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const matchesRole = selectedRole.value === 'ALL' || u.role === selectedRole.value
-    const matchesStatus =
-      selectedStatus.value === 'ALL' || u.status === selectedStatus.value
-    return matchesSearch && matchesRole && matchesStatus
-  })
+  return users.value
+    .filter((u) => {
+      const q = searchQuery.value.toLowerCase().trim()
+      const matchQuery =
+        !q ||
+        u.name.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        u.department.toLowerCase().includes(q)
+      const matchRole = roleFilter.value === 'ALL' || u.role === roleFilter.value
+      const matchDept = departmentFilter.value === 'ALL' || u.department === departmentFilter.value
+      const matchStatus = statusFilter.value === 'ALL' || u.status === statusFilter.value
+      return matchQuery && matchRole && matchDept && matchStatus
+    })
+    .sort((a, b) => {
+      const valA = a[sortField.value].toLowerCase()
+      const valB = b[sortField.value].toLowerCase()
+      return sortAsc.value ? valA.localeCompare(valB) : valB.localeCompare(valA)
+    })
 })
 
-function statusVariant(status: UserRecord['status']): ColorVariant {
-  if (status === 'Active') return 'success'
-  if (status === 'Pending') return 'warning'
-  return 'error'
+const paginatedUsers = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value
+  return filteredUsers.value.slice(start, start + pageSize.value)
+})
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredUsers.value.length / pageSize.value)))
+
+const allVisibleSelected = computed(() => {
+  if (paginatedUsers.value.length === 0) return false
+  return paginatedUsers.value.every((u) => selectedIds.value.includes(u.id))
+})
+
+function toggleSelectAll() {
+  if (allVisibleSelected.value) {
+    selectedIds.value = selectedIds.value.filter(
+      (id) => !paginatedUsers.value.some((u) => u.id === id),
+    )
+  } else {
+    const newIds = new Set([...selectedIds.value, ...paginatedUsers.value.map((u) => u.id)])
+    selectedIds.value = Array.from(newIds)
+  }
 }
 
-function roleVariant(role: UserRecord['role']): ColorVariant {
-  if (role === 'Maintainer') return 'primary'
-  if (role === 'Designer') return 'secondary'
-  if (role === 'Developer') return 'accent'
-  return 'info'
+function toggleSelectUser(id: number) {
+  const idx = selectedIds.value.indexOf(id)
+  if (idx === -1) selectedIds.value.push(id)
+  else selectedIds.value.splice(idx, 1)
 }
+
+function toggleSort(field: 'name' | 'role' | 'department') {
+  if (sortField.value === field) {
+    sortAsc.value = !sortAsc.value
+  } else {
+    sortField.value = field
+    sortAsc.value = true
+  }
+}
+
+function resetFilters() {
+  searchQuery.value = ''
+  roleFilter.value = 'ALL'
+  departmentFilter.value = 'ALL'
+  statusFilter.value = 'ALL'
+  currentPage.value = 1
+}
+
+function deleteSelected() {
+  const count = selectedIds.value.length
+  users.value = users.value.filter((u) => !selectedIds.value.includes(u.id))
+  selectedIds.value = []
+  toast.warning('Pengguna Dihapus', `${count} akun pengguna telah dihapus dari daftar.`)
+}
+
+function deleteSingleUser(user: UserRecord) {
+  users.value = users.value.filter((u) => u.id !== user.id)
+  selectedIds.value = selectedIds.value.filter((id) => id !== user.id)
+  toast.warning('Pengguna Dihapus', `${user.name} telah dihapus.`)
+}
+
+// Add User Modal
+const showAddModal = ref(false)
+const newUser = ref({
+  name: '',
+  email: '',
+  role: 'Editor' as UserRecord['role'],
+  department: 'Engineering',
+  plan: 'Team',
+})
 
 function handleAddUser() {
-  if (!newName.value.trim() || !newEmail.value.trim()) return
+  if (!newUser.value.name.trim() || !newUser.value.email.trim()) {
+    toast.error('Data Belum Lengkap', 'Harap isi nama lengkap dan alamat email.')
+    return
+  }
+  const id = Math.max(0, ...users.value.map((u) => u.id)) + 1
+  const handle = '@' + (newUser.value.name.toLowerCase().replace(/\s+/g, '').slice(0, 8) || `user${id}`)
   users.value.unshift({
-    id: Date.now(),
-    name: newName.value.trim(),
-    email: newEmail.value.trim(),
-    role: newRole.value,
+    id,
+    name: newUser.value.name.trim(),
+    handle,
+    email: newUser.value.email.trim(),
+    role: newUser.value.role,
+    department: newUser.value.department.trim() || 'Engineering',
+    plan: newUser.value.plan,
     status: 'Active',
-    department: newDept.value.trim() || 'Community',
     joinedAt: 'Baru saja',
-    color: 'primary',
+    avatarBg: 'avatar-soft-primary',
   })
-  newName.value = ''
-  newEmail.value = ''
-  addModalOpen.value = false
+  showAddModal.value = false
+  toast.success('Pengguna Ditambahkan', `${newUser.value.name} berhasil didaftarkan.`)
+  newUser.value = { name: '', email: '', role: 'Editor', department: 'Engineering', plan: 'Team' }
 }
 
-function removeUser(id: number) {
-  users.value = users.value.filter((u) => u.id !== id)
+const roleMeta: Record<UserRecord['role'], { icon: any; colorClass: string }> = {
+  Admin: { icon: Crown, colorClass: 'text-primary' },
+  Author: { icon: Monitor, colorClass: 'text-error' },
+  Editor: { icon: Edit3, colorClass: 'text-warning' },
+  Maintainer: { icon: PieChart, colorClass: 'text-info' },
+  Subscriber: { icon: User, colorClass: 'text-success' },
+}
+
+const statusBadgeMap: Record<UserRecord['status'], string> = {
+  Active: 'badge-soft badge-success',
+  Pending: 'badge-soft badge-warning',
+  Inactive: 'badge-soft badge-neutral',
+}
+
+function getInitials(name: string) {
+  return name
+    .split(' ')
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
 }
 </script>
 
 <template>
   <div class="space-y-6">
-    <!-- Top Summary Bar -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="card card-bordered p-4 flex flex-row items-center justify-between">
-        <div>
-          <span class="text-xs font-bold uppercase text-base-content/55">Total Kontributor</span>
-          <div class="text-2xl font-extrabold text-base-content mt-0.5">{{ users.length }}</div>
-        </div>
-        <UiBadge variant="primary" soft size="lg">Terdaftar</UiBadge>
-      </div>
-
-      <div class="card card-bordered p-4 flex flex-row items-center justify-between">
-        <div>
-          <span class="text-xs font-bold uppercase text-base-content/55">Status Aktif</span>
-          <div class="text-2xl font-extrabold text-success mt-0.5">
-            {{ users.filter((u) => u.status === 'Active').length }}
-          </div>
-        </div>
-        <UiBadge variant="success" soft dot size="lg">Online</UiBadge>
-      </div>
-
-      <div class="card card-bordered p-4 flex flex-row items-center justify-between">
-        <div>
-          <span class="text-xs font-bold uppercase text-base-content/55">Menunggu Review</span>
-          <div class="text-2xl font-extrabold text-warning mt-0.5">
-            {{ users.filter((u) => u.status === 'Pending').length }}
-          </div>
-        </div>
-        <UiBadge variant="warning" soft size="lg">Pending</UiBadge>
-      </div>
+    <!-- Top 4 Horizontal Stat Cards -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <UiStatCard
+        layout="horizontal"
+        title="Session"
+        value="21,459"
+        change="+29%"
+        trend="up"
+        description="Total Users"
+        variant="primary"
+        :icon="Users"
+      />
+      <UiStatCard
+        layout="horizontal"
+        title="Paid Users"
+        value="4,567"
+        change="+18%"
+        trend="up"
+        description="Last week analytics"
+        variant="error"
+        :icon="UserPlus"
+      />
+      <UiStatCard
+        layout="horizontal"
+        title="Active Users"
+        value="19,860"
+        change="-14%"
+        trend="down"
+        description="Last week analytics"
+        variant="success"
+        :icon="UserCheck"
+      />
+      <UiStatCard
+        layout="horizontal"
+        title="Pending Users"
+        value="237"
+        change="+42%"
+        trend="up"
+        description="Last week analytics"
+        variant="warning"
+        :icon="Clock"
+      />
     </div>
 
-    <!-- Main Users Data Table Card -->
-    <UiCard
-      title="Manajemen Pengguna & Kontributor"
-      subtitle="Contoh halaman tabel interaktif dengan pencarian, filter multi-kriteria, dan tambah data"
-      accent-top="primary"
-    >
-      <template #actions>
-        <UiButton variant="primary" size="sm" @click="addModalOpen = true">
-          <template #icon-left>
-            <UserPlus class="h-4 w-4" />
-          </template>
-          Tambah Pengguna
-        </UiButton>
-      </template>
-
-      <!-- Filter & Search Toolbar -->
-      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-5">
-        <div class="flex-1 max-w-md">
-          <UiInput
-            v-model="searchQuery"
-            placeholder="Cari nama, email, atau divisi..."
-            size="sm"
-          >
-            <template #icon-left>
-              <Search class="h-4 w-4" />
-            </template>
-          </UiInput>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="text-xs font-semibold text-base-content/60">
-            Filter:
-          </span>
-
-          <select v-model="selectedRole" class="select select-sm w-auto">
-            <option value="ALL">Semua Role</option>
-            <option value="Maintainer">Maintainer</option>
-            <option value="Developer">Developer</option>
-            <option value="Designer">Designer</option>
-            <option value="Viewer">Viewer</option>
-          </select>
-
-          <select v-model="selectedStatus" class="select select-sm w-auto">
-            <option value="ALL">Semua Status</option>
-            <option value="Active">Active</option>
-            <option value="Pending">Pending</option>
-            <option value="Suspended">Suspended</option>
-          </select>
+    <!-- Main Users List Card (Search Filters + Action Toolbar + Table + Pagination) -->
+    <div class="card overflow-visible">
+      <!-- 1. Search Filters Header Section -->
+      <div class="p-5">
+        <h5 class="card-title mb-4">Search Filters</h5>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <UiSelect
+            v-model="roleFilter"
+            :options="roleOptions"
+            placeholder="Select Role"
+            @update:model-value="currentPage = 1"
+          />
+          <UiSelect
+            v-model="departmentFilter"
+            :options="departmentOptions"
+            placeholder="Select Department"
+            @update:model-value="currentPage = 1"
+          />
+          <UiSelect
+            v-model="statusFilter"
+            :options="statusOptions"
+            placeholder="Select Status"
+            @update:model-value="currentPage = 1"
+          />
         </div>
       </div>
 
-      <!-- Table -->
-      <div class="overflow-x-auto -mx-6 px-6">
-        <table class="table table-hover table-zebra">
+      <!-- 2. Datatable Action Toolbar -->
+      <div class="flex flex-col gap-3 border-t border-base-300/80 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
+        <!-- Left: Custom Polished Per-Page Selector + Bulk Delete -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div
+            ref="pageSizeRef"
+            class="relative inline-flex items-center"
+            :class="showPageSizeMenu ? 'z-[90]' : 'z-auto'"
+          >
+            <button
+              type="button"
+              class="inline-flex h-9 items-center gap-2 rounded-btn border border-base-300 bg-base-100 px-3 text-xs font-medium text-base-content transition-all hover:border-base-content/40 focus:outline-none"
+              :class="showPageSizeMenu ? 'border-primary ring-2 ring-primary/20' : ''"
+              @click="showPageSizeMenu = !showPageSizeMenu"
+            >
+              <span class="text-base-content/55">Show</span>
+              <span class="rounded bg-primary/15 px-1.5 py-0.5 font-mono text-xs font-bold text-primary">
+                {{ pageSize }}
+              </span>
+              <span class="text-base-content/55">entries</span>
+              <ChevronDown
+                class="h-3.5 w-3.5 text-base-content/45 transition-transform duration-200"
+                :class="showPageSizeMenu ? 'rotate-180 text-primary' : ''"
+              />
+            </button>
+
+            <Transition
+              :css="false"
+              @enter="(el, done) => animateDropdownIn(el, done)"
+              @leave="(el, done) => animateDropdownOut(el, done)"
+            >
+              <div
+                v-if="showPageSizeMenu"
+                class="absolute left-0 top-full mt-1.5 z-[100] w-36 rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
+              >
+                <div class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-base-content/45">
+                  Rows Per Page
+                </div>
+                <button
+                  v-for="size in pageSizeOptions"
+                  :key="size"
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-btn px-2.5 py-1.5 text-xs font-medium transition-colors"
+                  :class="
+                    pageSize === size
+                      ? 'bg-primary/15 text-primary font-semibold'
+                      : 'text-base-content/80 hover:bg-base-200'
+                  "
+                  @click="selectPageSize(size)"
+                >
+                  <span>{{ size }} entries</span>
+                  <Check v-if="pageSize === size" class="h-3.5 w-3.5 text-primary" />
+                </button>
+              </div>
+            </Transition>
+          </div>
+
+          <button
+            v-if="selectedIds.length > 0"
+            class="btn btn-error btn-sm gap-1.5"
+            @click="deleteSelected"
+          >
+            <Trash2 class="h-3.5 w-3.5" />
+            Delete ({{ selectedIds.length }})
+          </button>
+        </div>
+
+        <!-- Right: Search Input + Export XLSX + Export PDF + Add New User -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="relative flex-1 sm:w-56 sm:flex-initial">
+            <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search User..."
+              class="input input-sm pl-9"
+              @input="currentPage = 1"
+            />
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-soft btn-success btn-sm gap-1.5"
+            title="Ekspor ke Excel (.xlsx)"
+            @click="handleExportUsersXLSX"
+          >
+            <FileSpreadsheet class="h-4 w-4" />
+            <span>XLSX</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-soft btn-error btn-sm gap-1.5"
+            title="Ekspor ke PDF (.pdf)"
+            @click="handleExportUsersPDF"
+          >
+            <FileText class="h-4 w-4" />
+            <span>PDF</span>
+          </button>
+
+          <button class="btn btn-primary btn-sm gap-1.5" @click="showAddModal = true">
+            <UserPlus class="h-4 w-4" />
+            Add New User
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. BeeJir Users Table -->
+      <div v-if="filteredUsers.length > 0" class="overflow-x-auto border-t border-base-300/80">
+        <table class="table">
           <thead>
             <tr>
-              <th>Pengguna</th>
-              <th>Role</th>
-              <th>Divisi</th>
+              <th class="w-12">
+                <input
+                  type="checkbox"
+                  class="checkbox checkbox-sm"
+                  :checked="allVisibleSelected"
+                  @change="toggleSelectAll"
+                />
+              </th>
+              <th>
+                <button
+                  class="inline-flex items-center gap-1.5 hover:text-primary transition-colors uppercase"
+                  @click="toggleSort('name')"
+                >
+                  User
+                  <ArrowUpDown class="h-3.5 w-3.5 opacity-50" />
+                </button>
+              </th>
+              <th>Email</th>
+              <th>
+                <button
+                  class="inline-flex items-center gap-1.5 hover:text-primary transition-colors uppercase"
+                  @click="toggleSort('role')"
+                >
+                  Role
+                  <ArrowUpDown class="h-3.5 w-3.5 opacity-50" />
+                </button>
+              </th>
+              <th>
+                <button
+                  class="inline-flex items-center gap-1.5 hover:text-primary transition-colors uppercase"
+                  @click="toggleSort('department')"
+                >
+                  Plan / Dept
+                  <ArrowUpDown class="h-3.5 w-3.5 opacity-50" />
+                </button>
+              </th>
               <th>Status</th>
-              <th>Bergabung</th>
-              <th class="text-right">Aksi</th>
+              <th class="text-right">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in filteredUsers" :key="user.id">
+            <tr
+              v-for="user in paginatedUsers"
+              :key="user.id"
+              :class="{ 'bg-primary/5': selectedIds.includes(user.id) }"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  class="checkbox checkbox-sm"
+                  :checked="selectedIds.includes(user.id)"
+                  @change="toggleSelectUser(user.id)"
+                />
+              </td>
               <td>
                 <div class="flex items-center gap-3">
                   <div
-                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-bold text-xs bg-primary/15 text-primary border border-primary/25"
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                    :class="user.avatarBg"
                   >
-                    {{ user.name.slice(0, 2).toUpperCase() }}
+                    {{ getInitials(user.name) }}
                   </div>
                   <div>
-                    <div class="font-bold text-base-content">{{ user.name }}</div>
-                    <div class="text-xs text-base-content/55">
-                      {{ user.email }}
-                    </div>
+                    <p class="font-medium text-base-content leading-snug">{{ user.name }}</p>
+                    <p class="text-xs text-base-content/50">{{ user.handle }}</p>
                   </div>
                 </div>
               </td>
+              <td class="text-base-content/75">{{ user.email }}</td>
               <td>
-                <UiBadge :variant="roleVariant(user.role)" soft size="sm">
-                  {{ user.role }}
-                </UiBadge>
-              </td>
-              <td class="text-xs font-semibold text-base-content/75">
-                {{ user.department }}
-              </td>
-              <td>
-                <UiBadge :variant="statusVariant(user.status)" soft dot size="sm">
-                  {{ user.status }}
-                </UiBadge>
-              </td>
-              <td class="text-xs text-base-content/60">
-                {{ user.joinedAt }}
-              </td>
-              <td class="text-right">
-                <div class="inline-flex items-center justify-end gap-1.5">
-                  <button
-                    type="button"
-                    class="btn btn-square btn-xs btn-ghost text-base-content/65 hover:text-info hover:bg-info/10"
-                    title="Lihat detail pengguna"
-                  >
-                    <Eye class="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-square btn-xs btn-soft btn-primary"
-                    title="Edit pengguna"
-                  >
-                    <Pencil class="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-square btn-xs btn-soft btn-error"
-                    title="Hapus pengguna"
-                    @click="removeUser(user.id)"
-                  >
-                    <Trash2 class="h-3.5 w-3.5" />
-                  </button>
+                <div class="flex items-center gap-2">
+                  <component
+                    :is="roleMeta[user.role].icon"
+                    class="h-4 w-4 shrink-0"
+                    :class="roleMeta[user.role].colorClass"
+                  />
+                  <span class="text-base-content/85">{{ user.role }}</span>
                 </div>
               </td>
-            </tr>
-            <tr v-if="filteredUsers.length === 0">
-              <td colspan="6" class="py-10 text-center text-base-content/55">
-                Tidak ada pengguna yang cocok dengan pencarian Anda.
+              <td>
+                <div>
+                  <span class="font-medium text-base-content/85">{{ user.plan }}</span>
+                  <span class="block text-xs text-base-content/50">{{ user.department }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium" :class="statusBadgeMap[user.status]">
+                  {{ user.status }}
+                </span>
+              </td>
+              <td class="text-right">
+                <div class="inline-flex items-center gap-1">
+                  <button
+                    class="btn btn-ghost btn-xs btn-square text-base-content/55 hover:text-error"
+                    title="Delete"
+                    @click="deleteSingleUser(user)"
+                  >
+                    <Trash2 class="h-4 w-4" />
+                  </button>
+                  <button
+                    class="btn btn-ghost btn-xs btn-square text-base-content/55 hover:text-primary"
+                    title="Preview"
+                    @click="toast.info('Detail Pengguna', `Menampilkan profil ${user.name}`)"
+                  >
+                    <Eye class="h-4 w-4" />
+                  </button>
+                  <button
+                    class="btn btn-ghost btn-xs btn-square text-base-content/55 hover:text-primary"
+                    title="Edit"
+                    @click="toast.info('Edit Pengguna', `Membuka form edit untuk ${user.name}`)"
+                  >
+                    <Edit3 class="h-4 w-4" />
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <template #footer>
-        <div class="flex w-full items-center justify-between text-xs text-base-content/60">
-          <span>Menampilkan {{ filteredUsers.length }} dari {{ users.length }} pengguna</span>
-          <div class="flex items-center gap-1.5">
-            <button
-              type="button"
-              class="btn btn-square btn-xs btn-outline"
-              disabled
-              title="Halaman sebelumnya"
-            >
-              <ChevronLeft class="h-3.5 w-3.5" />
-            </button>
-            <button type="button" class="btn btn-square btn-xs btn-primary font-bold">1</button>
-            <button type="button" class="btn btn-square btn-xs btn-ghost">2</button>
-            <button
-              type="button"
-              class="btn btn-square btn-xs btn-outline"
-              title="Halaman berikutnya"
-            >
-              <ChevronRight class="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-      </template>
-    </UiCard>
+      <!-- Empty State -->
+      <div v-else class="border-t border-base-300/80 p-6">
+        <UiEmptyState
+          title="Tidak Ada Pengguna Ditemukan"
+          description="Coba sesuaikan kata kunci pencarian atau reset filter untuk melihat seluruh daftar pengguna."
+          action-label="Reset Filter"
+          @action="resetFilters"
+        />
+      </div>
 
-    <!-- Add User Modal -->
+      <!-- 4. Pagination Footer -->
+      <div
+        v-if="filteredUsers.length > 0"
+        class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-5 py-4 border-t border-base-300/80 text-xs text-base-content/60"
+      >
+        <div>
+          Showing
+          <span class="font-semibold text-base-content">{{ (currentPage - 1) * pageSize + 1 }}</span>
+          to
+          <span class="font-semibold text-base-content">{{ Math.min(currentPage * pageSize, filteredUsers.length) }}</span>
+          of
+          <span class="font-semibold text-base-content">{{ filteredUsers.length }}</span>
+          entries
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button
+            class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
+            :disabled="currentPage <= 1"
+            @click="currentPage--"
+          >
+            <ChevronLeft class="h-3.5 w-3.5" />
+          </button>
+          <button
+            v-for="p in totalPages"
+            :key="p"
+            class="btn btn-xs h-7 min-w-7 rounded-lg font-medium"
+            :class="
+              p === currentPage
+                ? 'btn-primary'
+                : 'bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none'
+            "
+            @click="currentPage = p"
+          >
+            {{ p }}
+          </button>
+          <button
+            class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
+            :disabled="currentPage >= totalPages"
+            @click="currentPage++"
+          >
+            <ChevronRight class="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Add User -->
     <UiModal
-      v-model="addModalOpen"
-      title="Tambah Pengguna Baru"
-      subtitle="Tambahkan anggota tim baru ke dalam daftar tabel secara reaktif"
+      v-model="showAddModal"
+      title="Add New User"
+      description="Daftarkan anggota tim baru beserta peran dan departemennya."
     >
       <form class="space-y-4" @submit.prevent="handleAddUser">
-        <UiInput
-          v-model="newName"
-          label="Nama Lengkap"
-          placeholder="Contoh: Budi Santoso"
-        />
-        <UiInput
-          v-model="newEmail"
-          label="Alamat Email"
-          type="email"
-          placeholder="budi@beejir.dev"
-        />
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label class="flex flex-col gap-1.5">
-            <span class="text-xs font-semibold text-base-content/80">Role Akses</span>
-            <select v-model="newRole" class="select">
+        <div class="form-control">
+          <label class="label"><span class="label-text">Full Name</span></label>
+          <input v-model="newUser.name" type="text" class="input" placeholder="e.g. Jordan Stevenson" required />
+        </div>
+        <div class="form-control">
+          <label class="label"><span class="label-text">Email</span></label>
+          <input v-model="newUser.email" type="email" class="input" placeholder="jordan@beejir.id" required />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="form-control">
+            <label class="label"><span class="label-text">Select Role</span></label>
+            <select v-model="newUser.role" class="select">
+              <option value="Admin">Admin</option>
               <option value="Maintainer">Maintainer</option>
-              <option value="Developer">Developer</option>
-              <option value="Designer">Designer</option>
-              <option value="Viewer">Viewer</option>
+              <option value="Editor">Editor</option>
+              <option value="Author">Author</option>
+              <option value="Subscriber">Subscriber</option>
             </select>
-          </label>
-          <UiInput
-            v-model="newDept"
-            label="Divisi / Tim"
-            placeholder="Frontend Engineering"
-          />
+          </div>
+          <div class="form-control">
+            <label class="label"><span class="label-text">Department</span></label>
+            <input v-model="newUser.department" type="text" class="input" placeholder="Engineering" />
+          </div>
         </div>
       </form>
-
-      <template #footer="{ close }">
-        <UiButton variant="ghost" size="sm" @click="close">Batal</UiButton>
-        <UiButton variant="primary" size="sm" @click="handleAddUser">
-          <template #icon-left>
-            <CheckCircle2 class="h-4 w-4" />
-          </template>
-          Simpan Pengguna
-        </UiButton>
+      <template #footer>
+        <button class="btn btn-ghost btn-sm" @click="showAddModal = false">Cancel</button>
+        <button class="btn btn-primary btn-sm" @click="handleAddUser">Submit</button>
       </template>
     </UiModal>
   </div>

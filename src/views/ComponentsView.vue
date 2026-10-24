@@ -26,6 +26,10 @@ import {
   Copy,
   Heart,
   Bookmark,
+  Bot,
+  Brain,
+  Cpu,
+  Zap,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 import { useToast } from '@/stores/toast'
@@ -38,6 +42,9 @@ import UiModal from '@/components/ui/UiModal.vue'
 import UiSelectTag from '@/components/ui/UiSelectTag.vue'
 import UiSelect from '@/components/ui/UiSelect.vue'
 import UiCheckbox from '@/components/ui/UiCheckbox.vue'
+import UiInputCurrency from '@/components/ui/UiInputCurrency.vue'
+import UiInputPercent from '@/components/ui/UiInputPercent.vue'
+import UiRadioCard, { type RadioCardOption } from '@/components/ui/UiRadioCard.vue'
 import UiTable from '@/components/ui/UiTable.vue'
 import UiDataTable from '@/components/ui/UiDataTable.vue'
 import UiDatePicker from '@/components/ui/UiDatePicker.vue'
@@ -208,6 +215,11 @@ function handleBulkDelete(rows: any[]) {
   toast.success('Pilihan Berhasil Dihapus', `${rows.length} tugas telah dihapus dari tabel.`)
 }
 
+// Financial & Percentage Input Demo State
+const demoCurrencyValue = ref<number | null>(47500000)
+const demoSelectedCurrency = ref('IDR')
+const demoPercentValue = ref<number | null>(18.5)
+
 // Phase 3 New Components Demo State
 const demoDate = ref('2026-10-18')
 const demoRichText = ref(
@@ -220,6 +232,24 @@ const singleUploadFiles = ref<UploadedFileItem[]>([
     name: 'Laporan-Keuangan-Q4-2026.pdf',
     size: 2458000,
     type: 'application/pdf',
+    url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    progress: 100,
+    status: 'done',
+  },
+  {
+    id: 'f2',
+    name: 'config-production.env',
+    size: 1420,
+    type: 'text/plain',
+    url: 'data:text/plain;charset=utf-8,APP_ENV=production%0APORT=8080%0ADATABASE_URL=postgresql://user:secret@localhost:5432/beejir%0ACACHE_TTL=3600%0ADEBUG=false',
+    progress: 100,
+    status: 'done',
+  },
+  {
+    id: 'f3',
+    name: 'arsip-backup-biner.tar.gz',
+    size: 15420000,
+    type: 'application/gzip',
     progress: 100,
     status: 'done',
   },
@@ -231,6 +261,15 @@ const dropzoneFiles = ref<UploadedFileItem[]>([
     name: 'Backup-Database-Cluster.zip',
     size: 8420000,
     type: 'application/zip',
+    progress: 100,
+    status: 'done',
+  },
+  {
+    id: 'f4',
+    name: 'sample-design-mockup.png',
+    size: 642000,
+    type: 'image/png',
+    url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
     progress: 100,
     status: 'done',
   },
@@ -262,6 +301,56 @@ const demoSteps: StepItem[] = [
   { id: 1, title: 'Konfigurasi Awal', subtitle: 'Pilih nama & region' },
   { id: 2, title: 'Integrasi Database', subtitle: 'Koneksi PostgreSQL' },
   { id: 3, title: 'Verifikasi & Deploy', subtitle: 'Siap diluncurkan' },
+]
+
+// AI Model Selection / Radio Cards Demo State
+const selectedAiModel = ref('claude-3-7')
+const aiModelOptions: RadioCardOption[] = [
+  {
+    value: 'gpt-4o',
+    title: 'GPT-4o Omnimodal',
+    subtitle: 'High-speed reasoning & multimodal analysis',
+    description: 'Model multimodal flagship dari OpenAI dengan throughput tinggi untuk pemrosesan teks, audio, dan gambar secara instan.',
+    icon: Bot,
+    badge: 'Multi-Modal',
+    badgeVariant: 'success',
+    tags: ['128k Tokens', 'Vision', 'Realtime Audio'],
+    meta: '92 tps • $5/M',
+  },
+  {
+    value: 'claude-3-7',
+    title: 'Claude 3.7 Sonnet',
+    subtitle: 'Hybrid thought & deep coding intelligence',
+    description: 'Standar terdepan untuk penalaran kode kompleks, arsitektur sistem, dan evaluasi berbasis rantai pemikiran (hybrid thinking).',
+    icon: Brain,
+    badge: 'State of the Art',
+    badgeVariant: 'primary',
+    tags: ['200k Window', 'Deep Thinking', 'Coding SOTA'],
+    meta: '75 tps • $3/M',
+    recommended: true,
+  },
+  {
+    value: 'deepseek-r1',
+    title: 'DeepSeek R1 Distill',
+    subtitle: 'Open weight mathematical & algorithmic reasoning',
+    description: 'Arsitektur Mixture-of-Experts open weights dengan efisiensi komputasi tinggi untuk kalkulasi saintifik dan inferensi lokal.',
+    icon: Cpu,
+    badge: 'Cost Efficient',
+    badgeVariant: 'info',
+    tags: ['MoE 671B', 'Open Weights', 'Self-Hosted'],
+    meta: '110 tps • $0.55/M',
+  },
+  {
+    value: 'gemini-2-flash',
+    title: 'Gemini 2.0 Flash',
+    subtitle: 'Ultra-low latency sub-second responses',
+    description: 'Dioptimalkan untuk respon secepat kilat pada task agen otonom, streaming interaktif, dan context caching masif.',
+    icon: Zap,
+    badge: 'Sub-second',
+    badgeVariant: 'warning',
+    tags: ['1M Context', 'Search Grounding', 'Fast Stream'],
+    meta: '160 tps • $0.10/M',
+  },
 ]
 
 const demoProgressValue = ref(72)
@@ -339,18 +428,18 @@ const demoDropdownItems: DropdownItem[] = [
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <!-- Top Header Banner -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-box border border-base-300 bg-base-100 p-5">
+    <div class="card flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5">
       <div>
-        <div class="flex items-center gap-2 mb-1">
+        <div class="flex items-center gap-2 mb-1.5">
           <UiBadge variant="primary" soft>Dual-API System</UiBadge>
-          <UiBadge variant="secondary" soft>Pure Tailwind CSS</UiBadge>
+          <UiBadge variant="secondary" soft>Enterprise UI</UiBadge>
         </div>
-        <h2 class="text-xl font-extrabold text-base-content">
+        <h2 class="text-xl font-bold text-base-content">
           Katalog Komponen Semantik UI
         </h2>
-        <p class="text-xs text-base-content/65 mt-0.5">
+        <p class="text-[0.8125rem] text-base-content/60 mt-0.5">
           Gunakan class CSS semantik seperti <code class="font-mono text-primary">.btn .btn-primary</code>
           atau komponen Vue bertipe <code class="font-mono text-secondary">&lt;UiButton variant="primary"&gt;</code>.
         </p>
@@ -959,6 +1048,44 @@ const demoDropdownItems: DropdownItem[] = [
             </div>
           </div>
 
+          <!-- NEW: Currency & Percent Inputs -->
+          <div class="pt-3 border-t border-base-300/70 space-y-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-primary block">
+              Format Khusus: Currency &amp; Percentage (&lt;UiInputCurrency&gt; &amp; &lt;UiInputPercent&gt;)
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Currency with selector -->
+              <UiInputCurrency
+                v-model="demoCurrencyValue"
+                v-model:currency="demoSelectedCurrency"
+                label="Input Nilai Mata Uang (Dapat Ganti Valuta)"
+                hint="Dapat memilih valuta (IDR, USD, EUR, SGD, JPY, GBP) dengan pemisah desimal otomatis"
+              />
+
+              <!-- Percentage input with slider -->
+              <UiInputPercent
+                v-model="demoPercentValue"
+                label="Input Persentase Bunga / Rasio"
+                hint="Terformat otomatis dengan simbol % dan slider penyesuaian instan"
+                show-slider
+                :min="0"
+                :max="100"
+              />
+            </div>
+
+            <!-- Preview Values State -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs font-mono">
+              <div class="rounded-box border border-base-300 bg-base-200/50 p-2.5 flex items-center justify-between">
+                <span class="text-base-content/70 font-sans">Raw Value (Number):</span>
+                <span class="badge badge-primary font-bold">{{ demoCurrencyValue ?? 'null' }} ({{ demoSelectedCurrency }})</span>
+              </div>
+              <div class="rounded-box border border-base-300 bg-base-200/50 p-2.5 flex items-center justify-between">
+                <span class="text-base-content/70 font-sans">Raw Value (Percent):</span>
+                <span class="badge badge-secondary font-bold">{{ demoPercentValue ?? 'null' }}%</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Toggles -->
           <div class="pt-2 border-t border-base-300/70 flex flex-wrap items-center gap-6">
             <label class="inline-flex items-center gap-2.5 cursor-pointer text-xs font-semibold">
@@ -1028,8 +1155,9 @@ const demoDropdownItems: DropdownItem[] = [
         <div class="space-y-4">
           <UiDatePicker
             v-model="demoDate"
-            label="Pilih Tanggal Acara / Rilis"
-            hint="Klik input untuk membuka kalender popup"
+            label="Pilih Tanggal Acara / Rilis (Dengan Pilihan Waktu)"
+            hint="Klik untuk pilih tanggal, loncat bulan/tahun, dan atur jam"
+            enable-time
           />
 
           <div class="rounded-box border border-base-300 bg-base-200/50 p-3.5 flex items-center justify-between text-xs">
@@ -1094,34 +1222,63 @@ const demoDropdownItems: DropdownItem[] = [
       </div>
     </UiCard>
 
-    <!-- 12. Wizard / Stepper -->
-    <UiCard
-      title="12. Wizard / Multi-Step Stepper (<UiStepper>)"
-      subtitle="Navigasi tahapan proses berurutan dengan status selesai, langkah aktif, dan tombol kontrol"
-      accent-top="primary"
-    >
-      <UiStepper
-        v-model="demoStepIndex"
-        :steps="demoSteps"
-        @finish="toast.success('Wizard Selesai!', 'Seluruh tahapan konfigurasi telah berhasil disimpan.')"
+    <!-- 12. Wizard / Stepper & AI Model Card Selection -->
+    <div class="space-y-6">
+      <UiCard
+        title="12. Multi-Step Form Wizard (<UiStepper>)"
+        subtitle="Navigasi tahapan proses berurutan dengan status selesai, langkah aktif, dan tombol kontrol terintegrasi"
+        accent-top="primary"
       >
-        <template #default="{ currentStep, step }">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
-            <div>
-              <span class="badge badge-primary badge-sm mb-2">Tahap {{ currentStep + 1 }}</span>
-              <h4 class="text-base font-extrabold text-base-content">{{ step?.title }}</h4>
-              <p class="text-xs text-base-content/65 mt-1">
-                Ini adalah area konten dinamis untuk langkah <strong>{{ step?.title }}</strong> ({{ step?.subtitle }}).
-                Klik indikator langkah di atas atau tombol di bawah untuk berpindah tahap.
-              </p>
+        <UiStepper
+          v-model="demoStepIndex"
+          :steps="demoSteps"
+          show-controls
+          @finish="toast.success('Wizard Selesai!', 'Seluruh tahapan konfigurasi telah berhasil disimpan.')"
+        >
+          <template #default="{ currentStep, step }">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+              <div>
+                <span class="badge badge-primary badge-sm mb-2">Tahap {{ currentStep + 1 }}</span>
+                <h4 class="text-base font-extrabold text-base-content">{{ step?.title }}</h4>
+                <p class="text-xs text-base-content/65 mt-1">
+                  Ini adalah area konten dinamis untuk langkah <strong>{{ step?.title }}</strong> ({{ step?.subtitle }}).
+                  Klik indikator langkah di atas atau tombol di bawah untuk berpindah tahap.
+                </p>
+              </div>
+              <RouterLink to="/project-wizard" class="btn btn-soft btn-primary btn-sm shrink-0">
+                Buka Halaman Demo Wizard Penuh
+              </RouterLink>
             </div>
-            <RouterLink to="/project-wizard" class="btn btn-soft btn-primary btn-sm shrink-0">
-              Buka Halaman Demo Wizard Penuh
-            </RouterLink>
+          </template>
+        </UiStepper>
+      </UiCard>
+
+      <!-- Interactive Radio Card / Model Selection Card -->
+      <UiCard
+        title="Interactive Radio Card Selector (<UiRadioCard>)"
+        subtitle="Pilihan kartu radio modern ala AI Model Selection dengan avatar icon, status check kustom, tag teknis, dan badge rekomendasi"
+        accent-top="accent"
+      >
+        <div class="space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-base-content/60">Pilih Mesin AI Utama</span>
+              <p class="text-xs text-base-content/50">Digunakan pada agent reasoning engine dan pipeline otomatisasi</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-base-content/60">Model aktif:</span>
+              <span class="badge badge-primary font-mono text-xs uppercase">{{ selectedAiModel }}</span>
+            </div>
           </div>
-        </template>
-      </UiStepper>
-    </UiCard>
+
+          <UiRadioCard
+            v-model="selectedAiModel"
+            :options="aiModelOptions"
+            :columns="4"
+          />
+        </div>
+      </UiCard>
+    </div>
 
     <!-- 13. Progress Bar & Spinners -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

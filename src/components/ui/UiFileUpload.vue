@@ -53,6 +53,8 @@ const isDragging = ref(false)
 const internalFiles = ref<UploadedFileItem[]>([...props.modelValue])
 const previewImageUrl = ref<string | null>(null)
 const previewImageTitle = ref<string>('')
+const previewFileType = ref<'image' | 'pdf' | 'text' | null>(null)
+const previewTextContent = ref<string>('')
 const createdUrls: string[] = []
 
 function syncFiles() {
@@ -71,10 +73,29 @@ function formatFileSize(bytes: number): string {
 function isImageFile(file: UploadedFileItem): boolean {
   return (
     file.type.startsWith('image/') ||
-    /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(file.name) ||
+    /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i.test(file.name) ||
     Boolean(file.url && file.url.startsWith('data:image')) ||
     Boolean(file.url && file.url.startsWith('https://images.unsplash.com'))
   )
+}
+
+function isPdfFile(file: UploadedFileItem): boolean {
+  return (
+    file.type === 'application/pdf' ||
+    /\.pdf$/i.test(file.name)
+  )
+}
+
+function isTextFile(file: UploadedFileItem): boolean {
+  return (
+    file.type.startsWith('text/') ||
+    /\.(txt|md|json|csv|js|ts|html|css|xml|log)$/i.test(file.name)
+  )
+}
+
+function isPreviewable(file: UploadedFileItem): boolean {
+  if (!file.url) return false
+  return isImageFile(file) || isPdfFile(file) || isTextFile(file)
 }
 
 function getFileIcon(type: string, name: string) {
@@ -124,8 +145,9 @@ function processFileList(fileList: FileList) {
 
   toProcess.forEach((file) => {
     const isImg = file.type.startsWith('image/') || props.mode === 'gallery'
+    const isDoc = file.type === 'application/pdf' || file.type.startsWith('text/')
     let objectUrl: string | undefined
-    if (isImg) {
+    if (isImg || isDoc) {
       objectUrl = URL.createObjectURL(file)
       createdUrls.push(objectUrl)
     }
@@ -175,10 +197,34 @@ function clearAllFiles() {
 }
 
 function openPreview(file: UploadedFileItem) {
-  if (file.url) {
+  if (!file.url) return
+
+  previewImageTitle.value = file.name
+  if (isImageFile(file)) {
+    previewFileType.value = 'image'
     previewImageUrl.value = file.url
-    previewImageTitle.value = file.name
+  } else if (isPdfFile(file)) {
+    previewFileType.value = 'pdf'
+    previewImageUrl.value = file.url
+  } else if (isTextFile(file)) {
+    previewFileType.value = 'text'
+    previewImageUrl.value = file.url
+    // Fetch text preview if possible
+    fetch(file.url)
+      .then((res) => res.text())
+      .then((txt) => {
+        previewTextContent.value = txt.slice(0, 10000)
+      })
+      .catch(() => {
+        previewTextContent.value = 'Gagal memuat pratinjau teks.'
+      })
   }
+}
+
+function closePreview() {
+  previewImageUrl.value = null
+  previewFileType.value = null
+  previewTextContent.value = ''
 }
 
 onUnmounted(() => {
@@ -408,10 +454,10 @@ onUnmounted(() => {
         <!-- Preview & Remove Actions -->
         <div class="flex items-center gap-1 shrink-0">
           <button
-            v-if="item.url && isImageFile(item)"
+            v-if="isPreviewable(item)"
             type="button"
-            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/60 hover:text-primary"
-            title="Pratinjau gambar"
+            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/60 hover:text-primary hover:bg-primary/10"
+            title="Pratinjau berkas"
             @click="openPreview(item)"
           >
             <Eye class="h-4 w-4" />
@@ -432,7 +478,7 @@ onUnmounted(() => {
       {{ hint }}
     </span>
 
-    <!-- Image Lightbox Modal -->
+    <!-- Unified File Lightbox Modal (Images, PDF, and Text) -->
     <Transition
       enter-active-class="transition duration-150 ease-out"
       enter-from-class="opacity-0"
@@ -443,28 +489,53 @@ onUnmounted(() => {
     >
       <div
         v-if="previewImageUrl"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4"
-        @click="previewImageUrl = null"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4"
+        @click="closePreview"
       >
         <div
-          class="relative max-w-2xl w-full rounded-box bg-base-100 border border-base-300 p-3 shadow-2xl"
+          class="relative max-w-3xl w-full max-h-[85vh] flex flex-col rounded-box bg-base-100 border border-base-300 p-4 shadow-2xl"
           @click.stop
         >
-          <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-base-300">
-            <span class="text-xs font-bold text-base-content truncate">{{ previewImageTitle }}</span>
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-base-300">
+            <div class="flex items-center gap-2 truncate pr-4">
+              <span class="badge badge-primary badge-xs font-mono uppercase">
+                {{ previewFileType }}
+              </span>
+              <span class="text-xs font-bold text-base-content truncate">{{ previewImageTitle }}</span>
+            </div>
             <button
               type="button"
               class="btn btn-ghost btn-xs btn-circle h-7 w-7"
-              @click="previewImageUrl = null"
+              @click="closePreview"
             >
               <X class="h-4 w-4" />
             </button>
           </div>
-          <img
-            :src="previewImageUrl"
-            :alt="previewImageTitle"
-            class="max-h-[70vh] w-full object-contain rounded-btn bg-base-200"
-          />
+
+          <!-- Preview Content by File Type -->
+          <div class="overflow-auto flex-1 min-h-[250px] max-h-[70vh] flex items-center justify-center rounded-btn bg-base-200/60 p-2">
+            <!-- Image Preview -->
+            <img
+              v-if="previewFileType === 'image'"
+              :src="previewImageUrl"
+              :alt="previewImageTitle"
+              class="max-h-[68vh] w-full object-contain rounded-btn"
+            />
+
+            <!-- PDF Preview via Iframe -->
+            <iframe
+              v-else-if="previewFileType === 'pdf'"
+              :src="previewImageUrl"
+              class="w-full h-[65vh] rounded-btn border border-base-300"
+              title="Pratinjau PDF"
+            />
+
+            <!-- Text / Code Preview -->
+            <pre
+              v-else-if="previewFileType === 'text'"
+              class="w-full h-full max-h-[65vh] overflow-auto p-4 font-mono text-xs text-base-content bg-base-100 rounded-btn whitespace-pre-wrap select-text"
+            >{{ previewTextContent || 'Memuat dokumen teks...' }}</pre>
+          </div>
         </div>
       </div>
     </Transition>

@@ -191,9 +191,9 @@ onUnmounted(() => {
   <div
     ref="containerRef"
     class="relative flex flex-col gap-1.5 w-full"
-    :class="isOpen ? 'z-30' : 'z-auto'"
+    :class="isOpen ? 'z-[90]' : 'z-auto'"
   >
-    <span v-if="label" class="text-xs font-semibold text-base-content/80">
+    <span v-if="label" class="label-text">
       {{ label }}
     </span>
 
@@ -270,7 +270,7 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 right-0 top-full mt-1.5 z-50 max-h-60 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
+        class="absolute left-0 right-0 top-full mt-1.5 z-[100] max-h-60 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
       >
         <!-- Create New Tag Option -->
         <button

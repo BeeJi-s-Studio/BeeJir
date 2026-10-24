@@ -10,6 +10,8 @@ export type ThemeId =
 
 export type RadiusScale = 'none' | 'sm' | 'md' | 'lg' | 'full'
 
+export type ContentWidth = 'compact' | 'wide' | 'full'
+
 export type ColorVariant =
   | 'primary'
   | 'secondary'

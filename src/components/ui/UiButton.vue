@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
 import type { ColorVariant } from '@/types/theme'
+import { animateTap } from '@/utils/gsap'
 
 export interface UiButtonProps {
   variant?: ColorVariant | 'ghost'
@@ -38,6 +39,13 @@ const props = withDefaults(defineProps<UiButtonProps>(), {
 const emit = defineEmits<{
   click: [event: MouseEvent]
 }>()
+
+const btnRef = ref<HTMLElement | null>(null)
+
+function handleClick(event: MouseEvent) {
+  animateTap(btnRef.value)
+  emit('click', event)
+}
 
 const isIconButton = computed(() => props.circle || props.square || props.iconOnly)
 
@@ -93,12 +101,13 @@ const classes = computed(() => {
 
 <template>
   <button
+    ref="btnRef"
     :type="type"
     :class="classes"
     :disabled="disabled || loading"
     :title="title"
     :aria-label="title"
-    @click="emit('click', $event)"
+    @click="handleClick"
   >
     <Loader2 v-if="loading" class="animate-spin shrink-0" :class="iconSizeClass" />
     <template v-else>

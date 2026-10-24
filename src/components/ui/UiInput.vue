@@ -33,7 +33,7 @@ function onInput(event: Event) {
 
 <template>
   <label class="flex flex-col gap-1.5 w-full">
-    <span v-if="label" class="text-xs font-semibold text-base-content/80">
+    <span v-if="label" class="label-text">
       {{ label }}
     </span>
     <div class="relative flex items-center">

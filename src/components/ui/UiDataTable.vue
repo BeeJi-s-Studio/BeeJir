@@ -8,12 +8,15 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  FileSpreadsheet,
+  FileText,
   Trash2,
   X,
 } from 'lucide-vue-next'
 import type { TableColumn, SortDirection } from '@/types/table'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiInput from '@/components/ui/UiInput.vue'
+import { exportToCSV, exportToXLSX, exportToPDF } from '@/utils/exportData'
 
 export interface UiDataTableProps<T = Record<string, any>> {
   columns: TableColumn<T>[]
@@ -23,6 +26,7 @@ export interface UiDataTableProps<T = Record<string, any>> {
   pageSizeOptions?: number[]
   initialPageSize?: number
   rowKey?: string
+  exportTitle?: string
 }
 
 const props = withDefaults(defineProps<UiDataTableProps>(), {
@@ -31,6 +35,7 @@ const props = withDefaults(defineProps<UiDataTableProps>(), {
   pageSizeOptions: () => [5, 10, 25, 50],
   initialPageSize: 5,
   rowKey: 'id',
+  exportTitle: 'BeeJir Enterprise Data Report',
 })
 
 const emit = defineEmits<{
@@ -106,7 +111,7 @@ watch([searchQuery, pageSize], () => {
 const isAllSelected = computed(() => {
   if (paginatedItems.value.length === 0) return false
   return paginatedItems.value.every((row, idx) =>
-    selectedKeys.value.has(getKey(row, idx))
+    selectedKeys.value.has(getKey(row, idx)),
   )
 })
 
@@ -116,12 +121,10 @@ const selectedRows = computed(() => {
 
 function toggleSelectAll() {
   if (isAllSelected.value) {
-    // Uncheck currently paginated items
     paginatedItems.value.forEach((row, idx) => {
       selectedKeys.value.delete(getKey(row, idx))
     })
   } else {
-    // Check currently paginated items
     paginatedItems.value.forEach((row, idx) => {
       selectedKeys.value.add(getKey(row, idx))
     })
@@ -163,37 +166,39 @@ function handleSort(col: TableColumn) {
   }
 }
 
-// Export to CSV
-function exportCSV() {
-  if (sortedItems.value.length === 0) return
+// Export Actions (XLSX, PDF, CSV)
+const exportColumns = computed(() =>
+  props.columns.map((c) => ({ key: c.key, label: c.label })),
+)
 
-  const headers = props.columns.map((c) => `"${c.label}"`).join(',')
-  const rows = sortedItems.value.map((item: any) => {
-    return props.columns
-      .map((col) => `"${String(item[col.key] ?? '').replace(/"/g, '""')}"`)
-      .join(',')
+function handleExportXLSX() {
+  exportToXLSX(exportColumns.value, sortedItems.value, {
+    filename: 'beejir-datatable',
+    sheetName: 'Data Export',
+    title: props.exportTitle,
   })
+}
 
-  const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n')
-  const encodedUri = encodeURI(csvContent)
-  const link = document.createElement('a')
-  link.setAttribute('href', encodedUri)
-  link.setAttribute('download', `beejir-datatable-${Date.now()}.csv`)
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+function handleExportPDF() {
+  exportToPDF(exportColumns.value, sortedItems.value, {
+    title: props.exportTitle,
+  })
+}
+
+function handleExportCSV() {
+  exportToCSV(exportColumns.value, sortedItems.value, 'beejir-datatable')
 }
 </script>
 
 <template>
-  <div class="card card-bordered bg-base-100 overflow-hidden">
-    <!-- Top Toolbar: Search, Bulk Selection Banner & Action Slots -->
-    <div class="p-4 border-b border-base-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <!-- Search Bar -->
-      <div v-if="searchable" class="w-full sm:max-w-xs">
+  <div class="card card-bordered bg-base-100 overflow-visible">
+    <!-- Top Toolbar: Search Bar & Export Actions (XLSX, PDF, CSV) -->
+    <div class="p-4 sm:px-5 border-b border-base-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- Left: Search Input -->
+      <div v-if="searchable" class="w-full sm:w-72">
         <UiInput
           v-model="searchQuery"
-          placeholder="Cari semua data..."
+          placeholder="Cari semua kolom..."
           size="sm"
         >
           <template #icon-left>
@@ -201,19 +206,43 @@ function exportCSV() {
           </template>
         </UiInput>
       </div>
+      <div v-else />
 
-      <!-- Right Actions: Export & Slots -->
-      <div class="flex items-center gap-2 self-end sm:self-auto">
+      <!-- Right Actions: Export XLSX, PDF, CSV & Custom Slots -->
+      <div class="flex flex-wrap items-center gap-2 self-end sm:self-auto">
         <slot name="toolbar-right" />
+
+        <UiButton
+          variant="success"
+          soft
+          size="sm"
+          title="Ekspor ke Microsoft Excel (.xlsx)"
+          @click="handleExportXLSX"
+        >
+          <FileSpreadsheet class="h-4 w-4" />
+          <span>Ekspor XLSX</span>
+        </UiButton>
+
+        <UiButton
+          variant="error"
+          soft
+          size="sm"
+          title="Ekspor ke Dokumen PDF (.pdf)"
+          @click="handleExportPDF"
+        >
+          <FileText class="h-4 w-4" />
+          <span>Ekspor PDF</span>
+        </UiButton>
+
         <UiButton
           variant="ghost"
           size="sm"
           class="border border-base-300"
           title="Ekspor CSV"
-          @click="exportCSV"
+          @click="handleExportCSV"
         >
           <Download class="h-4 w-4" />
-          <span class="hidden sm:inline">Ekspor CSV</span>
+          <span class="hidden sm:inline">CSV</span>
         </UiButton>
       </div>
     </div>
@@ -348,18 +377,10 @@ function exportCSV() {
       </table>
     </div>
 
-    <!-- Bottom Pagination & Rows Per Page Controls -->
-    <div class="p-4 border-t border-base-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-base-content/70">
-      <!-- Info & Page Size Selector -->
-      <div class="flex items-center gap-3">
-        <label class="flex items-center gap-1.5 font-medium">
-          <span>Baris:</span>
-          <select v-model="pageSize" class="select select-sm w-auto py-1">
-            <option v-for="size in pageSizeOptions" :key="size" :value="size">
-              {{ size }}
-            </option>
-          </select>
-        </label>
+    <!-- Bottom Pagination & Quick Per-Page Pills Footer -->
+    <div class="p-4 sm:px-5 border-t border-base-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-base-content/70">
+      <!-- Showing Info & Quick Segmented Pills -->
+      <div class="flex flex-wrap items-center gap-3">
         <span>
           Menampilkan
           <strong class="font-bold text-base-content">
@@ -373,30 +394,59 @@ function exportCSV() {
           <strong class="font-bold text-base-content">{{ sortedItems.length }}</strong>
           data
         </span>
+
+        <!-- Segmented Quick Per-Page Switcher -->
+        <div class="hidden md:inline-flex items-center rounded-btn border border-base-300/80 bg-base-200/50 p-0.5">
+          <button
+            v-for="size in pageSizeOptions"
+            :key="size"
+            type="button"
+            class="rounded px-2 py-0.5 text-[11px] font-semibold transition-all"
+            :class="
+              pageSize === size
+                ? 'bg-primary text-primary-content shadow-xs'
+                : 'text-base-content/60 hover:text-base-content'
+            "
+            @click="pageSize = size"
+          >
+            {{ size }}
+          </button>
+        </div>
       </div>
 
-      <!-- Pagination Buttons -->
+      <!-- Pagination Numbered Buttons -->
       <div class="flex items-center gap-1 self-end sm:self-auto">
         <button
           type="button"
-          class="btn btn-ghost btn-xs btn-circle"
+          class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
           :disabled="currentPage <= 1"
           @click="currentPage--"
         >
-          <ChevronLeft class="h-4 w-4" />
+          <ChevronLeft class="h-3.5 w-3.5" />
         </button>
 
-        <span class="px-2 font-mono font-semibold">
-          {{ currentPage }} / {{ totalPages }}
-        </span>
+        <button
+          v-for="p in totalPages"
+          :key="p"
+          type="button"
+          class="btn btn-xs h-7 min-w-7 rounded-lg font-medium"
+          :class="
+            p === currentPage
+              ? 'btn-primary'
+              : 'bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none'
+          "
+          @click="currentPage = p"
+        >
+          {{ p }}
+        </button>
 
         <button
           type="button"
-          class="btn btn-ghost btn-xs btn-circle"
+          class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
           :disabled="currentPage >= totalPages"
           @click="currentPage++"
         >
-          <ChevronRight class="h-4 w-4" />
+          <ChevronRight class="h-3.5 w-3.5" />
         </button>
       </div>
     </div>

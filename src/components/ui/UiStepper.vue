@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Check, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 
 export interface StepItem {
@@ -17,15 +17,17 @@ export interface UiStepperProps {
   showProgress?: boolean
   progressLabel?: string
   finishLabel?: string
+  allowJumpForward?: boolean
 }
 
 const props = withDefaults(defineProps<UiStepperProps>(), {
   modelValue: 0,
   clickable: true,
-  showControls: true,
+  showControls: false,
   showProgress: true,
   progressLabel: 'Progres Konfigurasi Wizard',
-  finishLabel: 'Selesaikan & Simpan',
+  finishLabel: 'Submit & Launch',
+  allowJumpForward: false,
 })
 
 const emit = defineEmits<{
@@ -39,13 +41,28 @@ const totalSteps = computed(() => props.steps.length)
 const isFirstStep = computed(() => currentStep.value <= 0)
 const isLastStep = computed(() => currentStep.value >= totalSteps.value - 1)
 
-const completionPercentage = computed(() => {
-  if (totalSteps.value <= 0) return 0
-  return Math.round(((currentStep.value + 1) / totalSteps.value) * 100)
-})
+// Track the highest step index reached by the user
+const maxVisitedStep = ref(props.modelValue)
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val > maxVisitedStep.value) {
+      maxVisitedStep.value = val
+    }
+  },
+  { immediate: true },
+)
+
+function isStepAccessible(index: number): boolean {
+  if (props.allowJumpForward) return true
+  // Can only jump to steps already visited or the immediate current step
+  return index <= maxVisitedStep.value
+}
 
 function goToStep(index: number) {
   if (!props.clickable) return
+  if (!isStepAccessible(index)) return
   if (index >= 0 && index < totalSteps.value) {
     emit('update:modelValue', index)
     emit('change', index)
@@ -72,89 +89,63 @@ function nextStep() {
 </script>
 
 <template>
-  <div class="card card-bordered overflow-hidden">
-    <!-- Seamless Top Card Progress Bar (Replaces redundant top accent border) -->
-    <div
-      v-if="showProgress"
-      class="relative h-1.5 w-full bg-base-300/40 dark:bg-white/10 overflow-hidden"
-    >
-      <div
-        class="h-full bg-primary transition-all duration-500 ease-out"
-        :style="{ width: `${completionPercentage}%` }"
-      />
-    </div>
-
-    <!-- Unified Wizard Header: Status Label + Stepper Navigation -->
-    <div
-      class="relative border-b border-base-300/80 dark:border-white/[0.09] bg-base-200/40 dark:bg-base-200/50 p-4 sm:p-5 space-y-3.5"
-    >
-      <!-- Integrated Progress Status -->
-      <div v-if="showProgress" class="flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-base-content">{{ progressLabel }}</span>
-          <span class="text-base-content/40 hidden sm:inline">•</span>
-          <span class="text-base-content/65 font-medium hidden sm:inline">
-            Langkah {{ currentStep + 1 }} dari {{ totalSteps }}: <strong class="text-base-content">{{ steps[currentStep]?.title }}</strong>
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="badge badge-sm badge-soft badge-primary font-mono font-medium">
-            {{ completionPercentage }}% Selesai
-          </span>
-        </div>
-      </div>
-
-      <!-- Step Indicators Row -->
-      <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+  <div class="w-full">
+    <!-- BeeJir Numbered Wizard Header -->
+    <div class="px-2 py-3 sm:px-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div
           v-for="(step, idx) in steps"
           :key="step.id"
-          class="relative flex items-center flex-1 min-w-0"
+          class="flex items-center gap-3 flex-1 min-w-0"
         >
-          <!-- Step Pill Box -->
+          <!-- Step Clickable Area -->
           <div
-            class="flex items-center gap-3 flex-1 min-w-0 rounded-btn px-3 py-2 transition-all duration-200"
+            class="flex items-center gap-3 min-w-0 flex-1 transition-all"
             :class="[
-              clickable ? 'cursor-pointer group' : '',
-              idx === currentStep
-                ? 'bg-base-100 dark:bg-white/[0.05] border border-primary/35 shadow-xs'
-                : idx < currentStep
-                  ? 'bg-base-100/60 dark:bg-white/[0.02] border border-base-300 dark:border-white/10'
-                  : 'border border-transparent hover:bg-base-100/50 dark:hover:bg-white/[0.02]',
+              clickable && isStepAccessible(idx)
+                ? 'cursor-pointer group'
+                : 'cursor-not-allowed opacity-60',
             ]"
+            :title="
+              !isStepAccessible(idx)
+                ? 'Selesaikan tahap sebelumnya terlebih dahulu'
+                : undefined
+            "
             @click="goToStep(idx)"
           >
-            <!-- Step Circle Indicator -->
+            <!-- BeeJir Refined Square Step Avatar -->
             <div
-              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-bold text-xs transition-all duration-200"
+              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn font-bold text-xs transition-all duration-150"
               :class="[
-                idx < currentStep
-                  ? 'bg-success text-success-content shadow-xs'
-                  : idx === currentStep
-                    ? 'bg-primary text-primary-content ring-4 ring-primary/20 shadow-xs'
-                    : 'bg-base-200 dark:bg-base-300/80 border border-base-300 dark:border-white/15 text-base-content/50 group-hover:border-primary/40',
+                idx === currentStep
+                  ? 'bg-primary text-primary-content shadow-[0_2px_6px_0_rgb(var(--p)/0.45)] ring-2 ring-primary/25'
+                  : idx < currentStep
+                    ? 'bg-primary/15 text-primary'
+                    : isStepAccessible(idx)
+                      ? 'bg-base-200 text-base-content/60 group-hover:bg-base-300/80 group-hover:text-base-content'
+                      : 'bg-base-200/50 text-base-content/35 border border-base-300/60',
               ]"
             >
-              <Check v-if="idx < currentStep" class="h-4 w-4 stroke-[2.5]" />
-              <component :is="step.icon" v-else-if="step.icon" class="h-3.5 w-3.5" />
-              <span v-else>{{ idx + 1 }}</span>
+              <Check v-if="idx < currentStep" class="h-3.5 w-3.5 stroke-[2.4]" />
+              <component :is="step.icon" v-else-if="step.icon" class="h-4 w-4 shrink-0 stroke-[1.9]" />
+              <span v-else class="text-[11px] font-mono font-semibold">{{ String(idx + 1).padStart(2, '0') }}</span>
             </div>
 
-            <!-- Step Label -->
+            <!-- Step Number + Title + Subtitle -->
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-1.5">
-                <span
-                  class="text-xs font-bold truncate transition-colors"
-                  :class="[
-                    idx === currentStep
-                      ? 'text-primary'
-                      : idx < currentStep
-                        ? 'text-base-content'
-                        : 'text-base-content/55',
-                  ]"
-                >
-                  {{ step.title }}
-                </span>
+              <div
+                class="text-xs sm:text-sm font-semibold truncate transition-colors"
+                :class="
+                  idx === currentStep
+                    ? 'text-base-content'
+                    : idx < currentStep
+                      ? 'text-base-content/85'
+                      : isStepAccessible(idx)
+                        ? 'text-base-content/60 group-hover:text-base-content'
+                        : 'text-base-content/40'
+                "
+              >
+                {{ step.title }}
               </div>
               <p v-if="step.subtitle" class="text-[11px] text-base-content/50 truncate">
                 {{ step.subtitle }}
@@ -162,22 +153,17 @@ function nextStep() {
             </div>
           </div>
 
-          <!-- Connector Line (Desktop) -->
-          <div
+          <!-- Chevron Connector (BeeJir Style) -->
+          <ChevronRight
             v-if="idx < steps.length - 1"
-            class="hidden lg:block h-0.5 w-5 shrink-0 mx-1 rounded-full transition-colors duration-300"
-            :class="
-              idx < currentStep
-                ? 'bg-success'
-                : 'bg-base-300 dark:bg-white/15'
-            "
+            class="hidden md:block h-5 w-5 text-base-content/30 shrink-0"
           />
         </div>
       </div>
     </div>
 
-    <!-- Step Content Body -->
-    <div class="relative z-10 p-5 sm:p-6">
+    <!-- Step Content Body (Rendered only when default slot is provided) -->
+    <div v-if="$slots.default || $slots[`step-${currentStep}`]" class="p-5 sm:p-6 border-t border-base-300/80">
       <slot :name="`step-${currentStep}`" :current-step="currentStep" :step="steps[currentStep]">
         <slot :current-step="currentStep" :step="steps[currentStep]" />
       </slot>
@@ -186,34 +172,28 @@ function nextStep() {
     <!-- Stepper Footer Controls -->
     <div
       v-if="showControls"
-      class="flex flex-wrap items-center justify-between gap-3 border-t border-base-300/80 dark:border-white/[0.08] bg-base-200/35 dark:bg-base-200/45 px-5 py-4 rounded-b-[inherit]"
+      class="flex flex-wrap items-center justify-between gap-3 border-t border-base-300/70 px-5 py-4 sm:px-6"
     >
       <button
         type="button"
-        class="btn btn-outline btn-sm"
+        class="btn btn-outline btn-md"
         :disabled="isFirstStep"
         @click="prevStep"
       >
         <ChevronLeft class="h-4 w-4" />
-        Langkah Sebelumnya
+        <span>Previous</span>
       </button>
 
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-mono text-base-content/55 hidden sm:inline">
-          Langkah {{ currentStep + 1 }} / {{ totalSteps }}
-        </span>
-
-        <button
-          type="button"
-          class="btn btn-sm"
-          :class="isLastStep ? 'btn-success' : 'btn-primary'"
-          @click="nextStep"
-        >
-          <span>{{ isLastStep ? finishLabel : 'Langkah Selanjutnya' }}</span>
-          <Check v-if="isLastStep" class="h-4 w-4" />
-          <ChevronRight v-else class="h-4 w-4" />
-        </button>
-      </div>
+      <button
+        type="button"
+        class="btn btn-md"
+        :class="isLastStep ? 'btn-success' : 'btn-primary'"
+        @click="nextStep"
+      >
+        <span>{{ isLastStep ? finishLabel : 'Next' }}</span>
+        <Check v-if="isLastStep" class="h-4 w-4" />
+        <ChevronRight v-else class="h-4 w-4" />
+      </button>
     </div>
   </div>
 </template>

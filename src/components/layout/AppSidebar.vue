@@ -1,15 +1,13 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useRoute, RouterLink } from 'vue-router'
 import {
   LayoutDashboard,
   Layers,
   Users,
   Palette,
-  Sparkles,
-  ChevronLeft,
-  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   X,
-  Github,
   Wand2,
   UserCircle,
   LogIn,
@@ -31,32 +29,23 @@ interface NavItem {
 
 const mainNav: NavItem[] = [
   {
-    label: 'Dashboard',
+    label: 'Dashboard CRM',
     to: '/',
     icon: LayoutDashboard,
-    badge: 'Live',
-    badgeVariant: 'primary',
+    badge: 'CRM',
+    badgeVariant: 'error',
   },
   {
-    label: 'UI Components',
-    to: '/components',
-    icon: Layers,
-    badge: '22+ UI',
-    badgeVariant: 'secondary',
+    label: 'Users Management',
+    to: '/users',
+    icon: Users,
+    badge: '4',
+    badgeVariant: 'primary',
   },
   {
     label: 'Project Wizard',
     to: '/project-wizard',
     icon: Wand2,
-    badge: 'Demo',
-    badgeVariant: 'accent',
-  },
-  {
-    label: 'Users & Data',
-    to: '/users',
-    icon: Users,
-    badge: '128',
-    badgeVariant: 'info',
   },
 ]
 
@@ -65,22 +54,28 @@ const pagesNav: NavItem[] = [
     label: 'User Profile',
     to: '/profile',
     icon: UserCircle,
-    badge: 'New',
-    badgeVariant: 'success',
   },
   {
-    label: 'Login & Register',
+    label: 'Auth Cover Login',
     to: '/login',
     icon: LogIn,
-    badge: 'Auth',
-    badgeVariant: 'primary',
   },
   {
-    label: 'Error 403 / 404 / 500',
+    label: 'Misc Error Pages',
     to: '/error/404',
     icon: ShieldAlert,
-    badge: 'HTTP',
+    badge: '3',
     badgeVariant: 'warning',
+  },
+]
+
+const uiNav: NavItem[] = [
+  {
+    label: 'UI Components',
+    to: '/components',
+    icon: Layers,
+    badge: '22+',
+    badgeVariant: 'info',
   },
 ]
 
@@ -108,49 +103,75 @@ function isActive(path: string): boolean {
     />
   </Transition>
 
-  <!-- Sidebar Panel -->
+  <!-- Sidebar Panel (BeeJir Vertical Menu Style) -->
   <aside
-    class="fixed inset-y-0 left-0 z-40 flex flex-col border-r border-base-300/80 bg-base-100 dark:bg-base-100/90 dark:backdrop-blur-xl transition-all duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:max-h-screen"
+    class="fixed inset-y-0 left-0 z-40 flex flex-col bg-base-100 border-r border-base-300/75 shadow-[0_0.125rem_0.625rem_0_rgba(38,43,67,0.06)] dark:shadow-[0_0.125rem_0.625rem_0_rgba(16,17,33,0.24)] transition-all duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:max-h-screen shrink-0"
     :class="[
-      themeStore.sidebarCollapsed ? 'lg:w-20' : 'lg:w-68',
+      themeStore.sidebarCollapsed ? 'lg:w-[74px]' : 'lg:w-[260px]',
       themeStore.mobileSidebarOpen
-        ? 'translate-x-0 w-72 shadow-2xl'
-        : '-translate-x-full w-72 lg:translate-x-0 lg:shadow-none',
+        ? 'translate-x-0 w-[260px] shadow-2xl'
+        : '-translate-x-full w-[260px] lg:translate-x-0',
     ]"
   >
-    <!-- Brand Header (Pinned / Fixed at top) -->
+    <!-- Brand Header (BeeJir app-brand style) -->
     <div
-      class="flex h-16 shrink-0 items-center border-b border-base-300/70 transition-all"
-      :class="themeStore.sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-4'"
+      class="flex h-16 shrink-0 items-center transition-all"
+      :class="themeStore.sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-5'"
     >
       <RouterLink
         to="/"
-        class="flex items-center gap-3 overflow-hidden"
-        :class="themeStore.sidebarCollapsed ? 'justify-center' : ''"
+        class="flex items-center gap-2.5 overflow-hidden"
         @click="themeStore.mobileSidebarOpen = false"
       >
-        <div
-          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-gradient-to-tr from-primary via-secondary to-accent text-white shadow-md shadow-primary/30 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.35),0_4px_18px_rgb(var(--p)/0.55)]"
-        >
-          <Sparkles class="h-5 w-5" />
-        </div>
-        <div
+        <!-- BeeJir Hexagon Bee Emblem Logo -->
+        <span class="shrink-0 flex items-center justify-center">
+          <svg class="h-8 w-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Modern Hexagon Shield Base -->
+            <polygon
+              points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5"
+              fill="rgb(var(--p))"
+              class="transition-colors"
+            />
+            <!-- Hexagon Soft Inner Glow -->
+            <polygon
+              points="16,4.5 26.5,10.6 26.5,21.4 16,27.5 5.5,21.4 5.5,10.6"
+              fill="rgb(var(--p))"
+              fill-opacity="0.25"
+            />
+            <!-- Bee Head -->
+            <circle cx="16" cy="11" r="2.8" fill="white" />
+            <!-- Bee Wings -->
+            <ellipse cx="11.2" cy="13.2" rx="3.5" ry="2.2" transform="rotate(-28 11.2 13.2)" fill="white" fill-opacity="0.85" />
+            <ellipse cx="20.8" cy="13.2" rx="3.5" ry="2.2" transform="rotate(28 20.8 13.2)" fill="white" fill-opacity="0.85" />
+            <!-- Bee Abdomen Body -->
+            <path
+              d="M13 14.8C13 13.8 19 13.8 19 14.8V20C19 21.6 17.5 23.5 16 24.5C14.5 23.5 13 21.6 13 20V14.8Z"
+              fill="#181a20"
+            />
+            <!-- Honey Golden Stripes -->
+            <path d="M13 16.5H19" stroke="#fdb528" stroke-width="1.4" stroke-linecap="round" />
+            <path d="M13.4 19.2H18.6" stroke="#fdb528" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <span
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="flex flex-col"
+          class="text-[1.25rem] font-bold tracking-tight text-base-content"
         >
-          <div class="flex items-center gap-1.5">
-            <span class="text-lg font-extrabold tracking-tight text-base-content">
-              Bee<span class="text-primary">Jir</span>
-            </span>
-            <span class="badge badge-sm badge-soft badge-primary font-mono text-[10px]">
-              v0.3
-            </span>
-          </div>
-          <span class="text-[11px] font-medium text-base-content/55 truncate">
-            Clean & Colorful Admin
-          </span>
-        </div>
+          Bee<span class="text-primary">Jir</span>
+        </span>
       </RouterLink>
+
+      <!-- Desktop Collapse Toggle (Double Chevron like BeeJir) -->
+      <button
+        v-show="!themeStore.sidebarCollapsed"
+        type="button"
+        class="hidden lg:inline-flex h-7 w-7 items-center justify-center rounded-full text-base-content/55 hover:bg-base-200 hover:text-base-content transition-colors cursor-pointer"
+        title="Collapse Menu"
+        @click="themeStore.sidebarCollapsed = true"
+      >
+        <ChevronsLeft class="h-4.5 w-4.5" />
+      </button>
 
       <!-- Mobile Close Button -->
       <button
@@ -162,39 +183,54 @@ function isActive(path: string): boolean {
       </button>
     </div>
 
-    <!-- Navigation Links (Scrollable independently) -->
+    <!-- Expand Button When Collapsed -->
+    <div v-if="themeStore.sidebarCollapsed" class="hidden lg:flex justify-center pb-2">
+      <button
+        type="button"
+        class="h-7 w-7 flex items-center justify-center rounded-full text-base-content/55 hover:bg-base-200 hover:text-primary transition-colors cursor-pointer"
+        title="Expand Menu"
+        @click="themeStore.sidebarCollapsed = false"
+      >
+        <ChevronsRight class="h-4 w-4" />
+      </button>
+    </div>
+
+    <!-- Navigation Links -->
     <div
-      class="flex-1 min-h-0 overflow-y-auto py-5 space-y-6"
-      :class="themeStore.sidebarCollapsed ? 'px-2' : 'px-3'"
+      class="flex-1 min-h-0 overflow-y-auto py-2 space-y-5"
+      :class="themeStore.sidebarCollapsed ? 'px-2.5' : 'px-3.5'"
     >
-      <!-- Group 1: Main Menu -->
+      <!-- Group 1: Dashboards & Apps -->
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-base-content/45"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-base-content/45"
         >
-          Menu Utama
+          <span>Dashboards &amp; Apps</span>
+          <span class="h-px flex-1 bg-base-300/80" />
         </div>
-        <nav class="space-y-1.5">
+
+        <nav class="space-y-1">
           <RouterLink
             v-for="item in mainNav"
             :key="item.to"
             :to="item.to"
-            class="group relative flex items-center rounded-btn text-sm font-semibold transition-all duration-150"
+            class="group relative flex items-center rounded-btn text-[14px] font-normal transition-all duration-150"
             :class="[
               themeStore.sidebarCollapsed
-                ? 'justify-center h-11 w-11 mx-auto p-0'
-                : 'justify-start gap-3 px-3 py-2.5 w-full',
+                ? 'justify-center h-10 w-10 mx-auto p-0'
+                : 'justify-start gap-3 px-3.5 py-2 w-full',
               isActive(item.to)
-                ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-content shadow-sm shadow-primary/25 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_4px_20px_-2px_rgb(var(--p)/0.55)]'
-                : 'text-base-content/75 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content',
+                ? 'bg-primary text-primary-content font-medium shadow-[0_2px_6px_0_rgb(var(--p)/0.48)]'
+                : 'text-base-content/80 hover:bg-base-200/85 hover:text-base-content',
             ]"
             :title="themeStore.sidebarCollapsed ? item.label : undefined"
             @click="themeStore.mobileSidebarOpen = false"
           >
             <component
               :is="item.icon"
-              class="h-5 w-5 shrink-0 transition-transform duration-150 group-hover:scale-105"
+              class="h-[19px] w-[19px] shrink-0"
+              :class="isActive(item.to) ? 'text-primary-content' : 'text-base-content/70 group-hover:text-base-content'"
             />
             <span
               v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
@@ -204,10 +240,10 @@ function isActive(path: string): boolean {
             </span>
             <span
               v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
-              class="badge badge-sm"
+              class="badge badge-xs rounded-full font-semibold"
               :class="
                 isActive(item.to)
-                  ? 'border-white/25 bg-white/20 text-white'
+                  ? 'bg-white/20 text-white border-transparent'
                   : `badge-soft badge-${item.badgeVariant || 'primary'}`
               "
             >
@@ -217,34 +253,37 @@ function isActive(path: string): boolean {
         </nav>
       </div>
 
-      <!-- Group 2: Demo Pages, Profile, Auth & Errors -->
+      <!-- Group 2: Pages & Auth -->
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-base-content/45"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-base-content/45"
         >
-          Halaman & Autentikasi
+          <span>Pages &amp; Auth</span>
+          <span class="h-px flex-1 bg-base-300/80" />
         </div>
-        <nav class="space-y-1.5">
+
+        <nav class="space-y-1">
           <RouterLink
             v-for="item in pagesNav"
             :key="item.to"
             :to="item.to"
-            class="group relative flex items-center rounded-btn text-sm font-semibold transition-all duration-150"
+            class="group relative flex items-center rounded-btn text-[14px] font-normal transition-all duration-150"
             :class="[
               themeStore.sidebarCollapsed
-                ? 'justify-center h-11 w-11 mx-auto p-0'
-                : 'justify-start gap-3 px-3 py-2.5 w-full',
+                ? 'justify-center h-10 w-10 mx-auto p-0'
+                : 'justify-start gap-3 px-3.5 py-2 w-full',
               isActive(item.to)
-                ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-content shadow-sm shadow-primary/25 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28),0_4px_20px_-2px_rgb(var(--p)/0.55)]'
-                : 'text-base-content/75 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content',
+                ? 'bg-primary text-primary-content font-medium shadow-[0_2px_6px_0_rgb(var(--p)/0.48)]'
+                : 'text-base-content/80 hover:bg-base-200/85 hover:text-base-content',
             ]"
             :title="themeStore.sidebarCollapsed ? item.label : undefined"
             @click="themeStore.mobileSidebarOpen = false"
           >
             <component
               :is="item.icon"
-              class="h-5 w-5 shrink-0 transition-transform duration-150 group-hover:scale-105"
+              class="h-[19px] w-[19px] shrink-0"
+              :class="isActive(item.to) ? 'text-primary-content' : 'text-base-content/70 group-hover:text-base-content'"
             />
             <span
               v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
@@ -254,10 +293,10 @@ function isActive(path: string): boolean {
             </span>
             <span
               v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
-              class="badge badge-sm"
+              class="badge badge-xs rounded-full font-semibold"
               :class="
                 isActive(item.to)
-                  ? 'border-white/25 bg-white/20 text-white'
+                  ? 'bg-white/20 text-white border-transparent'
                   : `badge-soft badge-${item.badgeVariant || 'primary'}`
               "
             >
@@ -267,83 +306,114 @@ function isActive(path: string): boolean {
         </nav>
       </div>
 
-      <!-- Customization Quick Action -->
+      <!-- Group 3: Components & Theme -->
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-base-content/45"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-base-content/45"
         >
-          Personalisasi
+          <span>Components &amp; UI</span>
+          <span class="h-px flex-1 bg-base-300/80" />
         </div>
-        <button
-          type="button"
-          class="group flex items-center rounded-btn text-sm font-semibold text-base-content/75 hover:bg-secondary/10 dark:hover:bg-secondary/20 hover:text-secondary transition-all duration-150"
-          :class="[
-            themeStore.sidebarCollapsed
-              ? 'justify-center h-11 w-11 mx-auto p-0'
-              : 'w-full justify-start gap-3 px-3 py-2.5',
-          ]"
-          :title="themeStore.sidebarCollapsed ? 'Theme Customizer' : undefined"
-          @click="themeStore.customizerOpen = true; themeStore.mobileSidebarOpen = false"
-        >
-          <Palette class="h-5 w-5 shrink-0 text-secondary group-hover:rotate-12 transition-transform" />
-          <span
-            v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-            class="flex-1 text-left truncate"
+
+        <nav class="space-y-1">
+          <RouterLink
+            v-for="item in uiNav"
+            :key="item.to"
+            :to="item.to"
+            class="group relative flex items-center rounded-btn text-[14px] font-normal transition-all duration-150"
+            :class="[
+              themeStore.sidebarCollapsed
+                ? 'justify-center h-10 w-10 mx-auto p-0'
+                : 'justify-start gap-3 px-3.5 py-2 w-full',
+              isActive(item.to)
+                ? 'bg-primary text-primary-content font-medium shadow-[0_2px_6px_0_rgb(var(--p)/0.48)]'
+                : 'text-base-content/80 hover:bg-base-200/85 hover:text-base-content',
+            ]"
+            :title="themeStore.sidebarCollapsed ? item.label : undefined"
+            @click="themeStore.mobileSidebarOpen = false"
           >
-            Theme Studio
-          </span>
-          <span
-            v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-            class="flex items-center gap-1"
+            <component
+              :is="item.icon"
+              class="h-[19px] w-[19px] shrink-0"
+              :class="isActive(item.to) ? 'text-primary-content' : 'text-base-content/70 group-hover:text-base-content'"
+            />
+            <span
+              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
+              class="flex-1 truncate"
+            >
+              {{ item.label }}
+            </span>
+            <span
+              v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
+              class="badge badge-xs rounded-full font-semibold"
+              :class="
+                isActive(item.to)
+                  ? 'bg-white/20 text-white border-transparent'
+                  : `badge-soft badge-${item.badgeVariant || 'primary'}`
+              "
+            >
+              {{ item.badge }}
+            </span>
+          </RouterLink>
+
+          <!-- Theme Customizer Trigger -->
+          <button
+            type="button"
+            class="group flex items-center rounded-btn text-[14px] font-normal text-base-content/80 hover:bg-base-200/85 hover:text-base-content transition-all duration-150 cursor-pointer"
+            :class="[
+              themeStore.sidebarCollapsed
+                ? 'justify-center h-10 w-10 mx-auto p-0'
+                : 'w-full justify-start gap-3 px-3.5 py-2',
+            ]"
+            :title="themeStore.sidebarCollapsed ? 'Theme Customizer' : undefined"
+            @click="themeStore.customizerOpen = true; themeStore.mobileSidebarOpen = false"
           >
-            <span class="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_8px_rgb(var(--p)/0.7)]" />
-            <span class="h-2.5 w-2.5 rounded-full bg-secondary shadow-[0_0_8px_rgb(var(--s)/0.7)]" />
-            <span class="h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_8px_rgb(var(--a)/0.7)]" />
-          </span>
-        </button>
+            <Palette class="h-[19px] w-[19px] shrink-0 text-primary" />
+            <span
+              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
+              class="flex-1 text-left truncate"
+            >
+              Theme Customizer
+            </span>
+            <span
+              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
+              class="flex items-center gap-1"
+            >
+              <span class="h-2 w-2 rounded-full bg-primary" />
+              <span class="h-2 w-2 rounded-full bg-secondary" />
+              <span class="h-2 w-2 rounded-full bg-accent" />
+            </span>
+          </button>
+        </nav>
       </div>
     </div>
 
-    <!-- Bottom Open-Source Promo Card & Collapse Toggle (Pinned / Fixed at bottom) -->
+    <!-- Bottom Active Preset Summary -->
     <div
-      class="shrink-0 border-t border-base-300/70 space-y-2"
-      :class="themeStore.sidebarCollapsed ? 'p-2' : 'p-3'"
+      class="shrink-0 border-t border-base-300/70"
+      :class="themeStore.sidebarCollapsed ? 'p-2' : 'p-3.5'"
     >
       <div
         v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-        class="rounded-box bg-gradient-to-br from-primary/12 via-secondary/10 to-accent/12 dark:from-primary/20 dark:via-secondary/15 dark:to-accent/20 border border-primary/20 dark:border-primary/35 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] p-3.5"
+        class="rounded-btn bg-base-200/75 p-3 flex items-center justify-between gap-2"
       >
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-bold text-base-content">Open Source Ready</span>
-          <Github class="h-4 w-4 text-primary" />
+        <div class="min-w-0">
+          <div class="text-xs font-semibold text-base-content truncate">
+            {{ themeStore.currentPreset.name }}
+          </div>
+          <div class="text-[11px] text-base-content/55 truncate">
+            Mode: {{ themeStore.currentPreset.mode === 'dark' ? 'Dark Theme' : 'Light Theme' }}
+          </div>
         </div>
-        <p class="text-[11px] text-base-content/65 leading-relaxed mb-2.5">
-          Bebas digunakan & dikustomisasi tanpa ketergantungan library eksternal.
-        </p>
         <button
           type="button"
-          class="btn btn-primary btn-xs btn-block"
+          class="btn btn-soft btn-primary btn-xs shrink-0"
           @click="themeStore.customizerOpen = true"
         >
-          Atur Tema Sekarang
+          Customize
         </button>
       </div>
-
-      <!-- Desktop Collapse Button -->
-      <button
-        type="button"
-        class="hidden lg:flex items-center justify-center rounded-btn text-xs font-semibold text-base-content/60 hover:bg-base-200 hover:text-base-content transition-colors"
-        :class="themeStore.sidebarCollapsed ? 'h-10 w-10 mx-auto p-0' : 'w-full gap-2 py-2 px-3'"
-        :title="themeStore.sidebarCollapsed ? 'Perluas Sidebar' : 'Ringkas Sidebar'"
-        @click="themeStore.sidebarCollapsed = !themeStore.sidebarCollapsed"
-      >
-        <ChevronRight v-if="themeStore.sidebarCollapsed" class="h-4 w-4" />
-        <template v-else>
-          <ChevronLeft class="h-4 w-4" />
-          <span>Ringkas Sidebar</span>
-        </template>
-      </button>
     </div>
   </aside>
 </template>

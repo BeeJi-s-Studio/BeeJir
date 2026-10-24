@@ -1,42 +1,42 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
-import type { ThemeId, RadiusScale, ThemePreset, CustomColorOverrides } from '@/types/theme'
+import type { ThemeId, RadiusScale, ContentWidth, ThemePreset, CustomColorOverrides } from '@/types/theme'
 
 export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'daybreak',
-    name: 'Daybreak Pop',
-    tagline: 'Clean slate white dengan Indigo, Coral & Mint',
+    name: 'Daybreak Indigo',
+    tagline: 'Royal Indigo (#666cff) pada permukaan putih bersih & slate profesional',
     mode: 'light',
     preview: {
-      bg: '#f4f7fe',
+      bg: '#f7f7f9',
       card: '#ffffff',
-      primary: '#6366f1',
-      secondary: '#ec4899',
-      accent: '#14b8a6',
+      primary: '#666cff',
+      secondary: '#e83e8c',
+      accent: '#20c997',
     },
   },
   {
     id: 'midnight',
-    name: 'Midnight Cyber',
-    tagline: 'Deep obsidian dengan Electric Indigo, Hot Pink & Cyber Cyan',
+    name: 'Midnight Navy',
+    tagline: 'Deep Navy Slate (#282a42 / #30334e) dengan Royal Indigo & Cyan',
     mode: 'dark',
     preview: {
-      bg: '#080c18',
-      card: '#11192c',
-      primary: '#6366f1',
-      secondary: '#ec4899',
-      accent: '#06b6d4',
+      bg: '#282a42',
+      card: '#30334e',
+      primary: '#666cff',
+      secondary: '#e83e8c',
+      accent: '#26c6f9',
     },
   },
   {
     id: 'aurora',
-    name: 'Aurora Matrix',
-    tagline: 'Botanical night dengan Neon Emerald, Electric Cyan & Gold',
+    name: 'Aurora Emerald',
+    tagline: 'Forest slate gelap dengan Emerald, Lagoon Cyan & Solar Gold',
     mode: 'dark',
     preview: {
-      bg: '#06100d',
-      card: '#0d1f1a',
+      bg: '#13221e',
+      card: '#1a2e29',
       primary: '#10b981',
       secondary: '#06b6d4',
       accent: '#f59e0b',
@@ -48,8 +48,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     tagline: 'Velvet plum dark dengan Electric Violet, Fuchsia & Coral',
     mode: 'dark',
     preview: {
-      bg: '#0b0716',
-      card: '#171029',
+      bg: '#211a34',
+      card: '#2c2344',
       primary: '#8b5cf6',
       secondary: '#d946ef',
       accent: '#f43f5e',
@@ -58,10 +58,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'sunset',
     name: 'Tropical Sunset',
-    tagline: 'Warm cream dengan Tangerine, Rose & Violet',
+    tagline: 'Warm alabaster dengan Tangerine, Rose & Violet',
     mode: 'light',
     preview: {
-      bg: '#fff8f3',
+      bg: '#f9f7f6',
       card: '#ffffff',
       primary: '#f97316',
       secondary: '#e11d48',
@@ -71,10 +71,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'ocean',
     name: 'Ocean Breeze',
-    tagline: 'Crisp aqua surface dengan Sky, Lagoon & Coral',
+    tagline: 'Crisp cool slate dengan Azure Sky, Lagoon & Coral',
     mode: 'light',
     preview: {
-      bg: '#f0f9ff',
+      bg: '#f5f8fb',
       card: '#ffffff',
       primary: '#0284c7',
       secondary: '#06b6d4',
@@ -84,10 +84,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'matcha',
     name: 'Matcha Forest',
-    tagline: 'Botanical sage dengan Emerald, Teal & Citrus Gold',
+    tagline: 'Botanical sage dengan Emerald, Teal & Citrus Amber',
     mode: 'light',
     preview: {
-      bg: '#f2faf6',
+      bg: '#f6f9f7',
       card: '#ffffff',
       primary: '#059669',
       secondary: '#0d9488',
@@ -96,11 +96,11 @@ export const THEME_PRESETS: ThemePreset[] = [
   },
   {
     id: 'berry',
-    name: 'Berry Candy',
-    tagline: 'Soft lavender dengan Royal Violet, Fuchsia & Amber',
+    name: 'Berry Violet',
+    tagline: 'Soft lavender slate dengan Royal Violet, Fuchsia & Amber',
     mode: 'light',
     preview: {
-      bg: '#faf5ff',
+      bg: '#f8f7fb',
       card: '#ffffff',
       primary: '#7c3aed',
       secondary: '#d946ef',
@@ -111,10 +111,10 @@ export const THEME_PRESETS: ThemePreset[] = [
 
 const RADIUS_MAP: Record<RadiusScale, { box: string; btn: string; badge: string; label: string }> = {
   none: { box: '0rem', btn: '0rem', badge: '0.25rem', label: 'Sharp (0px)' },
-  sm: { box: '0.5rem', btn: '0.375rem', badge: '0.375rem', label: 'Small' },
-  md: { box: '0.875rem', btn: '0.625rem', badge: '9999px', label: 'Medium' },
-  lg: { box: '1.25rem', btn: '0.75rem', badge: '9999px', label: 'Large (Default)' },
-  full: { box: '1.75rem', btn: '9999px', badge: '9999px', label: 'Pill / Full' },
+  sm: { box: '0.375rem', btn: '0.25rem', badge: '0.375rem', label: 'Small' },
+  md: { box: '0.625rem', btn: '0.5rem', badge: '9999px', label: 'Medium (Default)' },
+  lg: { box: '1rem', btn: '0.625rem', badge: '9999px', label: 'Large' },
+  full: { box: '1.5rem', btn: '9999px', badge: '9999px', label: 'Pill / Full' },
 }
 
 /**
@@ -122,11 +122,11 @@ const RADIUS_MAP: Record<RadiusScale, { box: string; btn: string; badge: string;
  */
 export function hexToRgbChannels(hex: string): string {
   const clean = hex.replace('#', '').trim()
-  if (clean.length !== 6) return '99 102 241'
+  if (clean.length !== 6) return '102 108 255'
   const r = parseInt(clean.slice(0, 2), 16)
   const g = parseInt(clean.slice(2, 4), 16)
   const b = parseInt(clean.slice(4, 6), 16)
-  if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) return '99 102 241'
+  if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) return '102 108 255'
   return `${r} ${g} ${b}`
 }
 
@@ -136,7 +136,10 @@ export const useThemeStore = defineStore('beejir-theme', () => {
     (localStorage.getItem('beejir:theme') as ThemeId) || 'daybreak'
   )
   const radiusScale = ref<RadiusScale>(
-    (localStorage.getItem('beejir:radius') as RadiusScale) || 'lg'
+    (localStorage.getItem('beejir:radius') as RadiusScale) || 'md'
+  )
+  const contentWidth = ref<ContentWidth>(
+    (localStorage.getItem('beejir:content-width') as ContentWidth) || 'compact'
   )
   const sidebarCollapsed = ref<boolean>(
     localStorage.getItem('beejir:sidebar-collapsed') === 'true'
@@ -146,9 +149,9 @@ export const useThemeStore = defineStore('beejir-theme', () => {
 
   const customColors = ref<CustomColorOverrides>({
     enabled: false,
-    primary: '#6366f1',
-    secondary: '#ec4899',
-    accent: '#14b8a6',
+    primary: '#666cff',
+    secondary: '#e83e8c',
+    accent: '#20c997',
   })
 
   // Load saved custom colors if any
@@ -176,7 +179,7 @@ export const useThemeStore = defineStore('beejir-theme', () => {
     root.classList.toggle('dark', isDark.value)
 
     // Apply radius variables
-    const radius = RADIUS_MAP[radiusScale.value] ?? RADIUS_MAP.lg
+    const radius = RADIUS_MAP[radiusScale.value] ?? RADIUS_MAP.md
     root.style.setProperty('--rounded-box', radius.box)
     root.style.setProperty('--rounded-btn', radius.btn)
     root.style.setProperty('--rounded-badge', radius.badge)
@@ -219,6 +222,10 @@ export const useThemeStore = defineStore('beejir-theme', () => {
     radiusScale.value = scale
   }
 
+  function setContentWidth(width: ContentWidth) {
+    contentWidth.value = width
+  }
+
   function setCustomColor(key: 'primary' | 'secondary' | 'accent', hex: string) {
     customColors.value.enabled = true
     customColors.value[key] = hex
@@ -230,7 +237,8 @@ export const useThemeStore = defineStore('beejir-theme', () => {
     customColors.value.primary = preset.preview.primary
     customColors.value.secondary = preset.preview.secondary
     customColors.value.accent = preset.preview.accent
-    radiusScale.value = 'lg'
+    radiusScale.value = 'md'
+    contentWidth.value = 'compact'
     applyThemeToDom()
   }
 
@@ -260,10 +268,11 @@ export const useThemeStore = defineStore('beejir-theme', () => {
 
   // Watchers for persistence & DOM sync
   watch(
-    [activeTheme, radiusScale, customColors],
+    [activeTheme, radiusScale, contentWidth, customColors],
     () => {
       localStorage.setItem('beejir:theme', activeTheme.value)
       localStorage.setItem('beejir:radius', radiusScale.value)
+      localStorage.setItem('beejir:content-width', contentWidth.value)
       localStorage.setItem('beejir:custom-colors', JSON.stringify(customColors.value))
       applyThemeToDom()
     },
@@ -277,6 +286,7 @@ export const useThemeStore = defineStore('beejir-theme', () => {
   return {
     activeTheme,
     radiusScale,
+    contentWidth,
     sidebarCollapsed,
     mobileSidebarOpen,
     customizerOpen,
@@ -288,6 +298,7 @@ export const useThemeStore = defineStore('beejir-theme', () => {
     setTheme,
     toggleDarkLight,
     setRadius,
+    setContentWidth,
     setCustomColor,
     resetCustomizations,
     exportThemeCSS,

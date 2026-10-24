@@ -10,6 +10,7 @@ import {
   Inbox,
 } from 'lucide-vue-next'
 import type { ColorVariant } from '@/types/theme'
+import { animateDropdownIn, animateDropdownOut } from '@/utils/gsap'
 
 export interface SelectOption {
   label: string
@@ -306,10 +307,10 @@ const sizeClasses = computed(() => {
   <div
     ref="containerRef"
     class="relative flex flex-col gap-1.5 w-full"
-    :class="isOpen ? 'z-30' : 'z-auto'"
+    :class="isOpen ? 'z-[90]' : 'z-auto'"
   >
     <!-- Optional Label -->
-    <span v-if="label" class="text-xs font-semibold text-base-content/80">
+    <span v-if="label" class="label-text">
       {{ label }}
     </span>
 
@@ -408,16 +409,13 @@ const sizeClasses = computed(() => {
 
     <!-- Dropdown Menu -->
     <Transition
-      enter-active-class="transition duration-150 ease-out"
-      enter-from-class="opacity-0 scale-95 -translate-y-1"
-      enter-to-class="opacity-100 scale-100 translate-y-0"
-      leave-active-class="transition duration-100 ease-in"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
+      :css="false"
+      @enter="(el, done) => animateDropdownIn(el, done)"
+      @leave="(el, done) => animateDropdownOut(el, done)"
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
+        class="absolute left-0 right-0 top-full mt-1.5 z-[100] rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
         @click.stop
         @mousedown.stop
       >

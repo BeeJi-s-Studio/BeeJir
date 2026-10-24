@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import {
   Menu,
   Search,
@@ -9,12 +9,18 @@ import {
   Moon,
   Bell,
   Check,
-  Sparkles,
-  CheckCircle2,
+  LayoutGrid,
+  LayoutDashboard,
+  Users,
+  Wand2,
+  Layers,
+  User,
+  Settings,
+  LogOut,
+  MailOpen,
+  ShoppingCart,
+  PieChart,
   AlertTriangle,
-  Info,
-  CheckCheck,
-  Inbox,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 
@@ -24,52 +30,104 @@ interface NotificationItem {
   description: string
   time: string
   unread: boolean
+  initials?: string
   variant: 'primary' | 'success' | 'warning' | 'error' | 'info'
-  icon: any
+  icon?: any
 }
 
-const route = useRoute()
 const themeStore = useThemeStore()
+
+const navbarWidthClass = computed(() => {
+  switch (themeStore.contentWidth) {
+    case 'full':
+      return 'w-full max-w-none px-4 sm:px-8'
+    case 'wide':
+      return 'max-w-[1720px] w-full mx-auto px-4 sm:px-8'
+    case 'compact':
+    default:
+      return 'max-w-[1440px] w-full mx-auto px-4 sm:px-6'
+  }
+})
 const showPresetMenu = ref(false)
+const showShortcuts = ref(false)
 const showNotifications = ref(false)
+const showUserMenu = ref(false)
 const searchQuery = ref('')
+
+function closeAllMenus() {
+  showPresetMenu.value = false
+  showShortcuts.value = false
+  showNotifications.value = false
+  showUserMenu.value = false
+}
+
+const shortcuts = [
+  {
+    title: 'CRM Dashboard',
+    subtitle: 'Sales & Analytics',
+    to: '/',
+    icon: LayoutDashboard,
+    variant: 'primary',
+  },
+  {
+    title: 'User Management',
+    subtitle: 'Manage Contributors',
+    to: '/users',
+    icon: Users,
+    variant: 'success',
+  },
+  {
+    title: 'Project Wizard',
+    subtitle: '4-Step Deployment',
+    to: '/project-wizard',
+    icon: Wand2,
+    variant: 'warning',
+  },
+  {
+    title: 'UI Components',
+    subtitle: '22+ Semantic Kits',
+    to: '/components',
+    icon: Layers,
+    variant: 'info',
+  },
+]
 
 const notifications = ref<NotificationItem[]>([
   {
     id: '1',
-    title: 'Deployment v1.2.0 Sukses',
-    description: 'Seluruh build aset Vite telah dipublikasikan ke production server.',
-    time: '5 menit lalu',
+    title: 'Congratulation Arif! 🎉',
+    description: 'Won the monthly best seller gold badge ($42.8k target)',
+    time: '1h ago',
     unread: true,
-    variant: 'success',
-    icon: CheckCircle2,
+    initials: 'AP',
+    variant: 'primary',
   },
   {
     id: '2',
-    title: 'Penggunaan Cloud Storage 85%',
-    description: 'Kapasitas tersisa 15 GB. Pertimbangkan upgrade kuota penyimpanan.',
-    time: '45 menit lalu',
+    title: 'Whoo! You have new order 🛒',
+    description: 'ACME Inc. made new enterprise order Rp 14.500.000',
+    time: '3h ago',
     unread: true,
-    variant: 'warning',
-    icon: AlertTriangle,
+    variant: 'success',
+    icon: ShoppingCart,
   },
   {
     id: '3',
-    title: 'Pengguna Baru Bergabung',
-    description: 'Sarah Jenkins (Frontend Dev) baru saja mendaftar dan verifikasi.',
-    time: '2 jam lalu',
+    title: 'Monthly report is generated',
+    description: 'October monthly CRM financial report is ready to review',
+    time: '1 day ago',
     unread: true,
-    variant: 'primary',
-    icon: Sparkles,
+    variant: 'info',
+    icon: PieChart,
   },
   {
     id: '4',
-    title: 'Backup Database Otomatis',
-    description: 'Arsip harian 4.2 GB berhasil diunggah ke secure vault.',
-    time: '6 jam lalu',
+    title: 'CPU Utilization Alert',
+    description: 'Cluster ap-southeast-1 CPU utilization is at 84.2%',
+    time: '2 days ago',
     unread: false,
-    variant: 'info',
-    icon: Info,
+    variant: 'warning',
+    icon: AlertTriangle,
   },
 ])
 
@@ -88,306 +146,381 @@ function markAsRead(id: string) {
 </script>
 
 <template>
+  <!-- BeeJir Detached Sticky Navbar Container -->
   <header
-    class="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-base-300/80 bg-base-100/85 px-4 sm:px-6 backdrop-blur-md"
+    class="sticky top-0 z-30 pt-4 sm:pt-5 w-full transition-all duration-200"
+    :class="navbarWidthClass"
   >
-    <!-- Left: Mobile Hamburger + Route Title -->
-    <div class="flex items-center gap-3">
-      <button
-        type="button"
-        class="btn btn-ghost btn-sm btn-square lg:hidden"
-        aria-label="Buka navigasi"
-        @click="themeStore.mobileSidebarOpen = true"
-      >
-        <Menu class="h-5 w-5" />
-      </button>
-
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-base-content">
-            {{ (route.meta.title as string) || 'Dashboard' }}
-          </h1>
-          <span
-            class="hidden sm:inline-flex badge badge-sm badge-soft badge-primary font-medium"
-          >
-            {{ themeStore.currentPreset.name }}
-          </span>
-        </div>
-        <p class="hidden md:block text-xs text-base-content/55">
-          {{ (route.meta.subtitle as string) || 'BeeJir Open-Source Administrator Template' }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Center: Clean Search Bar -->
-    <div class="hidden md:flex flex-1 max-w-md mx-4">
-      <div class="relative w-full">
-        <Search
-          class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/45"
-        />
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Cari menu, komponen, atau pengguna... (Ctrl+K)"
-          class="input input-bordered input-sm w-full pl-9 pr-14 py-2 bg-base-200/60 focus:bg-base-100"
-        />
-        <kbd
-          class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-base-300 bg-base-100 px-1.5 py-0.5 font-mono text-[10px] text-base-content/55"
-        >
-          ⌘K
-        </kbd>
-      </div>
-    </div>
-
-    <!-- Right: Theme Switcher, Customizer Button, Notifications & Profile -->
-    <div class="flex items-center gap-2">
-      <!-- Quick Theme Preset Dropdown -->
-      <div class="relative">
+    <nav
+      class="flex h-16 items-center justify-between gap-4 rounded-box bg-base-100/95 px-4 sm:px-5 backdrop-blur-md border border-base-300/70 shadow-[0_0.25rem_0.875rem_0_rgba(38,43,67,0.1)] dark:shadow-[0_0.25rem_0.875rem_0_rgba(16,17,33,0.3)]"
+    >
+      <!-- Left: Hamburger + Clean BeeJir Search Bar -->
+      <div class="flex items-center gap-3 flex-1">
         <button
           type="button"
-          class="btn btn-soft btn-primary btn-sm"
-          @click="showPresetMenu = !showPresetMenu; showNotifications = false"
+          class="btn btn-ghost btn-sm btn-circle lg:hidden"
+          aria-label="Open menu"
+          @click="themeStore.mobileSidebarOpen = true"
         >
-          <Sparkles class="h-4 w-4" />
-          <span class="hidden sm:inline">Tema</span>
+          <Menu class="h-5 w-5" />
         </button>
 
-        <div
-          v-if="showPresetMenu"
-          class="fixed inset-0 z-40"
-          @click="showPresetMenu = false"
-        />
-
-        <Transition
-          enter-active-class="transition duration-150 ease-out"
-          enter-from-class="opacity-0 scale-95 translate-y-1"
-          enter-to-class="opacity-100 scale-100 translate-y-0"
-          leave-active-class="transition duration-100 ease-in"
-          leave-from-class="opacity-100 scale-100"
-          leave-to-class="opacity-0 scale-95"
-        >
-          <div
-            v-if="showPresetMenu"
-            class="absolute right-0 mt-2 z-50 w-64 rounded-box border border-base-300 bg-base-100 p-2 shadow-xl"
-          >
-            <div class="px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-base-content/50">
-              Pilih Preset Tema
-            </div>
-            <div class="space-y-1">
-              <button
-                v-for="preset in themeStore.presets"
-                :key="preset.id"
-                type="button"
-                class="flex w-full items-center justify-between rounded-btn px-2.5 py-2 text-left text-xs font-semibold transition-colors"
-                :class="
-                  themeStore.activeTheme === preset.id
-                    ? 'bg-primary/12 text-primary'
-                    : 'text-base-content hover:bg-base-200'
-                "
-                @click="themeStore.setTheme(preset.id); showPresetMenu = false"
-              >
-                <div class="flex items-center gap-2.5">
-                  <div
-                    class="flex items-center gap-0.5 rounded-full border border-base-300 p-1"
-                    :style="{ backgroundColor: preset.preview.bg }"
-                  >
-                    <span
-                      class="h-2.5 w-2.5 rounded-full"
-                      :style="{ backgroundColor: preset.preview.primary }"
-                    />
-                    <span
-                      class="h-2.5 w-2.5 rounded-full"
-                      :style="{ backgroundColor: preset.preview.secondary }"
-                    />
-                    <span
-                      class="h-2.5 w-2.5 rounded-full"
-                      :style="{ backgroundColor: preset.preview.accent }"
-                    />
-                  </div>
-                  <span>{{ preset.name }}</span>
-                </div>
-                <Check v-if="themeStore.activeTheme === preset.id" class="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div class="mt-2 pt-2 border-t border-base-300/70">
-              <button
-                type="button"
-                class="btn btn-primary btn-xs btn-block"
-                @click="showPresetMenu = false; themeStore.customizerOpen = true"
-              >
-                <Palette class="h-3.5 w-3.5" />
-                Buka Theme Customizer
-              </button>
-            </div>
-          </div>
-        </Transition>
-      </div>
-
-      <!-- Quick Light/Dark Toggle -->
-      <button
-        type="button"
-        class="btn btn-ghost btn-sm btn-square"
-        :title="themeStore.isDark ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'"
-        @click="themeStore.toggleDarkLight"
-      >
-        <Sun v-if="themeStore.isDark" class="h-4 w-4 text-warning" />
-        <Moon v-else class="h-4 w-4 text-base-content/75" />
-      </button>
-
-      <!-- Live Theme Customizer Trigger -->
-      <button
-        type="button"
-        class="btn btn-ghost btn-sm btn-square relative"
-        title="Buka Theme Studio"
-        @click="themeStore.customizerOpen = true"
-      >
-        <Palette class="h-4 w-4 text-secondary" />
-        <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-accent animate-pulse" />
-      </button>
-
-      <!-- Notifications Dropdown -->
-      <div class="relative">
-        <button
-          type="button"
-          class="btn btn-ghost btn-sm btn-square relative"
-          :class="{ 'bg-base-200': showNotifications }"
-          title="Notifikasi"
-          aria-label="Lihat notifikasi"
-          @click="showNotifications = !showNotifications; showPresetMenu = false"
-        >
-          <Bell class="h-4 w-4 text-base-content/75" />
-          <span
-            v-if="unreadCount > 0"
-            class="absolute top-1 right-1 flex h-2 w-2 rounded-full bg-error ring-2 ring-base-100"
+        <div class="relative flex items-center w-full max-w-md">
+          <Search class="h-4.5 w-4.5 text-base-content/50 shrink-0 mr-2.5" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search (Ctrl+/)"
+            class="w-full bg-transparent text-sm text-base-content placeholder:text-base-content/45 focus:outline-none"
           />
-        </button>
+          <kbd
+            class="hidden sm:inline-flex items-center rounded border border-base-300 bg-base-200/70 px-1.5 py-0.5 font-mono text-[10px] text-base-content/55"
+          >
+            ⌘K
+          </kbd>
+        </div>
+      </div>
 
+      <!-- Right: BeeJir Icon Actions (Theme, Shortcuts, Notifications, User Avatar) -->
+      <div class="flex items-center gap-1 sm:gap-1.5">
+        <!-- Backdrop when any dropdown is open -->
         <div
-          v-if="showNotifications"
+          v-if="showPresetMenu || showShortcuts || showNotifications || showUserMenu"
           class="fixed inset-0 z-40"
-          @click="showNotifications = false"
+          @click="closeAllMenus"
         />
 
-        <Transition
-          enter-active-class="transition duration-150 ease-out"
-          enter-from-class="opacity-0 scale-95 translate-y-1"
-          enter-to-class="opacity-100 scale-100 translate-y-0"
-          leave-active-class="transition duration-100 ease-in"
-          leave-from-class="opacity-100 scale-100"
-          leave-to-class="opacity-0 scale-95"
-        >
-          <div
-            v-if="showNotifications"
-            class="absolute right-0 mt-2 z-50 w-80 sm:w-96 rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
+        <!-- 1. Theme Preset Switcher -->
+        <div class="relative z-50">
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm btn-circle"
+            :class="{ 'bg-base-200': showPresetMenu }"
+            title="Switch Color Theme"
+            @click="
+              showPresetMenu = !showPresetMenu;
+              showShortcuts = false;
+              showNotifications = false;
+              showUserMenu = false
+            "
           >
-            <!-- Dropdown Header -->
-            <div class="flex items-center justify-between border-b border-base-300/80 px-4 py-3 bg-base-200/40">
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-bold text-base-content">Notifikasi</span>
-                <span
-                  v-if="unreadCount > 0"
-                  class="badge badge-primary badge-xs font-bold"
-                >
-                  {{ unreadCount }} Baru
-                </span>
+            <Palette class="h-[19px] w-[19px] text-base-content/75" />
+          </button>
+
+          <Transition
+            enter-active-class="transition duration-150 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-1"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+          >
+            <div
+              v-if="showPresetMenu"
+              class="absolute right-0 mt-2.5 w-60 rounded-box border border-base-300 bg-base-100 p-2 shadow-xl"
+            >
+              <div class="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-content/50">
+                Theme Presets
               </div>
-              <button
-                v-if="unreadCount > 0"
-                type="button"
-                class="text-xs font-semibold text-primary hover:underline transition-colors flex items-center gap-1"
-                @click="markAllAsRead"
-              >
-                <CheckCheck class="h-3.5 w-3.5" />
-                <span>Tandai dibaca</span>
-              </button>
-            </div>
-
-            <!-- Notification List -->
-            <div class="max-h-80 overflow-y-auto divide-y divide-base-300/60">
-              <div
-                v-for="item in notifications"
-                :key="item.id"
-                class="flex items-start gap-3 p-3.5 transition-colors cursor-pointer"
-                :class="item.unread ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-base-200/60'"
-                @click="markAsRead(item.id)"
-              >
-                <div
-                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn"
-                  :class="{
-                    'bg-success/15 text-emerald-800 dark:text-success': item.variant === 'success',
-                    'bg-warning/20 text-amber-900 dark:text-warning': item.variant === 'warning',
-                    'bg-primary/15 text-indigo-700 dark:text-primary': item.variant === 'primary',
-                    'bg-info/15 text-sky-800 dark:text-info': item.variant === 'info',
-                    'bg-error/15 text-rose-700 dark:text-error': item.variant === 'error',
-                  }"
+              <div class="space-y-0.5">
+                <button
+                  v-for="preset in themeStore.presets"
+                  :key="preset.id"
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-btn px-2.5 py-2 text-left text-xs font-medium transition-colors cursor-pointer"
+                  :class="
+                    themeStore.activeTheme === preset.id
+                      ? 'bg-primary/14 text-primary font-semibold'
+                      : 'text-base-content hover:bg-base-200'
+                  "
+                  @click="themeStore.setTheme(preset.id); showPresetMenu = false"
                 >
-                  <component :is="item.icon" class="h-4 w-4" />
-                </div>
-
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center justify-between gap-1 mb-0.5">
-                    <h5
-                      class="text-xs font-bold truncate"
-                      :class="item.unread ? 'text-base-content' : 'text-base-content/75'"
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="flex items-center gap-0.5 rounded-full border border-base-300 p-1"
+                      :style="{ backgroundColor: preset.preview.bg }"
                     >
+                      <span
+                        class="h-2.5 w-2.5 rounded-full"
+                        :style="{ backgroundColor: preset.preview.primary }"
+                      />
+                      <span
+                        class="h-2.5 w-2.5 rounded-full"
+                        :style="{ backgroundColor: preset.preview.secondary }"
+                      />
+                      <span
+                        class="h-2.5 w-2.5 rounded-full"
+                        :style="{ backgroundColor: preset.preview.accent }"
+                      />
+                    </div>
+                    <span>{{ preset.name }}</span>
+                  </div>
+                  <Check v-if="themeStore.activeTheme === preset.id" class="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <div class="mt-2 pt-2 border-t border-base-300/70">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-xs btn-block"
+                  @click="showPresetMenu = false; themeStore.customizerOpen = true"
+                >
+                  <Palette class="h-3.5 w-3.5" />
+                  Open Theme Studio
+                </button>
+              </div>
+            </div>
+          </Transition>
+        </div>
+
+        <!-- 2. Light / Dark Mode Switcher -->
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm btn-circle"
+          :title="themeStore.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+          @click="themeStore.toggleDarkLight"
+        >
+          <Sun v-if="themeStore.isDark" class="h-[19px] w-[19px] text-warning" />
+          <Moon v-else class="h-[19px] w-[19px] text-base-content/75" />
+        </button>
+
+        <!-- 3. Quick Shortcuts Grid Dropdown (BeeJir Style) -->
+        <div class="relative z-50">
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm btn-circle"
+            :class="{ 'bg-base-200': showShortcuts }"
+            title="Quick Shortcuts"
+            @click="
+              showShortcuts = !showShortcuts;
+              showPresetMenu = false;
+              showNotifications = false;
+              showUserMenu = false
+            "
+          >
+            <LayoutGrid class="h-[19px] w-[19px] text-base-content/75" />
+          </button>
+
+          <Transition
+            enter-active-class="transition duration-150 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-1"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+          >
+            <div
+              v-if="showShortcuts"
+              class="absolute right-0 mt-2.5 w-72 sm:w-80 rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
+            >
+              <div class="flex items-center justify-between border-b border-base-300 px-4 py-3">
+                <h6 class="text-sm font-semibold text-base-content">Shortcuts</h6>
+                <span class="badge badge-xs badge-soft badge-primary">Quick Links</span>
+              </div>
+              <div class="grid grid-cols-2 divide-x divide-y divide-base-300/70">
+                <RouterLink
+                  v-for="sc in shortcuts"
+                  :key="sc.to"
+                  :to="sc.to"
+                  class="flex flex-col items-center justify-center p-4 text-center hover:bg-base-200/60 transition-colors"
+                  @click="showShortcuts = false"
+                >
+                  <div
+                    class="flex h-11 w-11 items-center justify-center rounded-full mb-2"
+                    :class="`avatar-soft-${sc.variant}`"
+                  >
+                    <component :is="sc.icon" class="h-5 w-5" />
+                  </div>
+                  <span class="text-xs font-semibold text-base-content">{{ sc.title }}</span>
+                  <span class="text-[11px] text-base-content/50 mt-0.5">{{ sc.subtitle }}</span>
+                </RouterLink>
+              </div>
+            </div>
+          </Transition>
+        </div>
+
+        <!-- 4. Notifications Dropdown (BeeJir Style) -->
+        <div class="relative z-50">
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm btn-circle relative"
+            :class="{ 'bg-base-200': showNotifications }"
+            title="Notifications"
+            @click="
+              showNotifications = !showNotifications;
+              showPresetMenu = false;
+              showShortcuts = false;
+              showUserMenu = false
+            "
+          >
+            <Bell class="h-[19px] w-[19px] text-base-content/75" />
+            <span
+              v-if="unreadCount > 0"
+              class="absolute top-1.5 right-1.5 flex h-2 w-2 rounded-full bg-error ring-2 ring-base-100"
+            />
+          </button>
+
+          <Transition
+            enter-active-class="transition duration-150 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-1"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+          >
+            <div
+              v-if="showNotifications"
+              class="absolute right-0 mt-2.5 w-80 sm:w-96 rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
+            >
+              <div class="flex items-center justify-between border-b border-base-300 px-4 py-3">
+                <h6 class="text-sm font-semibold text-base-content">Notification</h6>
+                <div class="flex items-center gap-2">
+                  <span
+                    v-if="unreadCount > 0"
+                    class="badge badge-xs badge-soft badge-primary font-semibold"
+                  >
+                    {{ unreadCount }} New
+                  </span>
+                  <button
+                    type="button"
+                    class="text-base-content/60 hover:text-base-content p-1 cursor-pointer"
+                    title="Mark all as read"
+                    @click="markAllAsRead"
+                  >
+                    <MailOpen class="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="max-h-80 overflow-y-auto divide-y divide-base-300/60">
+                <div
+                  v-for="item in notifications"
+                  :key="item.id"
+                  class="flex items-start gap-3.5 px-4 py-3 transition-colors cursor-pointer hover:bg-base-200/55"
+                  @click="markAsRead(item.id)"
+                >
+                  <div
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                    :class="`avatar-soft-${item.variant}`"
+                  >
+                    <component :is="item.icon" v-if="item.icon" class="h-4 w-4" />
+                    <span v-else>{{ item.initials }}</span>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+                    <h6 class="text-xs font-semibold text-base-content truncate mb-0.5">
                       {{ item.title }}
-                    </h5>
-                    <span class="text-[10px] text-base-content/45 shrink-0 whitespace-nowrap">
+                    </h6>
+                    <p class="text-xs text-base-content/65 line-clamp-2 leading-snug">
+                      {{ item.description }}
+                    </p>
+                    <span class="text-[11px] text-base-content/45 mt-1 block">
                       {{ item.time }}
                     </span>
                   </div>
-                  <p class="text-xs text-base-content/65 line-clamp-2 leading-relaxed">
-                    {{ item.description }}
-                  </p>
+
+                  <span
+                    v-if="item.unread"
+                    class="h-2 w-2 rounded-full bg-primary shrink-0 mt-1.5"
+                  />
                 </div>
-
-                <span
-                  v-if="item.unread"
-                  class="h-2 w-2 rounded-full bg-primary shrink-0 self-center"
-                />
               </div>
 
-              <!-- Empty State -->
-              <div
-                v-if="notifications.length === 0"
-                class="flex flex-col items-center justify-center p-8 text-center text-base-content/60"
-              >
-                <Inbox class="h-8 w-8 mb-2 text-base-content/30" />
-                <p class="text-xs font-semibold">Tidak ada notifikasi baru</p>
-                <p class="text-[11px] text-base-content/45 mt-0.5">Kotak masuk Anda sudah bersih.</p>
+              <div class="border-t border-base-300 p-3">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm btn-block"
+                  @click="showNotifications = false"
+                >
+                  View all notifications
+                </button>
               </div>
             </div>
+          </Transition>
+        </div>
 
-            <!-- Dropdown Footer -->
-            <div class="border-t border-base-300/80 p-2 bg-base-200/40 text-center">
-              <button
-                type="button"
-                class="btn btn-ghost btn-xs btn-block text-base-content/70 hover:text-base-content font-medium"
-                @click="showNotifications = false"
-              >
-                Tutup Notifikasi
-              </button>
+        <!-- 5. User Profile Avatar Dropdown (BeeJir avatar-online style) -->
+        <div class="relative z-50 ml-1">
+          <button
+            type="button"
+            class="relative flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary font-semibold text-xs cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all"
+            title="Account Menu"
+            @click="
+              showUserMenu = !showUserMenu;
+              showPresetMenu = false;
+              showShortcuts = false;
+              showNotifications = false
+            "
+          >
+            <span>AP</span>
+            <span
+              class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-base-100"
+            />
+          </button>
+
+          <Transition
+            enter-active-class="transition duration-150 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-1"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+          >
+            <div
+              v-if="showUserMenu"
+              class="absolute right-0 mt-2.5 w-56 rounded-box border border-base-300 bg-base-100 py-2 shadow-xl"
+            >
+              <div class="flex items-center gap-3 px-4 py-2 border-b border-base-300/70 mb-1">
+                <div class="relative flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary font-semibold text-xs">
+                  AP
+                  <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-base-100" />
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-semibold text-base-content truncate">Arif Pratama</div>
+                  <div class="text-[11px] text-base-content/50 truncate">Admin</div>
+                </div>
+              </div>
+
+              <div class="px-1.5 space-y-0.5">
+                <RouterLink
+                  to="/profile"
+                  class="flex items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-base-200 hover:text-base-content transition-colors"
+                  @click="showUserMenu = false"
+                >
+                  <User class="h-4 w-4 text-base-content/60" />
+                  <span>My Profile</span>
+                </RouterLink>
+                <RouterLink
+                  to="/users"
+                  class="flex items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-base-200 hover:text-base-content transition-colors"
+                  @click="showUserMenu = false"
+                >
+                  <Users class="h-4 w-4 text-base-content/60" />
+                  <span>Users &amp; Roles</span>
+                </RouterLink>
+                <button
+                  type="button"
+                  class="flex w-full items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-base-200 hover:text-base-content transition-colors cursor-pointer"
+                  @click="showUserMenu = false; themeStore.customizerOpen = true"
+                >
+                  <Settings class="h-4 w-4 text-base-content/60" />
+                  <span>Theme Settings</span>
+                </button>
+              </div>
+
+              <div class="px-3 pt-2 mt-1 border-t border-base-300/70">
+                <RouterLink
+                  to="/login"
+                  class="btn btn-error btn-sm btn-block"
+                  @click="showUserMenu = false"
+                >
+                  <span>Logout</span>
+                  <LogOut class="h-3.5 w-3.5" />
+                </RouterLink>
+              </div>
             </div>
-          </div>
-        </Transition>
+          </Transition>
+        </div>
       </div>
-
-      <!-- User Profile Pill -->
-      <RouterLink
-        to="/profile"
-        class="hidden sm:flex items-center gap-2.5 pl-2.5 pr-2 py-1 ml-1 border-l border-base-300/80 rounded-r-btn hover:bg-base-200/70 transition-colors"
-        title="Buka Profil Pengguna"
-      >
-        <div
-          class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-xs font-bold text-white shadow-xs"
-        >
-          AP
-        </div>
-        <div class="hidden lg:flex flex-col leading-tight">
-          <span class="text-xs font-bold text-base-content">Arif Pratama</span>
-          <span class="text-[10px] text-base-content/55">Lead Architect</span>
-        </div>
-      </RouterLink>
-    </div>
+    </nav>
   </header>
 </template>

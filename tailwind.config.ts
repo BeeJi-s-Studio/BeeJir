@@ -9,15 +9,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       spacing: {
-        68: '17rem',
+        68: '16.5rem',
       },
       opacity: {
         8: '0.08',
         12: '0.12',
+        14: '0.14',
         15: '0.15',
         35: '0.35',
         45: '0.45',
@@ -67,8 +68,8 @@ export default {
       },
       borderRadius: {
         xs: '0.125rem',
-        box: 'var(--rounded-box, 1rem)',
-        btn: 'var(--rounded-btn, 0.75rem)',
+        box: 'var(--rounded-box, 0.625rem)',
+        btn: 'var(--rounded-btn, 0.5rem)',
         badge: 'var(--rounded-badge, 9999px)',
       },
       backdropBlur: {

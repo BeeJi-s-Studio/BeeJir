@@ -1,46 +1,73 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
 import ThemeCustomizerDrawer from '@/components/layout/ThemeCustomizerDrawer.vue'
 import UiToastContainer from '@/components/ui/UiToastContainer.vue'
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
+
+const containerWidthClass = computed(() => {
+  switch (themeStore.contentWidth) {
+    case 'full':
+      return 'w-full max-w-none px-4 sm:px-8'
+    case 'wide':
+      return 'max-w-[1720px] w-full mx-auto px-4 sm:px-8'
+    case 'compact':
+    default:
+      return 'max-w-[1440px] w-full mx-auto px-4 sm:px-6'
+  }
+})
 </script>
 
 <template>
-  <div class="relative flex min-h-screen bg-base-200 text-base-content overflow-x-hidden">
-    <!-- Ambient Aurora Mesh Glow (Makes Dark Mode Vibrant, Alive & Dimensional) -->
-    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      <div
-        class="absolute -top-32 -left-24 h-[420px] w-[420px] rounded-full bg-primary/10 dark:bg-primary/20 blur-[130px] transition-colors duration-700"
-      />
-      <div
-        class="absolute top-1/4 -right-32 h-[380px] w-[380px] rounded-full bg-secondary/5 dark:bg-secondary/15 blur-[130px] transition-colors duration-700"
-      />
-      <div
-        class="absolute -bottom-32 left-1/3 h-[360px] w-[480px] rounded-full bg-accent/5 dark:bg-accent/15 blur-[140px] transition-colors duration-700"
-      />
-    </div>
-
-    <!-- Left Navigation Sidebar -->
+  <div class="relative flex min-h-screen bg-base-200 text-base-content">
+    <!-- Left Vertical Navigation Menu -->
     <AppSidebar />
 
-    <!-- Main Content Area -->
+    <!-- Main Layout Page Wrapper -->
     <div class="relative z-10 flex flex-1 flex-col min-w-0">
+      <!-- Detached Sticky Navbar -->
       <AppNavbar />
 
-      <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+      <!-- Content Wrapper (Consistent 24px gap below navbar & dynamic content width: compact | wide | full) -->
+      <main
+        class="flex-1 pt-6 pb-8 transition-all duration-200"
+        :class="containerWidthClass"
+      >
         <slot />
       </main>
 
+      <!-- Content Footer -->
       <footer
-        class="border-t border-base-300/60 bg-base-100/40 backdrop-blur-xs px-6 py-4 text-xs text-base-content/55 flex flex-wrap items-center justify-between gap-2"
+        class="py-4 border-t border-base-300/60 text-xs text-base-content/60 transition-all duration-200"
+        :class="containerWidthClass"
       >
-        <div>
-          <strong class="font-bold text-base-content">BeeJir Admin Template</strong>
-          — Dibuat dengan Vue 3 + Vite + Bun + TypeScript & Custom Tailwind CSS.
-        </div>
-        <div class="flex items-center gap-3">
-          <span class="badge badge-sm badge-soft badge-primary">MIT Open Source</span>
-          <span class="badge badge-sm badge-soft badge-secondary">Pure Tailwind CSS</span>
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div>
+            © {{ new Date().getFullYear() }}, dibuat dengan ❤️ oleh
+            <span class="font-semibold text-primary">BeeJir Open-Source</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-5">
+            <RouterLink to="/" class="hover:text-primary transition-colors">
+              CRM Dashboard
+            </RouterLink>
+            <RouterLink to="/components" class="hover:text-primary transition-colors">
+              UI Components
+            </RouterLink>
+            <RouterLink to="/users" class="hover:text-primary transition-colors">
+              Users List
+            </RouterLink>
+            <button
+              type="button"
+              class="hover:text-primary transition-colors cursor-pointer"
+              @click="themeStore.customizerOpen = true"
+            >
+              Theme Studio
+            </button>
+          </div>
         </div>
       </footer>
     </div>

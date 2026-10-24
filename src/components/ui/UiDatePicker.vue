@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, X } from 'lucide-vue-next'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import {
+  Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Clock,
+  ChevronDown,
+} from 'lucide-vue-next'
+import { animateDropdownIn, animateDropdownOut } from '@/utils/gsap'
 
 export interface UiDatePickerProps {
   modelValue?: string
@@ -10,6 +18,9 @@ export interface UiDatePickerProps {
   error?: string
   clearable?: boolean
   disabled?: boolean
+  enableTime?: boolean
+  minYear?: number
+  maxYear?: number
 }
 
 const props = withDefaults(defineProps<UiDatePickerProps>(), {
@@ -20,15 +31,19 @@ const props = withDefaults(defineProps<UiDatePickerProps>(), {
   error: undefined,
   clearable: true,
   disabled: false,
+  enableTime: false,
+  minYear: 1970,
+  maxYear: 2040,
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [dateStr: string]
-  change: [dateStr: string]
+  'update:modelValue': [val: string]
+  change: [val: string]
 }>()
 
 const isOpen = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
+const viewMode = ref<'calendar' | 'month' | 'year'>('calendar')
 
 const monthNames = [
   'Januari',
@@ -44,34 +59,87 @@ const monthNames = [
   'November',
   'Desember',
 ]
+const monthShortNames = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'Mei',
+  'Jun',
+  'Jul',
+  'Agu',
+  'Sep',
+  'Okt',
+  'Nov',
+  'Des',
+]
 const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
 
-// Parse initial YYYY-MM-DD or use current date
 const today = new Date()
 const viewYear = ref(today.getFullYear())
 const viewMonth = ref(today.getMonth())
 
-function parseDateString(val?: string): Date | null {
+// Time state
+const selectedHour = ref('12')
+const selectedMinute = ref('00')
+
+const hoursList = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
+const minutesList = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'))
+
+// Parse YYYY-MM-DD or YYYY-MM-DD HH:mm
+function parseValue(val?: string) {
   if (!val) return null
-  const parts = val.split('-').map(Number)
-  if (parts.length === 3 && !isNaN(parts[0]) && !isNaN(parts[1]) && !isNaN(parts[2])) {
-    return new Date(parts[0], parts[1] - 1, parts[2])
+  const [datePart, timePart] = val.split(' ')
+  if (!datePart) return null
+  const [y, m, d] = datePart.split('-').map(Number)
+  if (isNaN(y) || isNaN(m) || isNaN(d)) return null
+
+  let hr = '12'
+  let mn = '00'
+  if (timePart) {
+    const [h, min] = timePart.split(':')
+    if (h) hr = h.padStart(2, '0')
+    if (min) mn = min.padStart(2, '0')
   }
-  return null
+
+  return { year: y, month: m - 1, day: d, hour: hr, minute: mn, datePart }
 }
 
-function toIsoDateString(year: number, monthIndex: number, day: number): string {
-  const m = String(monthIndex + 1).padStart(2, '0')
-  const d = String(day).padStart(2, '0')
-  return `${year}-${m}-${d}`
+function syncFromModel() {
+  const parsed = parseValue(props.modelValue)
+  if (parsed) {
+    viewYear.value = parsed.year
+    viewMonth.value = parsed.month
+    selectedHour.value = parsed.hour
+    selectedMinute.value = parsed.minute
+  } else {
+    viewYear.value = today.getFullYear()
+    viewMonth.value = today.getMonth()
+  }
+}
+
+watch(() => props.modelValue, syncFromModel, { immediate: true })
+
+function toIsoDate(y: number, m: number, d: number): string {
+  const mm = String(m + 1).padStart(2, '0')
+  const dd = String(d).padStart(2, '0')
+  return `${y}-${mm}-${dd}`
+}
+
+function buildValueString(dateStr: string): string {
+  if (!props.enableTime) return dateStr
+  return `${dateStr} ${selectedHour.value}:${selectedMinute.value}`
 }
 
 const formattedDisplay = computed(() => {
-  const parsed = parseDateString(props.modelValue)
+  const parsed = parseValue(props.modelValue)
   if (!parsed) return ''
-  const d = parsed.getDate()
-  const m = monthNames[parsed.getMonth()]
-  const y = parsed.getFullYear()
+  const d = parsed.day
+  const m = monthNames[parsed.month]
+  const y = parsed.year
+  if (props.enableTime) {
+    return `${d} ${m} ${y}, ${parsed.hour}:${parsed.minute}`
+  }
   return `${d} ${m} ${y}`
 })
 
@@ -93,7 +161,9 @@ const calendarCells = computed<CalendarCell[]>(() => {
   const daysInCurrentMonth = new Date(y, m + 1, 0).getDate()
   const daysInPrevMonth = new Date(y, m, 0).getDate()
 
-  const todayIso = toIsoDateString(today.getFullYear(), today.getMonth(), today.getDate())
+  const todayIso = toIsoDate(today.getFullYear(), today.getMonth(), today.getDate())
+  const selectedDatePart = parseValue(props.modelValue)?.datePart
+
   const cells: CalendarCell[] = []
 
   // Leading days from previous month
@@ -101,7 +171,7 @@ const calendarCells = computed<CalendarCell[]>(() => {
   const prevYear = m === 0 ? y - 1 : y
   for (let i = firstDayOfMonth - 1; i >= 0; i--) {
     const day = daysInPrevMonth - i
-    const iso = toIsoDateString(prevYear, prevMonth, day)
+    const iso = toIsoDate(prevYear, prevMonth, day)
     cells.push({
       day,
       month: prevMonth,
@@ -109,13 +179,13 @@ const calendarCells = computed<CalendarCell[]>(() => {
       iso,
       isCurrentMonth: false,
       isToday: iso === todayIso,
-      isSelected: iso === props.modelValue,
+      isSelected: iso === selectedDatePart,
     })
   }
 
   // Current month days
   for (let day = 1; day <= daysInCurrentMonth; day++) {
-    const iso = toIsoDateString(y, m, day)
+    const iso = toIsoDate(y, m, day)
     cells.push({
       day,
       month: m,
@@ -123,16 +193,16 @@ const calendarCells = computed<CalendarCell[]>(() => {
       iso,
       isCurrentMonth: true,
       isToday: iso === todayIso,
-      isSelected: iso === props.modelValue,
+      isSelected: iso === selectedDatePart,
     })
   }
 
-  // Trailing days to complete 42 cells (6 weeks)
+  // Trailing days (6 weeks = 42 cells)
   const nextMonth = m === 11 ? 0 : m + 1
   const nextYear = m === 11 ? y + 1 : y
   const remaining = 42 - cells.length
   for (let day = 1; day <= remaining; day++) {
-    const iso = toIsoDateString(nextYear, nextMonth, day)
+    const iso = toIsoDate(nextYear, nextMonth, day)
     cells.push({
       day,
       month: nextMonth,
@@ -140,22 +210,28 @@ const calendarCells = computed<CalendarCell[]>(() => {
       iso,
       isCurrentMonth: false,
       isToday: iso === todayIso,
-      isSelected: iso === props.modelValue,
+      isSelected: iso === selectedDatePart,
     })
   }
 
   return cells
 })
 
+// Year options for jump selector
+const availableYears = computed(() => {
+  const years: number[] = []
+  for (let yr = props.minYear; yr <= props.maxYear; yr++) {
+    years.push(yr)
+  }
+  return years
+})
+
 function openPicker() {
   if (props.disabled) return
   isOpen.value = !isOpen.value
-  if (isOpen.value && props.modelValue) {
-    const parsed = parseDateString(props.modelValue)
-    if (parsed) {
-      viewYear.value = parsed.getFullYear()
-      viewMonth.value = parsed.getMonth()
-    }
+  if (isOpen.value) {
+    viewMode.value = 'calendar'
+    syncFromModel()
   }
 }
 
@@ -180,20 +256,44 @@ function nextMonth(event?: Event) {
 }
 
 function selectCell(cell: CalendarCell) {
-  emit('update:modelValue', cell.iso)
-  emit('change', cell.iso)
   viewYear.value = cell.year
   viewMonth.value = cell.month
-  isOpen.value = false
+  const val = buildValueString(cell.iso)
+  emit('update:modelValue', val)
+  emit('change', val)
+  if (!props.enableTime) {
+    isOpen.value = false
+  }
+}
+
+function selectMonth(mIdx: number) {
+  viewMonth.value = mIdx
+  viewMode.value = 'calendar'
+}
+
+function selectYear(yr: number) {
+  viewYear.value = yr
+  viewMode.value = 'calendar'
+}
+
+function onTimeChange() {
+  const parsed = parseValue(props.modelValue)
+  const dateStr = parsed ? parsed.datePart : toIsoDate(viewYear.value, viewMonth.value, today.getDate())
+  const val = buildValueString(dateStr)
+  emit('update:modelValue', val)
+  emit('change', val)
 }
 
 function selectToday() {
-  const iso = toIsoDateString(today.getFullYear(), today.getMonth(), today.getDate())
+  const iso = toIsoDate(today.getFullYear(), today.getMonth(), today.getDate())
   viewYear.value = today.getFullYear()
   viewMonth.value = today.getMonth()
-  emit('update:modelValue', iso)
-  emit('change', iso)
-  isOpen.value = false
+  const val = buildValueString(iso)
+  emit('update:modelValue', val)
+  emit('change', val)
+  if (!props.enableTime) {
+    isOpen.value = false
+  }
 }
 
 function clearDate(event?: Event) {
@@ -226,18 +326,18 @@ onUnmounted(() => {
   <div
     ref="containerRef"
     class="relative flex flex-col gap-1.5 w-full"
-    :class="isOpen ? 'z-30' : 'z-auto'"
+    :class="isOpen ? 'z-[90]' : 'z-auto'"
   >
-    <span v-if="label" class="text-xs font-semibold text-base-content/80">
+    <span v-if="label" class="label-text">
       {{ label }}
     </span>
 
-    <!-- Trigger Box -->
+    <!-- Trigger Box with Visible Border -->
     <div
       tabindex="0"
-      class="relative w-full min-h-[40px] px-3.5 py-2 form-surface flex items-center justify-between gap-2 text-sm cursor-pointer select-none"
+      class="relative w-full min-h-[40px] px-3.5 py-2 rounded-btn border border-base-300 bg-base-100 flex items-center justify-between gap-2 text-sm cursor-pointer select-none transition-all duration-150 hover:border-base-content/40"
       :class="[
-        isOpen ? 'form-surface-active' : '',
+        isOpen ? 'border-primary ring-2 ring-primary/20 shadow-sm' : '',
         disabled ? 'opacity-50 cursor-not-allowed bg-base-200/50' : '',
         error ? 'border-error ring-1 ring-error/20' : '',
       ]"
@@ -253,7 +353,13 @@ onUnmounted(() => {
         </span>
       </div>
 
-      <div class="flex items-center gap-1 shrink-0">
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span
+          v-if="enableTime && modelValue"
+          class="badge badge-soft badge-primary text-[10px] px-1.5 py-0.5 font-mono"
+        >
+          {{ selectedHour }}:{{ selectedMinute }}
+        </span>
         <button
           v-if="clearable && modelValue && !disabled"
           type="button"
@@ -266,87 +372,181 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Calendar Popup -->
+    <!-- Calendar Popup Floating Modal (Solid bg-base-100, z-[100], Elevated Shadow) -->
     <Transition
-      enter-active-class="transition duration-150 ease-out"
-      enter-from-class="opacity-0 scale-95 -translate-y-1"
-      enter-to-class="opacity-100 scale-100 translate-y-0"
-      leave-active-class="transition duration-100 ease-in"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
+      :css="false"
+      @enter="(el, done) => animateDropdownIn(el, done)"
+      @leave="(el, done) => animateDropdownOut(el, done)"
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 top-full mt-1.5 z-50 w-72 sm:w-80 rounded-box border border-base-300 bg-base-100 p-3.5 shadow-xl select-none"
+        class="absolute left-0 top-full mt-2 z-[100] w-76 sm:w-84 rounded-box border border-base-300 bg-base-100 p-4 shadow-2xl select-none dark:bg-base-100 dark:border-base-300 dark:shadow-[0_12px_36px_rgba(0,0,0,0.55)]"
         @click.stop
         @mousedown.stop
       >
-        <!-- Calendar Header: Month & Year Navigation -->
-        <div class="flex items-center justify-between mb-3">
+        <!-- Top Navigation Header -->
+        <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-base-300/70">
           <button
             type="button"
-            class="btn btn-ghost btn-xs btn-circle h-7 w-7"
+            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/70 hover:text-base-content"
             @click.stop="prevMonth"
           >
             <ChevronLeft class="h-4 w-4" />
           </button>
 
-          <div class="text-xs font-extrabold text-base-content">
-            {{ monthNames[viewMonth] }} {{ viewYear }}
+          <!-- Jump Pickers: Month & Year Dropdown/Toggles -->
+          <div class="flex items-center gap-1.5">
+            <button
+              type="button"
+              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 transition-colors"
+              :class="{ 'bg-primary/15 text-primary': viewMode === 'month' }"
+              @click="viewMode = viewMode === 'month' ? 'calendar' : 'month'"
+            >
+              <span>{{ monthNames[viewMonth] }}</span>
+              <ChevronDown class="h-3.5 w-3.5 opacity-60" />
+            </button>
+
+            <button
+              type="button"
+              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 transition-colors"
+              :class="{ 'bg-primary/15 text-primary': viewMode === 'year' }"
+              @click="viewMode = viewMode === 'year' ? 'calendar' : 'year'"
+            >
+              <span>{{ viewYear }}</span>
+              <ChevronDown class="h-3.5 w-3.5 opacity-60" />
+            </button>
           </div>
 
           <button
             type="button"
-            class="btn btn-ghost btn-xs btn-circle h-7 w-7"
+            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/70 hover:text-base-content"
             @click.stop="nextMonth"
           >
             <ChevronRight class="h-4 w-4" />
           </button>
         </div>
 
-        <!-- Day Names Header -->
-        <div class="grid grid-cols-7 gap-1 mb-1.5 text-center">
-          <span
-            v-for="day in dayNames"
-            :key="day"
-            class="text-[10px] font-bold uppercase text-base-content/45 py-1"
-          >
-            {{ day }}
-          </span>
-        </div>
-
-        <!-- Calendar Grid -->
-        <div class="grid grid-cols-7 gap-1">
+        <!-- MODE 1: MONTH QUICK SELECTOR GRID -->
+        <div v-if="viewMode === 'month'" class="grid grid-cols-3 gap-2 py-2">
           <button
-            v-for="cell in calendarCells"
-            :key="cell.iso"
+            v-for="(mName, idx) in monthShortNames"
+            :key="mName"
             type="button"
-            class="h-8 w-full rounded-btn text-xs font-semibold flex items-center justify-center transition-all cursor-pointer"
-            :class="[
-              cell.isSelected
-                ? 'bg-primary text-primary-content font-extrabold shadow-xs shadow-primary/30'
-                : cell.isToday
-                  ? 'border border-primary text-primary font-bold bg-primary/10'
-                  : cell.isCurrentMonth
-                    ? 'text-base-content hover:bg-base-200'
-                    : 'text-base-content/30 hover:bg-base-200/50',
-            ]"
-            @click.stop="selectCell(cell)"
+            class="py-2.5 px-2 rounded-btn text-xs font-semibold transition-colors"
+            :class="
+              viewMonth === idx
+                ? 'bg-primary text-primary-content font-bold shadow-xs'
+                : 'text-base-content hover:bg-base-200'
+            "
+            @click="selectMonth(idx)"
           >
-            {{ cell.day }}
+            {{ mName }}
           </button>
         </div>
 
-        <!-- Calendar Footer -->
-        <div class="mt-3 pt-2.5 border-t border-base-300/70 flex items-center justify-between text-xs">
+        <!-- MODE 2: YEAR QUICK SELECTOR SCROLLABLE GRID -->
+        <div v-else-if="viewMode === 'year'" class="h-48 overflow-y-auto grid grid-cols-3 gap-2 p-1 pr-2">
+          <button
+            v-for="yr in availableYears"
+            :key="yr"
+            type="button"
+            class="py-2 px-2 rounded-btn text-xs font-semibold transition-colors"
+            :class="
+              viewYear === yr
+                ? 'bg-primary text-primary-content font-bold shadow-xs'
+                : 'text-base-content hover:bg-base-200'
+            "
+            @click="selectYear(yr)"
+          >
+            {{ yr }}
+          </button>
+        </div>
+
+        <!-- MODE 3: STANDARD CALENDAR DAYS VIEW -->
+        <div v-else>
+          <!-- Day Names Header -->
+          <div class="grid grid-cols-7 gap-1 mb-1.5 text-center">
+            <span
+              v-for="day in dayNames"
+              :key="day"
+              class="text-[10px] font-bold uppercase text-base-content/50 py-1"
+            >
+              {{ day }}
+            </span>
+          </div>
+
+          <!-- Calendar Days Grid -->
+          <div class="grid grid-cols-7 gap-1">
+            <button
+              v-for="cell in calendarCells"
+              :key="cell.iso"
+              type="button"
+              class="h-8 w-full rounded-btn text-xs font-semibold flex items-center justify-center transition-all cursor-pointer"
+              :class="[
+                cell.isSelected
+                  ? 'bg-primary text-primary-content font-bold shadow-[0_2px_6px_0_rgb(var(--p)/0.45)]'
+                  : cell.isToday
+                    ? 'border border-primary text-primary font-bold bg-primary/10'
+                    : cell.isCurrentMonth
+                      ? 'text-base-content hover:bg-base-200'
+                      : 'text-base-content/30 hover:bg-base-200/50',
+              ]"
+              @click.stop="selectCell(cell)"
+            >
+              {{ cell.day }}
+            </button>
+          </div>
+        </div>
+
+        <!-- OPTIONAL: TIME SELECTOR (Hour & Minute) -->
+        <div
+          v-if="enableTime && viewMode === 'calendar'"
+          class="mt-3.5 pt-3 border-t border-base-300/70 flex items-center justify-between gap-3 text-xs"
+        >
+          <div class="flex items-center gap-1.5 text-base-content/70">
+            <Clock class="h-4 w-4 text-primary" />
+            <span class="font-medium">Waktu:</span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <!-- Hour Picker -->
+            <select
+              v-model="selectedHour"
+              class="select select-xs w-16 text-center font-mono font-medium"
+              @change="onTimeChange"
+            >
+              <option v-for="h in hoursList" :key="h" :value="h">{{ h }}</option>
+            </select>
+            <span class="font-bold text-base-content/50">:</span>
+            <!-- Minute Picker -->
+            <select
+              v-model="selectedMinute"
+              class="select select-xs w-16 text-center font-mono font-medium"
+              @change="onTimeChange"
+            >
+              <option v-for="m in minutesList" :key="m" :value="m">{{ m }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Calendar Footer (Today Action + Done) -->
+        <div class="mt-3.5 pt-2.5 border-t border-base-300/70 flex items-center justify-between text-xs">
           <button
             type="button"
             class="text-primary font-bold hover:underline cursor-pointer"
             @click.stop="selectToday"
           >
-            Pilih Hari Ini
+            Hari Ini
           </button>
-          <span v-if="modelValue" class="font-mono text-[11px] text-base-content/55">
+          <button
+            v-if="enableTime"
+            type="button"
+            class="btn btn-primary btn-xs"
+            @click.stop="isOpen = false"
+          >
+            Selesai
+          </button>
+          <span v-else-if="modelValue" class="font-mono text-[11px] text-base-content/55">
             {{ modelValue }}
           </span>
         </div>

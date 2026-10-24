@@ -9,12 +9,17 @@ import {
   Sparkles,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
-import type { RadiusScale } from '@/types/theme'
+import type { RadiusScale, ContentWidth } from '@/types/theme'
 
 const themeStore = useThemeStore()
 const copied = ref(false)
 
 const radiusKeys: RadiusScale[] = ['none', 'sm', 'md', 'lg', 'full']
+const contentWidthOptions: Array<{ id: ContentWidth; label: string; desc: string }> = [
+  { id: 'compact', label: 'Compact', desc: 'Maks. 1440px (Default)' },
+  { id: 'wide', label: 'Wide', desc: 'Maks. 1720px' },
+  { id: 'full', label: 'Full Width', desc: '100% Layar Penuh' },
+]
 
 async function copyCssConfig() {
   try {
@@ -256,10 +261,52 @@ async function copyCssConfig() {
             </div>
           </div>
 
-          <!-- 4. Live Component Preview & CSS Export -->
+          <!-- 4. Content Width (Compact / Wide / Full) -->
+          <div class="border-t border-base-300/70 pt-5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-base-content/60">
+                4. Lebar Konten Layar
+              </span>
+              <span class="badge badge-sm badge-soft badge-primary font-mono text-[10px]">
+                {{ themeStore.contentWidth.toUpperCase() }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                v-for="opt in contentWidthOptions"
+                :key="opt.id"
+                type="button"
+                class="flex flex-col items-center justify-center p-2.5 rounded-btn border text-center transition-all cursor-pointer"
+                :class="
+                  themeStore.contentWidth === opt.id
+                    ? 'border-primary bg-primary/10 ring-2 ring-primary/25 text-primary'
+                    : 'border-base-300 hover:border-base-content/30 text-base-content/75 hover:bg-base-200/50'
+                "
+                @click="themeStore.setContentWidth(opt.id)"
+              >
+                <div class="flex items-center justify-center mb-1.5">
+                  <div
+                    class="h-3.5 rounded-xs border border-current transition-all"
+                    :class="
+                      opt.id === 'compact'
+                        ? 'w-6'
+                        : opt.id === 'wide'
+                          ? 'w-9'
+                          : 'w-11'
+                    "
+                  />
+                </div>
+                <span class="text-xs font-bold leading-tight">{{ opt.label }}</span>
+                <span class="text-[9px] text-base-content/50 mt-0.5 leading-tight">{{ opt.desc }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 5. Live Component Preview & CSS Export -->
           <div class="border-t border-base-300/70 pt-5 space-y-3">
             <span class="text-xs font-bold uppercase tracking-wider text-base-content/60 block">
-              4. Export CSS Variables
+              5. Export CSS Variables
             </span>
             <pre
               class="rounded-box bg-base-200 border border-base-300 p-3 font-mono text-[11px] text-base-content/80 overflow-x-auto leading-relaxed"

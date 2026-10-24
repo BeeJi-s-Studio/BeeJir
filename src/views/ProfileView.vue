@@ -1,538 +1,569 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
+import { useToast } from '@/stores/toast'
 import {
   User,
-  Mail,
-  MapPin,
-  Briefcase,
-  Globe,
   Shield,
-  GitCommit,
-  CheckCircle2,
-  Sparkles,
-  Award,
-  Laptop,
-  Smartphone,
+  MapPin,
+  Mail,
+  Phone,
+  Calendar,
   Save,
-  Share2,
-  MoreHorizontal,
-  Edit3,
   KeyRound,
+  Smartphone,
+  Check,
+  Briefcase,
+  Flag,
+  Languages,
+  CheckCircle2,
+  Users,
+  FolderKanban,
+  Activity,
+  UserCheck,
+  MessageSquare,
 } from 'lucide-vue-next'
-import { useToast } from '@/stores/toast'
 import UiCard from '@/components/ui/UiCard.vue'
-import UiBadge from '@/components/ui/UiBadge.vue'
-import UiButton from '@/components/ui/UiButton.vue'
-import UiInput from '@/components/ui/UiInput.vue'
+import UiTimeline from '@/components/ui/UiTimeline.vue'
+import type { TimelineItem } from '@/components/ui/UiTimeline.vue'
+import UiDatePicker from '@/components/ui/UiDatePicker.vue'
 import UiSelect from '@/components/ui/UiSelect.vue'
 import UiSelectTag from '@/components/ui/UiSelectTag.vue'
-import UiDatePicker from '@/components/ui/UiDatePicker.vue'
 import UiRichEditor from '@/components/ui/UiRichEditor.vue'
 import UiFileUpload, { type UploadedFileItem } from '@/components/ui/UiFileUpload.vue'
 import UiProgress from '@/components/ui/UiProgress.vue'
-import UiTimeline, { type TimelineItem } from '@/components/ui/UiTimeline.vue'
-import UiList, { type ListItem } from '@/components/ui/UiList.vue'
-import UiCheckbox from '@/components/ui/UiCheckbox.vue'
-import UiDropdown from '@/components/ui/UiDropdown.vue'
-import UiTooltip from '@/components/ui/UiTooltip.vue'
 
 const toast = useToast()
 
-const activeTab = ref<'overview' | 'edit' | 'security'>('overview')
+const activeTab = ref('overview')
+const profileTabs = [
+  { id: 'overview', label: 'Profile', icon: User },
+  { id: 'edit', label: 'Account Settings', icon: Briefcase },
+  { id: 'security', label: 'Security', icon: Shield },
+]
 
-// Profile Form State
-const profileName = ref('Arif Pratama')
-const profileTitle = ref('Lead Frontend Architect')
-const profileEmail = ref('arif.pratama@beejir.dev')
-const profileLocation = ref('Jakarta Selatan, Indonesia')
-const profileWebsite = ref('https://beejir.dev')
-const profileBirthDate = ref('1998-05-14')
-const profileDepartment = ref('engineering')
-const profileSkills = ref(['vue', 'typescript', 'tailwind', 'bun', 'architecture'])
-const profileBio = ref(
-  '<h3>Tentang Saya</h3><p>Seorang <strong>Frontend Architect</strong> yang berfokus pada pengembangan sistem desain modern, arsitektur komponen modular di <em>Vue 3 & TypeScript</em>, serta performa tinggi menggunakan runtime <strong>Bun</strong>.</p><ul><li>Maintainer utama proyek open-source BeeJir Admin Template.</li><li>Aktif menulis dokumentasi teknis dan standar UI/UX aksesibel.</li></ul>'
-)
-
-const avatarFiles = ref<UploadedFileItem[]>([
-  {
-    id: 'avatar-1',
-    name: 'profile-avatar-hd.png',
-    size: 425984,
-    type: 'image/png',
-    progress: 100,
-    status: 'done',
-  },
-])
+// Profile Data
+const profile = ref({
+  firstName: 'Arif',
+  lastName: 'Budiman',
+  role: 'Principal Product Designer & Frontend Architect',
+  email: 'arif.budiman@beejir.id',
+  phone: '+62 812-3456-7890',
+  location: 'Jakarta Selatan, Indonesia',
+  birthDate: '1995-08-17',
+  department: 'design',
+  skills: ['Vue 3', 'TypeScript', 'Tailwind CSS', 'Design System', 'UI/UX Architecture'],
+  bio: '<p>Berfokus pada pengembangan <strong>Design System</strong> berskala enterprise yang modular, aksesibel, dan mudah dikustomisasi lintas produk digital.</p><ul><li>10+ tahun pengalaman di industri SaaS &amp; Fintech</li><li>Kontributor aktif ekosistem Vue &amp; Tailwind CSS</li></ul>',
+})
 
 const departmentOptions = [
-  { label: 'Core Engineering & Architecture', value: 'engineering', description: 'Pengembangan platform & infrastruktur', variant: 'primary' as const },
-  { label: 'Product Design & Design System', value: 'design', description: 'UI/UX, token warna & komponen', variant: 'secondary' as const },
-  { label: 'DevOps & Cloud Reliability', value: 'devops', description: 'CI/CD, Docker & Kubernetes', variant: 'accent' as const },
-  { label: 'Product Management', value: 'product', description: 'Roadmap & strategi rilis', variant: 'info' as const },
-  { label: 'Quality Assurance', value: 'qa', description: 'Automated testing & E2E', variant: 'success' as const },
-  { label: 'Security Operations', value: 'secops', description: 'Audit keamanan & kepatuhan', variant: 'warning' as const },
+  { label: 'Design Studio & UX', value: 'design', description: 'Product Design, Research & Design System' },
+  { label: 'Core Engineering', value: 'engineering', description: 'Frontend, Backend & Cloud Infrastructure' },
+  { label: 'Product Management', value: 'product', description: 'Product Strategy & Growth' },
+  { label: 'Data & Analytics', value: 'data', description: 'Business Intelligence & Machine Learning' },
 ]
 
-const skillOptions = [
-  { label: 'Vue 3.5', value: 'vue', variant: 'primary' as const },
-  { label: 'TypeScript', value: 'typescript', variant: 'secondary' as const },
-  { label: 'Tailwind CSS', value: 'tailwind', variant: 'accent' as const },
-  { label: 'Bun Runtime', value: 'bun', variant: 'warning' as const },
-  { label: 'UI Architecture', value: 'architecture', variant: 'success' as const },
-  { label: 'Vite 6', value: 'vite', variant: 'info' as const },
-  { label: 'Pinia Store', value: 'pinia', variant: 'primary' as const },
+const skillSuggestions = [
+  'Vue 3',
+  'TypeScript',
+  'Tailwind CSS',
+  'Design System',
+  'UI/UX Architecture',
+  'Figma',
+  'Node.js',
+  'GraphQL',
+  'Accessibility (WCAG)',
+  'Performance Optimization',
 ]
 
-// Activity Timeline
+const avatarFiles = ref<UploadedFileItem[]>([])
+
+const security = ref({
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+  twoFactor: true,
+  loginAlerts: true,
+})
+
 const timelineActivities: TimelineItem[] = [
   {
     id: 1,
-    title: 'Merilis Komponen Searchable & Paginated Select',
-    description: 'Menambahkan komponen <UiSelect> dengan fitur pencarian real-time, pill paginasi, dan dukungan multi-tag.',
-    time: '2 jam yang lalu',
+    title: '12 Invoices have been paid',
+    description: 'Invoices have been paid to the company akun utama PT Nusantara Digital.',
+    time: '12 min ago',
+    badge: 'Invoices.pdf',
     variant: 'primary',
-    badge: 'Release v0.3',
-    icon: Sparkles,
-    author: 'Arif Pratama',
   },
   {
     id: 2,
-    title: 'Menyelesaikan Audit Kontras Tema Gelap & Terang',
-    description: 'Memperbarui token warna teks dan ikon pada komponen Alert Solid agar tetap tajam di seluruh preset tema.',
-    time: 'Kemarin, 18:40',
+    title: 'Client Meeting with John @10:15am',
+    description: 'Project meeting bersama tim arsitektur desain untuk rilis v2.4.',
+    time: '45 min ago',
+    badge: 'Zoom Call',
     variant: 'success',
-    badge: 'Design System',
-    icon: CheckCircle2,
-    author: 'Arif Pratama',
   },
   {
     id: 3,
-    title: 'Mengintegrasikan Komponen DataTable & CSV Exporter',
-    description: 'Membangun tabel interaktif dengan sorting kolom, pemilihan baris massal, dan ekspor langsung ke CSV.',
-    time: '3 hari yang lalu',
-    variant: 'secondary',
-    badge: 'Feature',
-    icon: GitCommit,
-    author: 'Arif Pratama',
+    title: 'Create a new project for client',
+    description: '6 team members in a project — repositori BeeJir Enterprise UI Kit.',
+    time: '2 Day Ago',
+    badge: '6 Members',
+    variant: 'info',
   },
   {
     id: 4,
-    title: 'Penghargaan Top Open-Source Contributor',
-    description: 'Mencapai 100+ commit pertama pada repositori utama BeeJir Admin Template.',
-    time: 'Minggu lalu',
+    title: 'Audit Keamanan & Rotasi API Key',
+    description: 'Mengaktifkan autentikasi dua faktor (2FA) dan memperbarui kunci SSH produksi.',
+    time: '5 Day Ago',
     variant: 'warning',
-    badge: 'Milestone',
-    icon: Award,
-    author: 'System Bot',
   },
 ]
 
-// Active Projects List
-const activeProjects: ListItem[] = [
-  {
-    id: 'p1',
-    title: 'BeeJir Core UI Library',
-    subtitle: '24 Komponen Vue 3 + TypeScript + Custom Tailwind CSS',
-    badge: 'Active',
-    badgeVariant: 'success',
-    meta: 'v0.3.0',
-    variant: 'primary',
-    avatar: 'BJ',
-  },
-  {
-    id: 'p2',
-    title: 'Theme Engine & Live Customizer',
-    subtitle: 'Sistem variabel RGB dinamis dengan 6 preset warna bawaan',
-    badge: 'Stable',
-    badgeVariant: 'primary',
-    meta: '100%',
-    variant: 'secondary',
-    avatar: 'TE',
-  },
-  {
-    id: 'p3',
-    title: 'Dokumentasi & Starter Kit CLI',
-    subtitle: 'Panduan instalasi cepat berbasis Bun untuk developer',
-    badge: 'In Progress',
-    badgeVariant: 'warning',
-    meta: '75%',
-    variant: 'accent',
-    avatar: 'DK',
-  },
+const connections = [
+  { name: 'Cecilia Payne', connections: '45 Connections', initials: 'CP', avatarClass: 'avatar-soft-primary', connected: true },
+  { name: 'Curtis Fletcher', connections: '1.32k Connections', initials: 'CF', avatarClass: 'avatar-soft-success', connected: false },
+  { name: 'Alice Stone', connections: '125 Connections', initials: 'AS', avatarClass: 'avatar-soft-info', connected: false },
+  { name: 'Darrell Barnes', connections: '456 Connections', initials: 'DB', avatarClass: 'avatar-soft-warning', connected: true },
+  { name: 'Eugenia Moore', connections: '1.2k Connections', initials: 'EM', avatarClass: 'avatar-soft-error', connected: true },
 ]
 
-// Active Sessions List
-const deviceSessions: ListItem[] = [
-  {
-    id: 's1',
-    title: 'Windows 11 Pro • Chrome 132 (Perangkat Ini)',
-    subtitle: 'Jakarta, Indonesia • IP 103.144.22.18',
-    badge: 'Sesi Aktif',
-    badgeVariant: 'success',
-    icon: Laptop,
-    variant: 'primary',
-  },
-  {
-    id: 's2',
-    title: 'iPhone 16 Pro • Safari Mobile',
-    subtitle: 'Bandung, Indonesia • Terakhir aktif 3 jam lalu',
-    badge: 'Terverifikasi',
-    badgeVariant: 'info',
-    icon: Smartphone,
-    variant: 'secondary',
-  },
-]
-
-// Security Preferences
-const enable2FA = ref(true)
-const emailAlerts = ref(true)
-const weeklyDigest = ref(false)
-const loginNotifications = ref(true)
-
-const profileActions = [
-  { label: 'Bagikan Tautan Profil', value: 'share', icon: Share2 },
-  { label: 'Ekspor Resume JSON', value: 'export', icon: Briefcase, badge: 'JSON' },
-  { divider: true },
-  { label: 'Nonaktifkan Status Publik', value: 'disable', danger: true },
+const projectTeams = [
+  { title: 'React Developers', members: '72 Members', tag: 'Developer', badgeClass: 'badge-soft badge-primary', avatarClass: 'avatar-soft-primary', short: 'RD' },
+  { title: 'Support Team', members: '122 Members', tag: 'Support', badgeClass: 'badge-soft badge-warning', avatarClass: 'avatar-soft-warning', short: 'ST' },
+  { title: 'UI Designers', members: '7 Members', tag: 'Designer', badgeClass: 'badge-soft badge-info', avatarClass: 'avatar-soft-info', short: 'UI' },
+  { title: 'Vue.js Developers', members: '289 Members', tag: 'Developer', badgeClass: 'badge-soft badge-error', avatarClass: 'avatar-soft-error', short: 'VJ' },
+  { title: 'Digital Marketing', members: '24 Members', tag: 'Marketing', badgeClass: 'badge-soft badge-secondary', avatarClass: 'avatar-soft-secondary', short: 'DM' },
 ]
 
 function saveProfile() {
-  toast.success(
-    'Profil Berhasil Diperbarui!',
-    `Perubahan data profil untuk ${profileName.value} telah disimpan.`
-  )
-  activeTab.value = 'overview'
+  toast.success('Profil Diperbarui', 'Perubahan informasi akun Anda telah disimpan.')
+}
+
+function updatePassword() {
+  if (!security.value.currentPassword || !security.value.newPassword) {
+    toast.error('Gagal Memperbarui', 'Harap isi kata sandi saat ini dan kata sandi baru.')
+    return
+  }
+  security.value.currentPassword = ''
+  security.value.newPassword = ''
+  security.value.confirmPassword = ''
+  toast.success('Kata Sandi Diperbarui', 'Kata sandi akun Anda berhasil diganti.')
 }
 </script>
 
 <template>
   <div class="space-y-6">
-    <!-- Top Profile Banner Card -->
-    <div class="rounded-box border border-base-300 bg-base-100 overflow-visible shadow-xs">
-      <!-- Colorful Cover Gradient -->
-      <div class="h-36 sm:h-44 w-full rounded-t-box bg-gradient-to-r from-primary via-secondary to-accent relative overflow-hidden">
-        <div class="absolute inset-0 bg-black/10" />
-        <div class="absolute top-4 right-4 flex items-center gap-2">
-          <UiBadge variant="neutral" class="bg-black/40 text-white border-white/20 backdrop-blur-md">
-            Core Maintainer
-          </UiBadge>
-        </div>
+    <!-- 1. BeeJir Profile Header Card (Ref: pages-profile-user.html) -->
+    <div class="card overflow-hidden">
+      <!-- Top Colorful Banner -->
+      <div
+        class="h-40 sm:h-52 w-full relative overflow-hidden"
+        style="background: linear-gradient(120deg, rgb(var(--p)) 0%, rgb(var(--s)) 55%, rgb(var(--in)) 100%);"
+      >
+        <!-- Subtle geometric mesh pattern -->
+        <svg class="absolute inset-0 h-full w-full opacity-20" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="profileGrid" width="32" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" stroke-width="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#profileGrid)" />
+        </svg>
       </div>
 
-      <!-- Profile Identity Bar -->
-      <div class="px-5 sm:px-8 pb-6">
-        <div class="relative -mt-12 sm:-mt-14 mb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-            <!-- Avatar -->
-            <div class="relative h-24 w-24 sm:h-28 sm:w-28 rounded-2xl border-4 border-base-100 bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-3xl font-extrabold shadow-lg">
-              AP
-              <span
-                class="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-success border-2 border-base-100"
-                title="Status: Online"
-              />
+      <!-- Bottom Info Bar with Overlapping Rounded-XL Avatar -->
+      <div class="px-6 pb-6">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-12 sm:-mt-10 relative z-10">
+          <div class="flex flex-col sm:flex-row sm:items-end gap-5">
+            <!-- Avatar Box -->
+            <div class="h-28 w-28 rounded-xl bg-base-100 p-1.5 shadow-md shrink-0">
+              <div class="flex h-full w-full items-center justify-center rounded-lg bg-primary text-3xl font-bold text-primary-content">
+                AB
+              </div>
             </div>
 
-            <!-- Name & Headline -->
-            <div class="pt-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <h2 class="text-xl sm:text-2xl font-extrabold text-base-content">
-                  {{ profileName }}
-                </h2>
-                <UiTooltip text="Akun Maintainer Terverifikasi" variant="primary">
-                  <span class="badge badge-primary badge-sm gap-1">
-                    <CheckCircle2 class="h-3 w-3" />
-                    Verified
-                  </span>
-                </UiTooltip>
-              </div>
-              <p class="text-xs sm:text-sm font-medium text-base-content/65 mt-0.5">
-                {{ profileTitle }}
-              </p>
-              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-base-content/55">
-                <span class="inline-flex items-center gap-1">
-                  <MapPin class="h-3.5 w-3.5 text-primary" />
-                  {{ profileLocation }}
-                </span>
-                <span class="inline-flex items-center gap-1">
-                  <Mail class="h-3.5 w-3.5 text-secondary" />
-                  {{ profileEmail }}
-                </span>
-                <span class="inline-flex items-center gap-1">
-                  <Globe class="h-3.5 w-3.5 text-accent" />
-                  {{ profileWebsite }}
-                </span>
-              </div>
+            <!-- User Name & Metadata List -->
+            <div class="pt-1 sm:pb-1">
+              <h4 class="text-xl sm:text-2xl font-bold text-base-content">
+                {{ profile.firstName }} {{ profile.lastName }}
+              </h4>
+              <ul class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-base-content/65">
+                <li class="flex items-center gap-1.5">
+                  <Briefcase class="h-4 w-4 text-base-content/50" />
+                  <span>UX Designer</span>
+                </li>
+                <li class="flex items-center gap-1.5">
+                  <MapPin class="h-4 w-4 text-base-content/50" />
+                  <span>{{ profile.location }}</span>
+                </li>
+                <li class="flex items-center gap-1.5">
+                  <Calendar class="h-4 w-4 text-base-content/50" />
+                  <span>Joined April 2021</span>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <!-- Action Buttons & Dropdown -->
-          <div class="flex items-center gap-2">
-            <UiButton
-              variant="primary"
-              size="sm"
+          <!-- Connected / Edit Action Button -->
+          <div class="sm:pb-1">
+            <button
+              class="btn btn-primary gap-2"
               @click="activeTab = activeTab === 'edit' ? 'overview' : 'edit'"
             >
-              <template #icon-left>
-                <Edit3 class="h-4 w-4" />
-              </template>
-              {{ activeTab === 'edit' ? 'Lihat Profil' : 'Edit Profil' }}
-            </UiButton>
-
-            <UiDropdown
-              align="right"
-              :items="profileActions"
-              @select="(item) => toast.info('Aksi Profil', `Memilih menu: ${item.label}`)"
-            >
-              <template #trigger>
-                <button type="button" class="btn btn-outline btn-sm btn-square">
-                  <MoreHorizontal class="h-4 w-4" />
-                </button>
-              </template>
-            </UiDropdown>
+              <UserCheck class="h-4 w-4" />
+              {{ activeTab === 'edit' ? 'View Profile' : 'Connected' }}
+            </button>
           </div>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <div class="flex flex-wrap items-center gap-2 border-t border-base-300/70 pt-4">
-          <button
-            type="button"
-            class="btn btn-sm"
-            :class="activeTab === 'overview' ? 'btn-primary' : 'btn-ghost'"
-            @click="activeTab = 'overview'"
-          >
-            <User class="h-4 w-4" />
-            Ringkasan & Aktivitas
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm"
-            :class="activeTab === 'edit' ? 'btn-primary' : 'btn-ghost'"
-            @click="activeTab = 'edit'"
-          >
-            <Edit3 class="h-4 w-4" />
-            Edit Profil & Bio
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm"
-            :class="activeTab === 'security' ? 'btn-primary' : 'btn-ghost'"
-            @click="activeTab = 'security'"
-          >
-            <Shield class="h-4 w-4" />
-            Keamanan & Preferensi
-          </button>
         </div>
       </div>
     </div>
 
-    <!-- TAB 1: OVERVIEW & ACTIVITY -->
-    <div v-if="activeTab === 'overview'" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Left Column: Profile Completeness, Bio & Skills -->
-      <div class="space-y-6">
-        <UiCard title="Kelengkapan Profil" subtitle="Tingkatkan kredibilitas akun Anda" accent-top="primary">
-          <div class="space-y-4">
-            <UiProgress
-              :value="92"
-              variant="primary"
-              label="Skor Kelengkapan"
-              show-value
-              striped
-              animated
-            />
-            <p class="text-xs text-base-content/60 leading-relaxed">
-              Profil Anda hampir sempurna! Tambahkan tautan repositori publik untuk mencapai 100%.
+    <!-- 2. BeeJir Horizontal Navigation Pills -->
+    <div class="flex flex-wrap items-center gap-2">
+      <button
+        v-for="tab in profileTabs"
+        :key="tab.id"
+        type="button"
+        class="btn btn-sm h-10 px-5 gap-2 rounded-btn font-medium transition-all"
+        :class="
+          activeTab === tab.id
+            ? 'btn-primary'
+            : 'bg-transparent border-transparent text-base-content/70 hover:bg-primary/10 hover:text-primary shadow-none'
+        "
+        @click="activeTab = tab.id"
+      >
+        <component :is="tab.icon" class="h-4 w-4" />
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <!-- TAB 1: PROFILE OVERVIEW (Matches BeeJir pages-profile-user.html 4-col + 8-col layout) -->
+    <div v-if="activeTab === 'overview'" class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <!-- Left Column (lg:col-span-4): ABOUT Card + OVERVIEW Card -->
+      <div class="space-y-6 lg:col-span-4">
+        <!-- About & Contacts Card -->
+        <div class="card p-5 space-y-5">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-base-content/45 mb-3">
+              About
             </p>
+            <ul class="space-y-3 text-sm text-base-content/80">
+              <li class="flex items-center gap-2.5">
+                <User class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Full Name:</span>
+                <span>{{ profile.firstName }} {{ profile.lastName }}</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <Check class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Status:</span>
+                <span>Active</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <Briefcase class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Role:</span>
+                <span>Principal Designer</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <Flag class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Country:</span>
+                <span>Indonesia</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <Languages class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Languages:</span>
+                <span>Indonesian, English</span>
+              </li>
+            </ul>
           </div>
-        </UiCard>
 
-        <UiCard title="Biografi & Keahlian" accent-top="secondary">
-          <div class="space-y-4">
-            <div
-              class="prose prose-sm max-w-none text-xs text-base-content/80 leading-relaxed space-y-2"
-              v-html="profileBio"
-            />
+          <div class="border-t border-base-300/70 pt-4">
+            <p class="text-xs font-semibold uppercase tracking-wider text-base-content/45 mb-3">
+              Contacts
+            </p>
+            <ul class="space-y-3 text-sm text-base-content/80">
+              <li class="flex items-center gap-2.5">
+                <Phone class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Contact:</span>
+                <span>{{ profile.phone }}</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <MessageSquare class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Skype:</span>
+                <span>arif.budiman</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <Mail class="h-4 w-4 text-base-content/50 shrink-0" />
+                <span class="font-medium text-base-content/65">Email:</span>
+                <span class="truncate">{{ profile.email }}</span>
+              </li>
+            </ul>
+          </div>
 
-            <div class="pt-3 border-t border-base-300/70">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-base-content/50 block mb-2">
-                Tech Stack & Keahlian Utama
+          <div class="border-t border-base-300/70 pt-4">
+            <p class="text-xs font-semibold uppercase tracking-wider text-base-content/45 mb-3">
+              Skills
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span
+                v-for="skill in profile.skills"
+                :key="skill"
+                class="badge badge-soft badge-primary rounded-full px-2.5 py-0.5 text-xs font-medium"
+              >
+                {{ skill }}
               </span>
-              <div class="flex flex-wrap gap-1.5">
-                <span
-                  v-for="skill in profileSkills"
-                  :key="skill"
-                  class="badge badge-primary badge-sm font-semibold uppercase"
-                >
-                  {{ skill }}
-                </span>
-              </div>
             </div>
           </div>
-        </UiCard>
+        </div>
 
-        <UiCard title="Proyek yang Dikelola" subtitle="Klik item untuk melihat detail" accent-top="accent">
-          <UiList
-            :items="activeProjects"
-            compact
-            @item-click="(item) => toast.info(item.title, item.subtitle)"
-          />
-        </UiCard>
+        <!-- Overview Stats Card -->
+        <div class="card p-5">
+          <p class="text-xs font-semibold uppercase tracking-wider text-base-content/45 mb-3">
+            Overview
+          </p>
+          <ul class="space-y-3 text-sm text-base-content/80">
+            <li class="flex items-center gap-2.5">
+              <CheckCircle2 class="h-4 w-4 text-primary shrink-0" />
+              <span class="font-medium text-base-content/65">Task Compiled:</span>
+              <span class="font-semibold text-base-content">13.5k</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <FolderKanban class="h-4 w-4 text-success shrink-0" />
+              <span class="font-medium text-base-content/65">Projects Compiled:</span>
+              <span class="font-semibold text-base-content">146</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <Users class="h-4 w-4 text-info shrink-0" />
+              <span class="font-medium text-base-content/65">Connections:</span>
+              <span class="font-semibold text-base-content">897</span>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <!-- Right 2 Columns: Activity Timeline -->
-      <div class="lg:col-span-2">
-        <UiCard
-          title="Linimasa Aktivitas Terbaru (Timeline)"
-          subtitle="Riwayat kontribusi, rilis komponen, dan pembaruan sistem"
-          accent-top="primary"
-        >
+      <!-- Right Column (lg:col-span-8): Activity Timeline + Connections & Teams -->
+      <div class="space-y-6 lg:col-span-8">
+        <!-- Activity Timeline Card -->
+        <div class="card p-5">
+          <div class="flex items-center gap-2.5 mb-5">
+            <Activity class="h-5 w-5 text-base-content/60" />
+            <h5 class="card-title">Activity Timeline</h5>
+          </div>
           <UiTimeline :items="timelineActivities" />
-        </UiCard>
+        </div>
+
+        <!-- Connections & Teams 2-Col Sub-grid -->
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <!-- Connections Card -->
+          <div class="card p-5">
+            <h5 class="card-title mb-4">Connections</h5>
+            <ul class="space-y-3.5">
+              <li
+                v-for="conn in connections"
+                :key="conn.name"
+                class="flex items-center justify-between gap-3"
+              >
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold" :class="conn.avatarClass">
+                    {{ conn.initials }}
+                  </div>
+                  <div class="min-w-0">
+                    <h6 class="text-sm font-semibold text-base-content truncate">{{ conn.name }}</h6>
+                    <p class="text-xs text-base-content/55">{{ conn.connections }}</p>
+                  </div>
+                </div>
+                <button
+                  class="btn btn-xs btn-square rounded-lg"
+                  :class="conn.connected ? 'btn-primary' : 'bg-primary/15 text-primary border-transparent hover:bg-primary/25 shadow-none'"
+                  @click="conn.connected = !conn.connected"
+                >
+                  <UserCheck class="h-3.5 w-3.5" />
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Teams Card -->
+          <div class="card p-5">
+            <h5 class="card-title mb-4">Teams</h5>
+            <ul class="space-y-3.5">
+              <li
+                v-for="team in projectTeams"
+                :key="team.title"
+                class="flex items-center justify-between gap-3"
+              >
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold" :class="team.avatarClass">
+                    {{ team.short }}
+                  </div>
+                  <div class="min-w-0">
+                    <h6 class="text-sm font-semibold text-base-content truncate">{{ team.title }}</h6>
+                    <p class="text-xs text-base-content/55">{{ team.members }}</p>
+                  </div>
+                </div>
+                <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0" :class="team.badgeClass">
+                  {{ team.tag }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- TAB 2: EDIT PROFILE (Uses DatePicker, Select, SelectTag, RichEditor, FileUpload) -->
-    <div v-else-if="activeTab === 'edit'" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 space-y-6">
-        <UiCard
-          title="Informasi Pribadi & Pekerjaan"
-          subtitle="Perbarui identitas publik, tanggal lahir, dan peran organisasi"
-          accent-top="primary"
-        >
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <UiInput v-model="profileName" label="Nama Lengkap" placeholder="Nama lengkap..." />
-            <UiInput v-model="profileTitle" label="Jabatan / Role Title" placeholder="Jabatan..." />
-            <UiInput v-model="profileEmail" type="email" label="Email Utama" placeholder="Email..." />
-            <UiDatePicker
-              v-model="profileBirthDate"
-              label="Tanggal Lahir (UiDatePicker)"
-              hint="Format: YYYY-MM-DD dengan kalender interaktif"
-            />
-            <UiSelect
-              v-model="profileDepartment"
-              :options="departmentOptions"
-              label="Departemen / Divisi (UiSelect)"
-              :page-size="4"
-            />
-            <UiInput v-model="profileLocation" label="Lokasi Domisili" placeholder="Kota, Negara" />
+    <!-- TAB 2: EDIT ACCOUNT -->
+    <UiCard
+      v-else-if="activeTab === 'edit'"
+      title="Account Settings"
+      subtitle="Perbarui informasi personal, departemen, keahlian, serta foto profil Anda"
+    >
+      <form class="space-y-5" @submit.prevent="saveProfile">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="form-control">
+            <label class="label"><span class="label-text">First Name</span></label>
+            <input v-model="profile.firstName" type="text" class="input" required />
           </div>
-
-          <div class="mt-4">
-            <UiSelectTag
-              v-model="profileSkills"
-              :options="skillOptions"
-              label="Tag Keahlian (UiSelectTag)"
-              allow-create
-            />
+          <div class="form-control">
+            <label class="label"><span class="label-text">Last Name</span></label>
+            <input v-model="profile.lastName" type="text" class="input" required />
           </div>
+        </div>
 
-          <div class="mt-4">
-            <UiRichEditor
-              v-model="profileBio"
-              label="Biografi Lengkap (UiRichEditor WYSIWYG)"
-              hint="Gunakan toolbar di atas untuk memformat teks tebal, miring, daftar poin, atau melihat kode HTML"
-            />
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="form-control">
+            <label class="label"><span class="label-text">Email</span></label>
+            <input v-model="profile.email" type="email" class="input" required />
           </div>
+          <div class="form-control">
+            <label class="label"><span class="label-text">Phone Number</span></label>
+            <input v-model="profile.phone" type="text" class="input" />
+          </div>
+        </div>
 
-          <template #footer>
-            <UiButton variant="ghost" size="sm" @click="activeTab = 'overview'">
-              Batal
-            </UiButton>
-            <UiButton variant="primary" size="sm" @click="saveProfile">
-              <template #icon-left>
-                <Save class="h-4 w-4" />
-              </template>
-              Simpan Perubahan Profil
-            </UiButton>
-          </template>
-        </UiCard>
-      </div>
-
-      <div class="space-y-6">
-        <UiCard
-          title="Foto Avatar & Dokumen"
-          subtitle="Unggah foto profil baru dengan preview instan"
-          accent-top="secondary"
-        >
-          <UiFileUpload
-            v-model="avatarFiles"
-            mode="dropzone"
-            accept="image/*"
-            :multiple="false"
-            label="Upload Foto Profil Baru"
-            hint="Mendukung format PNG, JPG, atau WebP hingga 5MB"
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <UiDatePicker
+            v-model="profile.birthDate"
+            label="Birth Date"
+            placeholder="Select date"
           />
-        </UiCard>
-      </div>
-    </div>
-
-    <!-- TAB 3: SECURITY & PREFERENCES -->
-    <div v-else-if="activeTab === 'security'" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <UiCard
-        title="Preferensi Keamanan & Notifikasi"
-        subtitle="Kelola autentikasi dua faktor dan pemberitahuan akun"
-        accent-top="warning"
-      >
-        <div class="space-y-4">
-          <UiCheckbox
-            v-model="enable2FA"
-            variant="primary"
-            label="Aktifkan Two-Factor Authentication (2FA)"
-            description="Meminta kode OTP tambahan setiap kali masuk dari perangkat baru"
-          />
-          <UiCheckbox
-            v-model="loginNotifications"
-            variant="success"
-            label="Notifikasi Aktivitas Login Baru"
-            description="Kirim peringatan instan ketika ada sesi login dari alamat IP baru"
-          />
-          <UiCheckbox
-            v-model="emailAlerts"
-            variant="secondary"
-            label="Berlangganan Pembaruan Keamanan Sistem"
-            description="Terima buletin rilis patch keamanan dan pembaruan dependensi"
-          />
-          <UiCheckbox
-            v-model="weeklyDigest"
-            variant="accent"
-            label="Laporan Ringkasan Mingguan"
-            description="Kirim ringkasan performa proyek setiap hari Senin pagi"
+          <UiSelect
+            v-model="profile.department"
+            :options="departmentOptions"
+            label="Department"
+            placeholder="Select department"
           />
         </div>
 
-        <template #footer>
-          <UiButton
-            variant="primary"
-            size="sm"
-            @click="toast.success('Preferensi Disimpan', 'Pengaturan keamanan akun telah diperbarui.')"
-          >
-            <template #icon-left>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="form-control">
+            <label class="label"><span class="label-text">Role / Title</span></label>
+            <input v-model="profile.role" type="text" class="input" />
+          </div>
+          <div class="form-control">
+            <label class="label"><span class="label-text">Location</span></label>
+            <input v-model="profile.location" type="text" class="input" />
+          </div>
+        </div>
+
+        <UiSelectTag
+          v-model="profile.skills"
+          :suggestions="skillSuggestions"
+          label="Skills & Competencies"
+          placeholder="Ketik keahlian lalu tekan Enter..."
+          :max-tags="8"
+        />
+
+        <UiRichEditor
+          v-model="profile.bio"
+          label="Professional Biography"
+          placeholder="Tulis ringkasan pengalaman Anda..."
+          min-height="130px"
+        />
+
+        <UiFileUpload
+          v-model="avatarFiles"
+          label="Upload Avatar / Portfolio"
+          accept="image/*,.pdf"
+          :max-size-mb="5"
+          hint="PNG, JPG, WebP atau PDF hingga 5 MB"
+        />
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" class="btn btn-ghost btn-sm" @click="activeTab = 'overview'">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm gap-2">
+            <Save class="h-4 w-4" />
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </UiCard>
+
+    <!-- TAB 3: SECURITY -->
+    <div v-else-if="activeTab === 'security'" class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <UiCard
+        title="Change Password"
+        subtitle="Gunakan kombinasi huruf besar, angka, dan simbol minimal 8 karakter"
+        class="lg:col-span-7"
+      >
+        <form class="space-y-4" @submit.prevent="updatePassword">
+          <div class="form-control">
+            <label class="label"><span class="label-text">Current Password</span></label>
+            <input v-model="security.currentPassword" type="password" class="input" placeholder="••••••••" />
+          </div>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="form-control">
+              <label class="label"><span class="label-text">New Password</span></label>
+              <input v-model="security.newPassword" type="password" class="input" placeholder="••••••••" />
+            </div>
+            <div class="form-control">
+              <label class="label"><span class="label-text">Confirm New Password</span></label>
+              <input v-model="security.confirmPassword" type="password" class="input" placeholder="••••••••" />
+            </div>
+          </div>
+          <div class="flex justify-end pt-2">
+            <button type="submit" class="btn btn-primary btn-sm gap-2">
               <KeyRound class="h-4 w-4" />
-            </template>
-            Simpan Pengaturan Keamanan
-          </UiButton>
-        </template>
+              Save Password
+            </button>
+          </div>
+        </form>
       </UiCard>
 
       <UiCard
-        title="Sesi Perangkat Aktif"
-        subtitle="Daftar perangkat yang saat ini masuk ke akun Anda"
-        accent-top="info"
+        title="Two-steps Verification & Devices"
+        subtitle="Kelola proteksi ekstra dan perangkat yang sedang aktif"
+        class="lg:col-span-5"
       >
-        <UiList :items="deviceSessions">
-          <template #item-action="{ item }">
-            <div class="flex items-center gap-2">
-              <span class="badge badge-xs badge-soft badge-success font-bold">{{ item.badge }}</span>
-              <button
-                v-if="item.id !== 's1'"
-                type="button"
-                class="btn btn-ghost btn-xs text-error"
-                @click="toast.warning('Sesi Dihentikan', `Sesi pada ${item.title} telah dikeluarkan.`)"
-              >
-                Keluarkan
-              </button>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between rounded-lg border border-base-300/80 p-3.5">
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg avatar-soft-primary">
+                <Smartphone class="h-5 w-5" />
+              </div>
+              <div>
+                <p class="text-sm font-semibold">Two-Factor Authentication (2FA)</p>
+                <p class="text-xs text-base-content/55">Wajibkan kode OTP saat masuk dari perangkat baru</p>
+              </div>
             </div>
-          </template>
-        </UiList>
+            <input v-model="security.twoFactor" type="checkbox" class="toggle toggle-primary" />
+          </div>
+
+          <div class="flex items-center justify-between rounded-lg border border-base-300/80 p-3.5">
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg avatar-soft-info">
+                <Mail class="h-5 w-5" />
+              </div>
+              <div>
+                <p class="text-sm font-semibold">Unusual Login Alerts</p>
+                <p class="text-xs text-base-content/55">Kirim peringatan email saat ada sesi mencurigakan</p>
+              </div>
+            </div>
+            <input v-model="security.loginAlerts" type="checkbox" class="toggle toggle-primary" />
+          </div>
+
+          <div class="pt-2">
+            <UiProgress :value="92" label="Account Security Score" variant="success" />
+          </div>
+        </div>
       </UiCard>
     </div>
   </div>
