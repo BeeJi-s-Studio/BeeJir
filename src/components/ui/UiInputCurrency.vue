@@ -411,9 +411,9 @@ onUnmounted(() => {
 
     <!-- Wrapper strictly identical to standard .input -->
     <div
-      class="w-full rounded-btn bg-base-100 text-base-content border border-base-300 transition-all duration-150 flex items-center hover:border-base-content/40 focus-within:!outline-none focus-within:!bg-base-100 focus-within:!ring-2 focus-within:!ring-primary/20 focus-within:!border-primary dark:border-base-300 dark:bg-base-100 dark:hover:border-base-content/40"
+      class="w-full form-surface flex items-center focus-within:!outline-none focus-within:!border-[var(--accent)] focus-within:!shadow-[0_0_0_2px_var(--ring)]"
       :class="[
-        error ? '!border-error focus-within:!border-error focus-within:!ring-error/20' : '',
+        error ? '!border-error focus-within:!border-error focus-within:!shadow-[0_0_0_2px_rgb(var(--er)/0.22)]' : '',
         disabled ? 'opacity-50 cursor-not-allowed bg-base-200/50' : '',
         size === 'sm' ? 'h-8 text-xs' : size === 'lg' ? 'h-12 text-base' : 'h-10 text-sm'
       ]"
@@ -424,8 +424,8 @@ onUnmounted(() => {
           v-if="allowChangeCurrency"
           type="button"
           :disabled="disabled"
-          class="flex h-full items-center gap-1.5 rounded-l-btn border-r border-base-300/80 bg-base-200/60 px-3 text-xs font-bold text-base-content transition-colors hover:bg-base-200 focus:outline-none"
-          :class="isDropdownOpen && 'bg-base-200 text-primary border-primary/40'"
+          class="flex h-full items-center gap-1.5 rounded-l-btn border-r border-[var(--border)] bg-[var(--surface-1)] px-3 text-xs font-bold text-base-content transition-colors hover:bg-[var(--surface-raised)] focus:outline-none"
+          :class="isDropdownOpen && 'bg-[var(--surface-raised)] text-[var(--accent)] border-primary/40'"
           title="Klik untuk memilih mata uang atau cari negara"
           @click="toggleDropdown"
         >
@@ -437,13 +437,13 @@ onUnmounted(() => {
           <!-- Display currency symbol -->
           <span class="font-mono tracking-tight font-bold text-base-content">{{ currentCurrency.symbol }}</span>
           <ChevronDown
-            class="h-3.5 w-3.5 text-base-content/50 transition-transform duration-200"
+            class="h-3.5 w-3.5 text-[var(--text-faint)] transition-transform duration-200"
             :class="isDropdownOpen && 'rotate-180 text-primary'"
           />
         </button>
         <span
           v-else
-          class="flex h-full items-center gap-1.5 rounded-l-btn border-r border-base-300/80 bg-base-200/60 px-3.5 text-xs font-bold text-base-content/85 select-none font-mono"
+          class="flex h-full items-center gap-1.5 rounded-l-btn border-r border-[var(--border)] bg-[var(--surface-1)] px-3.5 text-xs font-bold text-base-content/85 select-none font-mono"
         >
           <span
             class="fi rounded-xs shadow-2xs shrink-0 text-sm"
@@ -463,29 +463,29 @@ onUnmounted(() => {
         >
           <div
             v-if="isDropdownOpen"
-            class="absolute left-0 top-full mt-1.5 w-64 rounded-xl border border-base-300 bg-base-100 p-2 shadow-2xl z-[100]"
+            class="absolute left-0 top-full mt-1.5 w-64 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-2 shadow-2xl z-[100]"
           >
             <!-- Search Box Inside Dropdown -->
             <div class="relative mb-2">
-              <Search class="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-base-content/45 pointer-events-none" />
+              <Search class="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-faint)] pointer-events-none" />
               <input
                 ref="searchInputRef"
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari negara / valuta..."
-                class="w-full rounded-lg bg-base-200/70 pl-8 pr-7 py-1.5 text-xs text-base-content placeholder:text-base-content/40 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-base-100 border border-transparent focus:border-primary/30"
+                class="w-full rounded-lg bg-[var(--surface-input)] pl-8 pr-7 py-1.5 text-xs text-base-content placeholder:text-[var(--text-faint)] focus:outline-none border border-[var(--border)] focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_var(--ring)] transition-[border-color,box-shadow]"
               />
               <button
                 v-if="searchQuery"
                 type="button"
-                class="absolute right-2 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content"
+                class="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-faint)] hover:text-base-content"
                 @click="searchQuery = ''"
               >
                 <X class="h-3 w-3" />
               </button>
             </div>
 
-            <div class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-base-content/50">
+            <div class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--text-faint)]">
               Daftar Mata Uang ({{ filteredCurrencies.length }})
             </div>
 
@@ -498,8 +498,8 @@ onUnmounted(() => {
                 class="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer select-none"
                 :class="
                   activeCurrencyCode === curr.code
-                    ? 'bg-primary/10 font-bold text-primary'
-                    : 'text-base-content hover:bg-base-200/70'
+                    ? 'bg-[var(--accent-soft)] font-bold text-[var(--accent)]'
+                    : 'text-base-content hover:bg-base-200/70 dark:hover:bg-white/[0.06]'
                 "
                 @click="selectCurrency(curr)"
               >
@@ -510,16 +510,16 @@ onUnmounted(() => {
                   />
                   <div class="text-left truncate">
                     <p class="font-medium text-xs text-base-content truncate leading-tight">{{ curr.name }}</p>
-                    <p class="text-[10px] text-base-content/60 font-mono leading-none mt-1">{{ curr.code }}</p>
+                    <p class="text-[10px] text-[var(--text-muted)] font-mono leading-none mt-1">{{ curr.code }}</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <span class="font-mono text-xs text-base-content/75 font-bold">{{ curr.symbol }}</span>
+                  <span class="font-mono text-xs text-[var(--text-muted)] font-bold">{{ curr.symbol }}</span>
                   <Check v-if="activeCurrencyCode === curr.code" class="h-3.5 w-3.5 stroke-[2.5]" />
                 </div>
               </button>
 
-              <div v-if="filteredCurrencies.length === 0" class="py-4 text-center text-xs text-base-content/50">
+              <div v-if="filteredCurrencies.length === 0" class="py-4 text-center text-xs text-[var(--text-muted)]">
                 Negara atau valuta tidak ditemukan
               </div>
             </div>
@@ -535,7 +535,7 @@ onUnmounted(() => {
         :value="displayValue"
         :placeholder="placeholder"
         :disabled="disabled"
-        class="w-full h-full bg-transparent px-3 text-sm font-mono text-base-content outline-none ring-0 border-0 focus:outline-none focus:ring-0 focus:border-0 placeholder:text-base-content/40 shadow-none"
+        class="w-full h-full bg-transparent px-3 text-sm font-mono text-base-content outline-none ring-0 border-0 focus:outline-none focus:ring-0 focus:border-0 placeholder:text-[var(--text-faint)] shadow-none"
         :class="size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm'"
         @focus="onFocus"
         @input="onInput"
@@ -544,7 +544,7 @@ onUnmounted(() => {
 
       <!-- Currency Code pill badge at the end -->
       <div class="pr-3 pl-1 shrink-0 select-none">
-        <span class="rounded bg-base-200/80 px-2 py-0.5 text-xs font-bold text-base-content/70 font-mono">
+        <span class="rounded bg-[var(--surface-1)] border border-[var(--border)] px-2 py-0.5 text-xs font-bold text-[var(--text-muted)] font-mono">
           {{ currentCurrency.code }}
         </span>
       </div>
@@ -554,7 +554,7 @@ onUnmounted(() => {
     <span v-if="error" class="text-xs font-medium text-error">
       {{ error }}
     </span>
-    <span v-else-if="hint" class="text-xs text-base-content/55">
+    <span v-else-if="hint" class="text-xs text-[var(--text-muted)]">
       {{ hint }}
     </span>
   </div>

@@ -235,14 +235,14 @@ onUnmounted(() => {
           type="text"
           :placeholder="selectedTags.length === 0 ? placeholder : ''"
           :disabled="disabled"
-          class="w-full bg-transparent px-2 py-1 text-sm text-base-content placeholder:text-base-content/40 focus:outline-none"
+          class="w-full bg-transparent px-2 py-1 text-sm text-base-content placeholder:text-[var(--text-faint)] focus:outline-none"
           @focus="isOpen = true"
           @keydown="handleKeyDown"
         />
       </div>
 
       <!-- Dropdown Toggle Arrow -->
-      <div class="flex items-center gap-1 text-base-content/40 pr-1 shrink-0">
+      <div class="flex items-center gap-1 text-[var(--text-faint)] pr-1 shrink-0">
         <button
           v-if="selectedTags.length > 0 && !disabled"
           type="button"
@@ -270,14 +270,14 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 right-0 top-full mt-1.5 z-[100] max-h-60 overflow-y-auto rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
+        class="absolute left-0 right-0 top-full mt-1.5 z-[100] max-h-60 overflow-y-auto rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-1.5 shadow-xl"
       >
         <!-- Create New Tag Option -->
         <button
           v-if="isQueryNew && allowCreate"
           type="button"
-          class="flex w-full items-center gap-2 rounded-btn px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/10 transition-colors"
-          :class="activeIndex === filteredOptions.length ? 'bg-primary/10' : ''"
+          class="flex w-full items-center gap-2 rounded-btn px-3 py-2 text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent-soft)] transition-colors"
+          :class="activeIndex === filteredOptions.length ? 'bg-[var(--accent-soft)]' : ''"
           @click="createTag"
         >
           <Plus class="h-4 w-4" />
@@ -293,9 +293,9 @@ onUnmounted(() => {
             class="flex w-full items-center justify-between rounded-btn px-3 py-2 text-xs font-semibold text-left transition-colors"
             :class="[
               isSelected(opt.value)
-                ? 'bg-primary/12 text-primary'
-                : 'text-base-content hover:bg-base-200/70',
-              activeIndex === idx ? 'ring-1 ring-primary/40 bg-base-200' : '',
+                ? 'bg-[var(--accent-soft)] text-[var(--accent)]'
+                : 'text-base-content hover:bg-base-200/70 dark:hover:bg-white/[0.06]',
+              activeIndex === idx ? 'ring-1 ring-primary/40 bg-base-200 dark:bg-white/[0.06]' : '',
             ]"
             @click="selectOption(opt)"
           >
@@ -313,7 +313,7 @@ onUnmounted(() => {
         <!-- Empty State -->
         <div
           v-if="filteredOptions.length === 0 && (!isQueryNew || !allowCreate)"
-          class="px-3 py-4 text-center text-xs text-base-content/50"
+          class="px-3 py-4 text-center text-xs text-[var(--text-muted)]"
         >
           Tidak ada opsi yang cocok dengan "{{ searchQuery }}".
         </div>

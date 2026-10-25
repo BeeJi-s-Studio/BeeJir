@@ -104,7 +104,7 @@ function nextStep() {
             :class="[
               clickable && isStepAccessible(idx)
                 ? 'cursor-pointer group'
-                : 'cursor-not-allowed opacity-60',
+                : 'cursor-not-allowed',
             ]"
             :title="
               !isStepAccessible(idx)
@@ -118,12 +118,12 @@ function nextStep() {
               class="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn font-bold text-xs transition-all duration-150"
               :class="[
                 idx === currentStep
-                  ? 'bg-primary text-primary-content shadow-[0_2px_6px_0_rgb(var(--p)/0.45)] ring-2 ring-primary/25'
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent)] shadow-[0_0_14px_-2px_var(--ring)]'
                   : idx < currentStep
-                    ? 'bg-primary/15 text-primary'
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent)]/30'
                     : isStepAccessible(idx)
-                      ? 'bg-base-200 text-base-content/60 group-hover:bg-base-300/80 group-hover:text-base-content'
-                      : 'bg-base-200/50 text-base-content/35 border border-base-300/60',
+                      ? 'bg-[var(--surface-input)] text-[var(--text-muted)] border border-[var(--border)] group-hover:bg-[var(--surface-raised)] group-hover:text-[var(--text)]'
+                      : 'bg-[var(--surface-input)] text-[var(--text-faint)] border border-[var(--border)]',
               ]"
             >
               <Check v-if="idx < currentStep" class="h-3.5 w-3.5 stroke-[2.4]" />
@@ -137,17 +137,21 @@ function nextStep() {
                 class="text-xs sm:text-sm font-semibold truncate transition-colors"
                 :class="
                   idx === currentStep
-                    ? 'text-base-content'
+                    ? 'text-[var(--text)]'
                     : idx < currentStep
-                      ? 'text-base-content/85'
+                      ? 'text-[var(--text)]'
                       : isStepAccessible(idx)
-                        ? 'text-base-content/60 group-hover:text-base-content'
-                        : 'text-base-content/40'
+                        ? 'text-[var(--text-muted)] group-hover:text-[var(--text)]'
+                        : 'text-[var(--text-faint)]'
                 "
               >
                 {{ step.title }}
               </div>
-              <p v-if="step.subtitle" class="text-[11px] text-base-content/50 truncate">
+              <p
+                v-if="step.subtitle"
+                class="text-[11px] truncate transition-colors"
+                :class="idx === currentStep ? 'text-[var(--text-muted)]' : 'text-[var(--text-faint)]'"
+              >
                 {{ step.subtitle }}
               </p>
             </div>
@@ -156,14 +160,14 @@ function nextStep() {
           <!-- Chevron Connector (BeeJir Style) -->
           <ChevronRight
             v-if="idx < steps.length - 1"
-            class="hidden md:block h-5 w-5 text-base-content/30 shrink-0"
+            class="hidden md:block h-5 w-5 text-[var(--text-faint)] shrink-0"
           />
         </div>
       </div>
     </div>
 
     <!-- Step Content Body (Rendered only when default slot is provided) -->
-    <div v-if="$slots.default || $slots[`step-${currentStep}`]" class="p-5 sm:p-6 border-t border-base-300/80">
+    <div v-if="$slots.default || $slots[`step-${currentStep}`]" class="p-5 sm:p-6 border-t border-[var(--border)]">
       <slot :name="`step-${currentStep}`" :current-step="currentStep" :step="steps[currentStep]">
         <slot :current-step="currentStep" :step="steps[currentStep]" />
       </slot>
@@ -172,7 +176,7 @@ function nextStep() {
     <!-- Stepper Footer Controls -->
     <div
       v-if="showControls"
-      class="flex flex-wrap items-center justify-between gap-3 border-t border-base-300/70 px-5 py-4 sm:px-6"
+      class="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] px-5 py-4 sm:px-6"
     >
       <button
         type="button"

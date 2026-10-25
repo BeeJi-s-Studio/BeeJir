@@ -80,7 +80,7 @@ const ganttTasks: TimelineTask[] = [
     task: 'UI Design',
     startCol: 18,
     widthCol: 46,
-    badgeBg: 'bg-success text-white shadow-[0_2px_6px_0_rgb(var(--su)/0.4)]',
+    badgeBg: 'bg-success text-success-content shadow-[0_2px_6px_0_rgb(var(--su)/0.4)]',
   },
   {
     person: 'Wellington',
@@ -94,14 +94,14 @@ const ganttTasks: TimelineTask[] = [
     task: 'Web App Wireframing',
     startCol: 12,
     widthCol: 54,
-    badgeBg: 'bg-info text-white shadow-[0_2px_6px_0_rgb(var(--in)/0.4)]',
+    badgeBg: 'bg-info text-info-content shadow-[0_2px_6px_0_rgb(var(--in)/0.4)]',
   },
   {
     person: 'Quinn',
     task: 'Prototyping',
     startCol: 42,
     widthCol: 54,
-    badgeBg: 'bg-warning text-white shadow-[0_2px_6px_0_rgb(var(--wa)/0.4)]',
+    badgeBg: 'bg-warning text-warning-content shadow-[0_2px_6px_0_rgb(var(--wa)/0.4)]',
   },
 ]
 

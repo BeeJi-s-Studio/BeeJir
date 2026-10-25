@@ -16,13 +16,18 @@ const toastStore = useToastStore()
 function onToastEnter(el: Element, done: () => void) {
   gsap.fromTo(
     el,
-    { opacity: 0, x: 40, scale: 0.94 },
+    {
+      opacity: 0,
+      y: 36,
+      scale: 0.95,
+    },
     {
       opacity: 1,
-      x: 0,
+      y: 0,
       scale: 1,
-      duration: 0.35,
-      ease: 'back.out(1.8)',
+      duration: 0.45,
+      ease: 'power3.out',
+      clearProps: 'transform,opacity',
       onComplete: done,
     },
   )
@@ -31,9 +36,9 @@ function onToastEnter(el: Element, done: () => void) {
 function onToastLeave(el: Element, done: () => void) {
   gsap.to(el, {
     opacity: 0,
-    x: 30,
+    y: 20,
     scale: 0.95,
-    duration: 0.2,
+    duration: 0.28,
     ease: 'power2.in',
     onComplete: done,
   })
@@ -58,16 +63,16 @@ function getIcon(variant: ToastVariant) {
 function getCardClasses(variant: ToastVariant) {
   switch (variant) {
     case 'success':
-      return 'border-success/30 bg-base-100 shadow-success/15'
+      return 'border-success/35 bg-base-100 shadow-success/15'
     case 'error':
-      return 'border-error/30 bg-base-100 shadow-error/15'
+      return 'border-error/35 bg-base-100 shadow-error/15'
     case 'warning':
-      return 'border-warning/30 bg-base-100 shadow-warning/15'
+      return 'border-warning/35 bg-base-100 shadow-warning/15'
     case 'primary':
-      return 'border-primary/30 bg-base-100 shadow-primary/15'
+      return 'border-primary/35 bg-base-100 shadow-primary/15'
     case 'info':
     default:
-      return 'border-info/30 bg-base-100 shadow-info/15'
+      return 'border-info/35 bg-base-100 shadow-info/15'
   }
 }
 
@@ -90,7 +95,7 @@ function getIconContainerClasses(variant: ToastVariant) {
 
 <template>
   <div
-    class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"
+    class="fixed bottom-5 right-5 z-50 flex flex-col-reverse gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"
     role="region"
     aria-label="Notifikasi Toast"
   >
@@ -102,7 +107,7 @@ function getIconContainerClasses(variant: ToastVariant) {
       <div
         v-for="toast in toastStore.toasts"
         :key="toast.id"
-        class="pointer-events-auto flex items-start gap-3 rounded-box border p-3.5 shadow-lg backdrop-blur-md transition-all duration-200"
+        class="pointer-events-auto flex items-start gap-3 rounded-box border p-3.5 shadow-xl backdrop-blur-md transition-colors"
         :class="getCardClasses(toast.variant)"
       >
         <div

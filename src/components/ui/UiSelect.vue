@@ -349,7 +349,7 @@ const sizeClasses = computed(() => {
 
           <span
             v-if="selectedOptionsList.length === 0"
-            class="text-base-content/40 text-sm truncate"
+            class="text-[var(--text-faint)] text-sm truncate"
           >
             {{ placeholder }}
           </span>
@@ -373,7 +373,7 @@ const sizeClasses = computed(() => {
             </span>
             <span
               v-if="selectedOption.description"
-              class="text-xs text-base-content/50 truncate hidden sm:inline"
+              class="text-xs text-[var(--text-muted)] truncate hidden sm:inline"
             >
               • {{ selectedOption.description }}
             </span>
@@ -381,7 +381,7 @@ const sizeClasses = computed(() => {
 
           <span
             v-else
-            class="text-base-content/40 truncate text-sm"
+            class="text-[var(--text-faint)] truncate text-sm"
           >
             {{ placeholder }}
           </span>
@@ -389,7 +389,7 @@ const sizeClasses = computed(() => {
       </div>
 
       <!-- Right: Clear Button & Chevron -->
-      <div class="flex items-center gap-1 shrink-0 text-base-content/45">
+      <div class="flex items-center gap-1 shrink-0 text-[var(--text-faint)]">
         <button
           v-if="clearable && hasValue && !disabled"
           type="button"
@@ -415,26 +415,26 @@ const sizeClasses = computed(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 right-0 top-full mt-1.5 z-[100] rounded-box border border-base-300 bg-base-100 shadow-xl overflow-hidden"
+        class="absolute left-0 right-0 top-full mt-1.5 z-[100] rounded-box border border-[var(--border)] bg-[var(--surface-raised)] shadow-xl overflow-hidden"
         @click.stop
         @mousedown.stop
       >
         <!-- Search Input Bar (when searchable = true) -->
         <div
           v-if="searchable"
-          class="p-2 border-b border-base-300/70 bg-base-200/30"
+          class="p-2 border-b border-[var(--border)] bg-[var(--surface-1)]"
           @click.stop
         >
           <div class="relative w-full">
             <Search
-              class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-base-content/40"
+              class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-faint)]"
             />
             <input
               ref="searchInputRef"
               v-model="searchQuery"
               type="text"
               placeholder="Cari pilihan..."
-              class="w-full rounded-btn border border-base-300 bg-base-100 pl-8 pr-3 py-1.5 text-xs text-base-content placeholder:text-base-content/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/25"
+              class="w-full rounded-btn border border-[var(--border)] bg-[var(--surface-input)] pl-8 pr-3 py-1.5 text-xs text-base-content placeholder:text-[var(--text-faint)] focus:outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_var(--ring)] transition-[border-color,box-shadow]"
               @keydown="handleKeyDown"
             />
           </div>
@@ -451,9 +451,9 @@ const sizeClasses = computed(() => {
             :class="[
               opt.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
               isOptionSelected(opt)
-                ? 'bg-primary/12 text-primary font-bold'
-                : 'text-base-content hover:bg-base-200/70',
-              activeIndex === idx ? 'ring-1 ring-primary/40 bg-base-200' : '',
+                ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-bold'
+                : 'text-base-content hover:bg-base-200/70 dark:hover:bg-white/[0.06]',
+              activeIndex === idx ? 'ring-1 ring-primary/40 bg-base-200 dark:bg-white/[0.06]' : '',
             ]"
             @click="selectOption(opt)"
           >
@@ -472,24 +472,24 @@ const sizeClasses = computed(() => {
                 <span class="truncate">{{ opt.label }}</span>
                 <span
                   v-if="opt.description"
-                  class="text-[10px] font-normal text-base-content/55 truncate"
+                  class="text-[10px] font-normal text-[var(--text-muted)] truncate"
                 >
                   {{ opt.description }}
                 </span>
               </div>
             </div>
 
-            <Check v-if="isOptionSelected(opt)" class="h-3.5 w-3.5 shrink-0 text-primary" />
+            <Check v-if="isOptionSelected(opt)" class="h-3.5 w-3.5 shrink-0 text-[var(--accent)]" />
           </button>
 
           <!-- Empty State -->
           <div
             v-if="paginatedOptions.length === 0"
-            class="flex flex-col items-center justify-center py-6 px-3 text-center text-base-content/50"
+            class="flex flex-col items-center justify-center py-6 px-3 text-center text-[var(--text-muted)]"
           >
-            <Inbox class="h-6 w-6 mb-1 text-base-content/30" />
+            <Inbox class="h-6 w-6 mb-1 text-[var(--text-faint)]" />
             <p class="text-xs font-semibold">Tidak ada opsi ditemukan</p>
-            <p v-if="searchQuery" class="text-[11px] text-base-content/40 mt-0.5">
+            <p v-if="searchQuery" class="text-[11px] text-[var(--text-faint)] mt-0.5">
               Tidak ada hasil untuk "{{ searchQuery }}"
             </p>
           </div>
@@ -498,7 +498,7 @@ const sizeClasses = computed(() => {
         <!-- Dropdown Footer with Pagination Info & Buttons -->
         <div
           v-if="totalPages > 1 || filteredOptions.length > 0"
-          class="flex items-center justify-between px-3 py-2 border-t border-base-300/80 bg-base-200/40 text-[11px] text-base-content/65 select-none"
+          class="flex items-center justify-between px-3 py-2 border-t border-[var(--border)] bg-[var(--surface-1)] text-[11px] text-[var(--text-muted)] select-none"
           @click.stop
           @mousedown.stop
         >
@@ -528,7 +528,7 @@ const sizeClasses = computed(() => {
                   :key="`page-${p}`"
                   type="button"
                   class="h-5 min-w-5 px-1.5 rounded text-[10px] font-bold transition-colors cursor-pointer"
-                  :class="currentPage === p ? 'bg-primary text-white shadow-xs' : 'text-base-content/70 hover:bg-base-200'"
+                  :class="currentPage === p ? 'bg-primary text-primary-content shadow-xs' : 'text-[var(--text-muted)] hover:bg-base-200 dark:hover:bg-white/[0.06]'"
                   @click.stop="goToPage(p, $event)"
                   @mousedown.stop.prevent
                 >
@@ -559,7 +559,7 @@ const sizeClasses = computed(() => {
     <span v-if="error" class="text-[11px] font-medium text-error">
       {{ error }}
     </span>
-    <span v-else-if="hint" class="text-[11px] text-base-content/60">
+    <span v-else-if="hint" class="text-[11px] text-[var(--text-muted)]">
       {{ hint }}
     </span>
   </div>

@@ -23,7 +23,7 @@ const containerWidthClass = computed(() => {
 </script>
 
 <template>
-  <div class="relative flex min-h-screen bg-base-200 text-base-content">
+  <div class="relative flex min-h-screen bg-[var(--bg)] text-[var(--text)]">
     <!-- Left Vertical Navigation Menu -->
     <AppSidebar />
 
@@ -42,7 +42,7 @@ const containerWidthClass = computed(() => {
 
       <!-- Content Footer -->
       <footer
-        class="py-4 border-t border-base-300/60 text-xs text-base-content/60 transition-all duration-200"
+        class="py-4 border-t border-[var(--border)] text-xs text-[var(--text-muted)] transition-all duration-200"
         :class="containerWidthClass"
       >
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3">

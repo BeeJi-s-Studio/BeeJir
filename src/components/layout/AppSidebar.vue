@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { useRoute, RouterLink } from 'vue-router'
 import {
   LayoutDashboard,
@@ -15,6 +15,7 @@ import {
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 import type { ColorVariant } from '@/types/theme'
+import UiTooltip from '@/components/ui/UiTooltip.vue'
 
 const route = useRoute()
 const themeStore = useThemeStore()
@@ -105,7 +106,7 @@ function isActive(path: string): boolean {
 
   <!-- Sidebar Panel (BeeJir Vertical Menu Style) -->
   <aside
-    class="fixed inset-y-0 left-0 z-40 flex flex-col bg-base-100 border-r border-base-300/75 shadow-[0_0.125rem_0.625rem_0_rgba(38,43,67,0.06)] dark:shadow-[0_0.125rem_0.625rem_0_rgba(16,17,33,0.24)] transition-all duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:max-h-screen shrink-0"
+    class="fixed inset-y-0 left-0 z-40 flex flex-col bg-[var(--surface-1)] border-r border-[var(--border)] shadow-[0_0.125rem_0.625rem_0_rgba(38,43,67,0.06)] dark:shadow-[0_0.125rem_0.625rem_0_rgba(0,0,0,0.28)] transition-all duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:max-h-screen shrink-0"
     :class="[
       themeStore.sidebarCollapsed ? 'lg:w-[74px]' : 'lg:w-[260px]',
       themeStore.mobileSidebarOpen
@@ -204,52 +205,69 @@ function isActive(path: string): boolean {
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-base-content/45"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-[var(--text-faint)]"
         >
           <span>Dashboards &amp; Apps</span>
-          <span class="h-px flex-1 bg-base-300/80" />
+          <span class="h-px flex-1 bg-[var(--border)]" />
         </div>
 
         <nav class="space-y-1">
-          <RouterLink
-            v-for="item in mainNav"
-            :key="item.to"
-            :to="item.to"
-            class="group relative flex items-center rounded-btn text-[14px] font-normal transition-all duration-150"
-            :class="[
-              themeStore.sidebarCollapsed
-                ? 'justify-center h-10 w-10 mx-auto p-0'
-                : 'justify-start gap-3 px-3.5 py-2 w-full',
-              isActive(item.to)
-                ? 'bg-primary text-primary-content font-medium shadow-[0_2px_6px_0_rgb(var(--p)/0.48)]'
-                : 'text-base-content/80 hover:bg-base-200/85 hover:text-base-content',
-            ]"
-            :title="themeStore.sidebarCollapsed ? item.label : undefined"
-            @click="themeStore.mobileSidebarOpen = false"
-          >
-            <component
-              :is="item.icon"
-              class="h-[19px] w-[19px] shrink-0"
-              :class="isActive(item.to) ? 'text-primary-content' : 'text-base-content/70 group-hover:text-base-content'"
-            />
-            <span
-              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-              class="flex-1 truncate"
+          <template v-for="item in mainNav" :key="item.to">
+            <!-- Collapsed state with right tooltip -->
+            <UiTooltip
+              v-if="themeStore.sidebarCollapsed && !themeStore.mobileSidebarOpen"
+              :text="item.label"
+              position="right"
+              teleport
+              class="w-full flex justify-center"
             >
-              {{ item.label }}
-            </span>
-            <span
-              v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
-              class="badge badge-xs rounded-full font-semibold"
-              :class="
+              <RouterLink
+                :to="item.to"
+                class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
+                :class="[
+                  isActive(item.to)
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                    : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+                ]"
+                @click="themeStore.mobileSidebarOpen = false"
+              >
+                <component
+                  :is="item.icon"
+                  class="h-[19px] w-[19px] shrink-0"
+                  :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+                />
+              </RouterLink>
+            </UiTooltip>
+
+            <!-- Expanded state -->
+            <RouterLink
+              v-else
+              :to="item.to"
+              class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
+              :class="[
                 isActive(item.to)
-                  ? 'bg-white/20 text-white border-transparent'
-                  : `badge-soft badge-${item.badgeVariant || 'primary'}`
-              "
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                  : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+              ]"
+              @click="themeStore.mobileSidebarOpen = false"
             >
-              {{ item.badge }}
-            </span>
-          </RouterLink>
+              <component
+                :is="item.icon"
+                class="h-[19px] w-[19px] shrink-0"
+                :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+              />
+              <span class="flex-1 truncate">
+                {{ item.label }}
+              </span>
+              <span
+                v-if="item.badge"
+                class="badge badge-xs rounded-full font-semibold"
+                :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
+              >
+                {{ item.badge }}
+              </span>
+            </RouterLink>
+          </template>
         </nav>
       </div>
 
@@ -257,52 +275,69 @@ function isActive(path: string): boolean {
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-base-content/45"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-[var(--text-faint)]"
         >
           <span>Pages &amp; Auth</span>
-          <span class="h-px flex-1 bg-base-300/80" />
+          <span class="h-px flex-1 bg-[var(--border)]" />
         </div>
 
         <nav class="space-y-1">
-          <RouterLink
-            v-for="item in pagesNav"
-            :key="item.to"
-            :to="item.to"
-            class="group relative flex items-center rounded-btn text-[14px] font-normal transition-all duration-150"
-            :class="[
-              themeStore.sidebarCollapsed
-                ? 'justify-center h-10 w-10 mx-auto p-0'
-                : 'justify-start gap-3 px-3.5 py-2 w-full',
-              isActive(item.to)
-                ? 'bg-primary text-primary-content font-medium shadow-[0_2px_6px_0_rgb(var(--p)/0.48)]'
-                : 'text-base-content/80 hover:bg-base-200/85 hover:text-base-content',
-            ]"
-            :title="themeStore.sidebarCollapsed ? item.label : undefined"
-            @click="themeStore.mobileSidebarOpen = false"
-          >
-            <component
-              :is="item.icon"
-              class="h-[19px] w-[19px] shrink-0"
-              :class="isActive(item.to) ? 'text-primary-content' : 'text-base-content/70 group-hover:text-base-content'"
-            />
-            <span
-              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-              class="flex-1 truncate"
+          <template v-for="item in pagesNav" :key="item.to">
+            <!-- Collapsed state with right tooltip -->
+            <UiTooltip
+              v-if="themeStore.sidebarCollapsed && !themeStore.mobileSidebarOpen"
+              :text="item.label"
+              position="right"
+              teleport
+              class="w-full flex justify-center"
             >
-              {{ item.label }}
-            </span>
-            <span
-              v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
-              class="badge badge-xs rounded-full font-semibold"
-              :class="
+              <RouterLink
+                :to="item.to"
+                class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
+                :class="[
+                  isActive(item.to)
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                    : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+                ]"
+                @click="themeStore.mobileSidebarOpen = false"
+              >
+                <component
+                  :is="item.icon"
+                  class="h-[19px] w-[19px] shrink-0"
+                  :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+                />
+              </RouterLink>
+            </UiTooltip>
+
+            <!-- Expanded state -->
+            <RouterLink
+              v-else
+              :to="item.to"
+              class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
+              :class="[
                 isActive(item.to)
-                  ? 'bg-white/20 text-white border-transparent'
-                  : `badge-soft badge-${item.badgeVariant || 'primary'}`
-              "
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                  : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+              ]"
+              @click="themeStore.mobileSidebarOpen = false"
             >
-              {{ item.badge }}
-            </span>
-          </RouterLink>
+              <component
+                :is="item.icon"
+                class="h-[19px] w-[19px] shrink-0"
+                :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+              />
+              <span class="flex-1 truncate">
+                {{ item.label }}
+              </span>
+              <span
+                v-if="item.badge"
+                class="badge badge-xs rounded-full font-semibold"
+                :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
+              >
+                {{ item.badge }}
+              </span>
+            </RouterLink>
+          </template>
         </nav>
       </div>
 
@@ -310,76 +345,98 @@ function isActive(path: string): boolean {
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-base-content/45"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-[var(--text-faint)]"
         >
           <span>Components &amp; UI</span>
-          <span class="h-px flex-1 bg-base-300/80" />
+          <span class="h-px flex-1 bg-[var(--border)]" />
         </div>
 
         <nav class="space-y-1">
-          <RouterLink
-            v-for="item in uiNav"
-            :key="item.to"
-            :to="item.to"
-            class="group relative flex items-center rounded-btn text-[14px] font-normal transition-all duration-150"
-            :class="[
-              themeStore.sidebarCollapsed
-                ? 'justify-center h-10 w-10 mx-auto p-0'
-                : 'justify-start gap-3 px-3.5 py-2 w-full',
-              isActive(item.to)
-                ? 'bg-primary text-primary-content font-medium shadow-[0_2px_6px_0_rgb(var(--p)/0.48)]'
-                : 'text-base-content/80 hover:bg-base-200/85 hover:text-base-content',
-            ]"
-            :title="themeStore.sidebarCollapsed ? item.label : undefined"
-            @click="themeStore.mobileSidebarOpen = false"
-          >
-            <component
-              :is="item.icon"
-              class="h-[19px] w-[19px] shrink-0"
-              :class="isActive(item.to) ? 'text-primary-content' : 'text-base-content/70 group-hover:text-base-content'"
-            />
-            <span
-              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-              class="flex-1 truncate"
+          <template v-for="item in uiNav" :key="item.to">
+            <!-- Collapsed state with right tooltip -->
+            <UiTooltip
+              v-if="themeStore.sidebarCollapsed && !themeStore.mobileSidebarOpen"
+              :text="item.label"
+              position="right"
+              teleport
+              class="w-full flex justify-center"
             >
-              {{ item.label }}
-            </span>
-            <span
-              v-if="item.badge && (!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen)"
-              class="badge badge-xs rounded-full font-semibold"
-              :class="
+              <RouterLink
+                :to="item.to"
+                class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
+                :class="[
+                  isActive(item.to)
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                    : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+                ]"
+                @click="themeStore.mobileSidebarOpen = false"
+              >
+                <component
+                  :is="item.icon"
+                  class="h-[19px] w-[19px] shrink-0"
+                  :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+                />
+              </RouterLink>
+            </UiTooltip>
+
+            <!-- Expanded state -->
+            <RouterLink
+              v-else
+              :to="item.to"
+              class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
+              :class="[
                 isActive(item.to)
-                  ? 'bg-white/20 text-white border-transparent'
-                  : `badge-soft badge-${item.badgeVariant || 'primary'}`
-              "
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                  : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+              ]"
+              @click="themeStore.mobileSidebarOpen = false"
             >
-              {{ item.badge }}
-            </span>
-          </RouterLink>
+              <component
+                :is="item.icon"
+                class="h-[19px] w-[19px] shrink-0"
+                :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+              />
+              <span class="flex-1 truncate">
+                {{ item.label }}
+              </span>
+              <span
+                v-if="item.badge"
+                class="badge badge-xs rounded-full font-semibold"
+                :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
+              >
+                {{ item.badge }}
+              </span>
+            </RouterLink>
+          </template>
 
           <!-- Theme Customizer Trigger -->
+          <UiTooltip
+            v-if="themeStore.sidebarCollapsed && !themeStore.mobileSidebarOpen"
+            text="Theme Customizer"
+            position="right"
+            teleport
+            class="w-full flex justify-center"
+          >
+            <button
+              type="button"
+              class="group flex items-center justify-center h-10 w-10 rounded-btn text-[14px] text-[var(--text-muted)] border border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)] transition-colors duration-150 cursor-pointer"
+              @click="themeStore.customizerOpen = true; themeStore.mobileSidebarOpen = false"
+            >
+              <Palette class="h-[19px] w-[19px] shrink-0 text-primary" />
+            </button>
+          </UiTooltip>
+
           <button
+            v-else
             type="button"
-            class="group flex items-center rounded-btn text-[14px] font-normal text-base-content/80 hover:bg-base-200/85 hover:text-base-content transition-all duration-150 cursor-pointer"
-            :class="[
-              themeStore.sidebarCollapsed
-                ? 'justify-center h-10 w-10 mx-auto p-0'
-                : 'w-full justify-start gap-3 px-3.5 py-2',
-            ]"
-            :title="themeStore.sidebarCollapsed ? 'Theme Customizer' : undefined"
+            class="group flex items-center w-full justify-start gap-3 px-3.5 py-2 rounded-btn text-[14px] font-normal text-[var(--text-muted)] border border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)] transition-colors duration-150 cursor-pointer"
             @click="themeStore.customizerOpen = true; themeStore.mobileSidebarOpen = false"
           >
             <Palette class="h-[19px] w-[19px] shrink-0 text-primary" />
-            <span
-              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-              class="flex-1 text-left truncate"
-            >
+            <span class="flex-1 text-left truncate">
               Theme Customizer
             </span>
-            <span
-              v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-              class="flex items-center gap-1"
-            >
+            <span class="flex items-center gap-1">
               <span class="h-2 w-2 rounded-full bg-primary" />
               <span class="h-2 w-2 rounded-full bg-secondary" />
               <span class="h-2 w-2 rounded-full bg-accent" />
@@ -391,19 +448,19 @@ function isActive(path: string): boolean {
 
     <!-- Bottom Active Preset Summary -->
     <div
-      class="shrink-0 border-t border-base-300/70"
+      class="shrink-0 border-t border-[var(--border)]"
       :class="themeStore.sidebarCollapsed ? 'p-2' : 'p-3.5'"
     >
       <div
         v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
-        class="rounded-btn bg-base-200/75 p-3 flex items-center justify-between gap-2"
+        class="rounded-btn bg-[var(--surface-2)] border border-[var(--border)] p-3 flex items-center justify-between gap-2"
       >
         <div class="min-w-0">
-          <div class="text-xs font-semibold text-base-content truncate">
+          <div class="text-xs font-semibold text-[var(--text)] truncate">
             {{ themeStore.currentPreset.name }}
           </div>
-          <div class="text-[11px] text-base-content/55 truncate">
-            Mode: {{ themeStore.currentPreset.mode === 'dark' ? 'Dark Theme' : 'Light Theme' }}
+          <div class="text-[11px] text-[var(--text-muted)] truncate">
+            Mode: {{ themeStore.isDark ? 'Dark Theme' : 'Light Theme' }}
           </div>
         </div>
         <button

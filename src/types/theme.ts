@@ -8,6 +8,8 @@ export type ThemeId =
   | 'matcha'
   | 'berry'
 
+export type ThemeMode = 'light' | 'dark'
+
 export type RadiusScale = 'none' | 'sm' | 'md' | 'lg' | 'full'
 
 export type ContentWidth = 'compact' | 'wide' | 'full'
@@ -22,18 +24,21 @@ export type ColorVariant =
   | 'warning'
   | 'error'
 
+export interface ThemePalettePreview {
+  bg: string
+  card: string
+  primary: string
+  secondary: string
+  accent: string
+}
+
 export interface ThemePreset {
   id: ThemeId
   name: string
   tagline: string
-  mode: 'light' | 'dark'
-  preview: {
-    bg: string
-    card: string
-    primary: string
-    secondary: string
-    accent: string
-  }
+  mode: ThemeMode
+  preview: ThemePalettePreview
+  lightPreview: ThemePalettePreview
 }
 
 export interface CustomColorOverrides {
@@ -42,3 +47,4 @@ export interface CustomColorOverrides {
   secondary: string
   accent: string
 }
+

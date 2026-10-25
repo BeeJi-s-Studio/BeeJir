@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { X } from 'lucide-vue-next'
 import { animateModalIn, animateModalOut } from '@/utils/gsap'
+import { lockScroll, unlockScroll } from '@/utils/scrollLock'
 
 export interface UiModalProps {
   modelValue: boolean
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<UiModalProps>(), {
 })
 
 const modalBoxRef = ref<HTMLElement | null>(null)
+let isLocked = false
 
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
@@ -26,12 +28,22 @@ watch(
   () => props.modelValue,
   async (isOpen) => {
     if (isOpen) {
+      if (!isLocked) {
+        lockScroll()
+        isLocked = true
+      }
       await nextTick()
       if (modalBoxRef.value) {
         animateModalIn(modalBoxRef.value)
       }
+    } else {
+      if (isLocked) {
+        unlockScroll()
+        isLocked = false
+      }
     }
   },
+  { immediate: true },
 )
 
 function close() {
@@ -50,8 +62,17 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-onMounted(() => window.addEventListener('keydown', onKeydown))
-onUnmounted(() => window.removeEventListener('keydown', onKeydown))
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
+  if (isLocked) {
+    unlockScroll()
+    isLocked = false
+  }
+})
 
 const widthClass = {
   sm: 'max-w-sm',

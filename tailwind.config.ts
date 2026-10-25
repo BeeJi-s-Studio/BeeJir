@@ -30,6 +30,7 @@ export default {
         primary: {
           DEFAULT: 'rgb(var(--p) / <alpha-value>)',
           content: 'rgb(var(--pc) / <alpha-value>)',
+          hover: 'rgb(var(--p-hover, var(--p)) / <alpha-value>)',
         },
         secondary: {
           DEFAULT: 'rgb(var(--s) / <alpha-value>)',
@@ -48,6 +49,24 @@ export default {
           200: 'rgb(var(--b2) / <alpha-value>)',
           300: 'rgb(var(--b3) / <alpha-value>)',
           content: 'rgb(var(--bc) / <alpha-value>)',
+        },
+        surface: {
+          bg: 'var(--bg)',
+          1: 'var(--surface-1)',
+          2: 'var(--surface-2)',
+          raised: 'var(--surface-raised)',
+          input: 'var(--surface-input)',
+        },
+        theme: {
+          text: 'var(--text)',
+          muted: 'var(--text-muted)',
+          faint: 'var(--text-faint)',
+          border: 'var(--border)',
+          'border-strong': 'var(--border-strong)',
+          accent: 'var(--accent)',
+          'accent-hover': 'var(--accent-hover)',
+          'accent-soft': 'var(--accent-soft)',
+          ring: 'var(--ring)',
         },
         info: {
           DEFAULT: 'rgb(var(--in) / <alpha-value>)',

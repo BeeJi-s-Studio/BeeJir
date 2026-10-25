@@ -99,13 +99,13 @@ const positionClasses = computed(() => {
     >
       <div
         v-if="isOpen"
-        class="absolute z-50 rounded-box border border-base-300 bg-base-100 p-4 shadow-xl text-left"
+        class="absolute z-50 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-4 shadow-xl text-left"
         :class="[positionClasses, widthClass]"
         @click.stop
       >
         <div
           v-if="title || subtitle || triggerMode === 'click'"
-          class="flex items-start justify-between gap-2 mb-2.5 pb-2 border-b border-base-300/70"
+          class="flex items-start justify-between gap-2 mb-2.5 pb-2 border-b border-[var(--border)]"
         >
           <div>
             <h5 v-if="title" class="text-xs font-extrabold text-base-content">

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
@@ -125,7 +125,7 @@ function handleSubmit() {
         </div>
 
         <!-- Main Center CRM Preview Card -->
-        <div class="card p-6 sm:p-8 shadow-xl border border-base-300/60">
+        <div class="card p-6 sm:p-8 shadow-xl">
           <div class="flex items-center justify-between border-b border-base-300/70 pb-4 mb-6">
             <div>
               <h5 class="card-title">BeeJir Enterprise CRM Analytics</h5>

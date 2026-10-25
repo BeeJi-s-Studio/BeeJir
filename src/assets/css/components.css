@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BeeJir Semantic Component Classes (BeeJir Colorful & Professional Style)
+   BeeJir Semantic Component Classes (Neutral-Tinted Dark & Clean Light Style)
    ========================================================================== */
 
 @layer components {
@@ -17,23 +17,32 @@
            disabled:opacity-50 disabled:pointer-events-none;
   }
 
-  /* Solid Color Variants (BeeJir Elevated Button Shadow) */
+  /* Solid Color Variants */
   .btn-primary {
     @apply border-primary bg-primary text-primary-content
-           shadow-[0_2px_6px_0_rgb(var(--p)/0.45)]
-           hover:bg-primary/90 hover:border-primary/90 hover:shadow-[0_4px_12px_0_rgb(var(--p)/0.55)];
+           shadow-sm hover:bg-primary/90 hover:border-primary/90;
+  }
+  html.dark .btn-primary {
+    background-image: linear-gradient(180deg, var(--accent-hover) 0%, var(--accent) 100%);
+    border-color: var(--accent);
+    color: rgb(var(--pc));
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  }
+  html.dark .btn-primary:hover:not(:disabled) {
+    background-image: none;
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: rgb(var(--pc));
   }
 
   .btn-secondary {
     @apply border-secondary bg-secondary text-secondary-content
-           shadow-[0_2px_6px_0_rgb(var(--s)/0.42)]
-           hover:bg-secondary/90 hover:border-secondary/90 hover:shadow-[0_4px_12px_0_rgb(var(--s)/0.5)];
+           shadow-sm hover:bg-secondary/90 hover:border-secondary/90;
   }
 
   .btn-accent {
     @apply border-accent bg-accent text-accent-content
-           shadow-[0_2px_6px_0_rgb(var(--a)/0.42)]
-           hover:bg-accent/90 hover:border-accent/90 hover:shadow-[0_4px_12px_0_rgb(var(--a)/0.5)];
+           shadow-sm hover:bg-accent/90 hover:border-accent/90;
   }
 
   .btn-neutral {
@@ -43,26 +52,22 @@
 
   .btn-info {
     @apply border-info bg-info text-info-content
-           shadow-[0_2px_6px_0_rgb(var(--in)/0.42)]
-           hover:bg-info/90;
+           shadow-sm hover:bg-info/90;
   }
 
   .btn-success {
     @apply border-success bg-success text-success-content
-           shadow-[0_2px_6px_0_rgb(var(--su)/0.42)]
-           hover:bg-success/90;
+           shadow-sm hover:bg-success/90;
   }
 
   .btn-warning {
     @apply border-warning bg-warning text-warning-content
-           shadow-[0_2px_6px_0_rgb(var(--wa)/0.42)]
-           hover:bg-warning/90;
+           shadow-sm hover:bg-warning/90;
   }
 
   .btn-error {
     @apply border-error bg-error text-error-content
-           shadow-[0_2px_6px_0_rgb(var(--er)/0.42)]
-           hover:bg-error/90;
+           shadow-sm hover:bg-error/90;
   }
 
   /* Soft Pastel Variants (BeeJir .btn-label-* Style) */
@@ -95,6 +100,20 @@
   .btn-outline {
     @apply bg-transparent shadow-none border-base-300 text-base-content/80 hover:bg-base-200 hover:text-base-content;
   }
+  html.dark .btn-outline {
+    border-color: var(--border);
+    color: var(--text);
+  }
+  html.dark .btn-outline:hover:not(:disabled) {
+    background-color: var(--surface-raised);
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+  html.dark .btn-outline:disabled {
+    border-color: var(--border);
+    color: var(--text-faint);
+    opacity: 0.45;
+  }
   .btn-outline.btn-primary {
     @apply bg-transparent border-primary text-primary hover:bg-primary/10 hover:text-primary;
   }
@@ -121,6 +140,16 @@
   .btn-ghost {
     @apply border-transparent bg-transparent text-base-content/75 shadow-none
            hover:bg-base-200 hover:text-base-content hover:border-transparent;
+  }
+
+  /* Ghost Variant */
+  .btn-ghost {
+    @apply border-transparent bg-transparent text-base-content/75 shadow-none
+           hover:bg-base-200 hover:text-base-content hover:border-transparent;
+    background-image: none;
+  }
+  html.dark .btn-ghost:hover {
+    background-color: var(--surface-raised);
   }
 
   /* Button Sizes & Shapes */
@@ -187,8 +216,12 @@
   .btn-icon.btn-ghost,
   .btn-square.btn-ghost,
   .btn-circle.btn-ghost {
-    @apply text-base-content/70 hover:text-base-content hover:bg-base-200 active:bg-base-300/70
-           dark:text-base-content/75 dark:hover:bg-white/[0.08] dark:hover:text-base-content;
+    @apply text-base-content/75 hover:text-base-content hover:bg-base-200 active:bg-base-300/70;
+  }
+  html.dark .btn-icon.btn-ghost:hover,
+  html.dark .btn-square.btn-ghost:hover,
+  html.dark .btn-circle.btn-ghost:hover {
+    background-color: var(--surface-raised);
   }
 
   .btn-icon.btn-soft,
@@ -201,30 +234,36 @@
   .btn-square.btn-outline,
   .btn-circle.btn-outline {
     @apply border border-base-300 bg-base-100 text-base-content/75
-           hover:border-primary/50 hover:text-primary hover:bg-primary/5;
+           hover:border-primary/50 hover:text-primary hover:bg-primary/10;
+    border-color: var(--border);
   }
 
   /* ------------------------------------------------------------------------
      2. CARDS (.card, .card-body, .card-title, .card-actions)
-        BeeJir Clean Paper Elevation & Subtle Border
+        Border-less Card with Smooth Multi-Layer Elevation Shadow
      ------------------------------------------------------------------------ */
   .card {
     @apply relative flex flex-col bg-base-100 text-base-content rounded-box
-           shadow-[0_0.25rem_0.875rem_0_rgba(38,43,67,0.12)]
-           transition-shadow duration-200
-           dark:bg-base-100
-           dark:shadow-[0_0.25rem_0.875rem_0_rgba(16,17,33,0.28)];
+           shadow-[0_4px_20px_-2px_rgba(38,43,67,0.06),0_2px_6px_-1px_rgba(38,43,67,0.04)]
+           transition-[shadow,transform] duration-200;
+    background-color: var(--surface-2);
+  }
+  html.dark .card {
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45), 0 4px 10px -3px rgba(0, 0, 0, 0.35);
   }
 
   .card-bordered {
-    @apply border border-base-300/70 dark:border-base-300/60;
+    border: 1px solid var(--border);
   }
 
   .card-hover {
-    @apply transition-all duration-200
-           hover:-translate-y-0.5
-           hover:shadow-[0_0.375rem_1.25rem_0_rgba(38,43,67,0.16)]
-           dark:hover:shadow-[0_0.375rem_1.25rem_0_rgba(16,17,33,0.38)];
+    @apply transition-all duration-200 hover:-translate-y-0.5
+           hover:shadow-[0_12px_28px_-4px_rgba(38,43,67,0.12),0_4px_10px_-2px_rgba(38,43,67,0.06)];
+  }
+  html.dark .card-hover:hover {
+    box-shadow: 0 16px 38px -6px rgba(0, 0, 0, 0.55), 0 6px 16px -4px rgba(0, 0, 0, 0.42);
   }
 
   .card-body {
@@ -236,11 +275,13 @@
   }
 
   .card-title {
-    @apply flex items-center gap-2 text-base sm:text-[1.125rem] font-bold text-base-content leading-snug tracking-tight;
+    @apply flex items-center gap-2 text-base sm:text-[1.125rem] font-bold leading-snug tracking-tight;
+    color: var(--text);
   }
 
   .card-subtitle {
-    @apply text-xs sm:text-[0.8125rem] text-base-content/60 font-normal leading-relaxed;
+    @apply text-xs sm:text-[0.8125rem] font-normal leading-relaxed;
+    color: var(--text-muted);
   }
 
   .card-actions {
@@ -254,7 +295,8 @@
     @apply inline-flex items-center justify-center shrink-0 rounded-btn font-semibold select-none;
   }
   .avatar-soft-primary {
-    @apply bg-primary/15 text-primary;
+    background-color: var(--accent-soft);
+    color: var(--accent);
   }
   .avatar-soft-secondary {
     @apply bg-secondary/15 text-secondary;
@@ -277,12 +319,11 @@
 
   /* ------------------------------------------------------------------------
      3. BADGES (.badge, .badge-primary, .badge-soft, .badge-outline)
-        BeeJir .bg-label-* Pill Aesthetic
      ------------------------------------------------------------------------ */
   .badge {
     @apply inline-flex items-center justify-center gap-1.5 rounded-badge
            px-2.5 py-0.5 text-xs font-medium leading-5
-           border border-transparent bg-base-200 text-base-content/80
+           border border-transparent bg-base-200 text-base-content/85
            transition-colors duration-150;
   }
 
@@ -312,9 +353,11 @@
     @apply border-error bg-error text-error-content;
   }
 
-  /* Soft Pastel Badges (BeeJir .bg-label-* style: borderless 15% tint) */
+  /* Soft Pastel Badges (15% alpha tint) */
   .badge-soft.badge-primary {
-    @apply border-transparent bg-primary/15 text-primary;
+    @apply border-transparent;
+    background-color: var(--accent-soft);
+    color: var(--accent);
   }
   .badge-soft.badge-secondary {
     @apply border-transparent bg-secondary/15 text-secondary;
@@ -373,51 +416,77 @@
 
   /* Form label styling */
   .label-text {
-    @apply text-xs sm:text-[0.8125rem] font-semibold text-base-content/85 select-none;
+    @apply text-xs sm:text-[0.8125rem] font-semibold select-none;
+    color: var(--text);
   }
 
   .label-text-alt {
-    @apply text-[11px] text-base-content/55 select-none;
+    @apply text-[11px] select-none;
+    color: var(--text-muted);
   }
 
   /* ------------------------------------------------------------------------
      4. FORM CONTROLS (.input, .select, .form-surface, .toggle, .checkbox)
-        Clean BeeJir Outlined Input Controls
+        Recessed Input Surface (--surface-input), Border (--border), Focus Ring (--ring)
      ------------------------------------------------------------------------ */
   .form-surface {
-    @apply rounded-btn border border-base-300 bg-base-100 text-base-content
-           transition-colors duration-150
-           hover:border-primary/40
-           dark:border-base-300 dark:bg-base-100
-           dark:hover:border-primary/40;
+    @apply rounded-btn border text-base-content
+           transition-[border-color,box-shadow,background-color] duration-150;
+    background-color: var(--surface-input);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .form-surface:hover {
+    border-color: var(--border-strong);
   }
 
-  .form-surface-active {
-    @apply border-primary bg-base-100 ring-2 ring-primary/20
-           dark:border-primary dark:bg-base-100 dark:ring-primary/25;
+  .form-surface-active,
+  .form-surface:focus-within {
+    background-color: var(--surface-input);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
   .input {
-    @apply w-full rounded-btn bg-base-100 px-3.5 py-2 text-sm text-base-content
-           border border-base-300
-           placeholder:text-base-content/40
-           transition-colors duration-150
-           hover:border-primary/40
-           focus:outline-none focus:bg-base-100 focus:ring-2 focus:ring-primary/20 focus:border-primary
-           dark:border-base-300 dark:bg-base-100 dark:hover:border-primary/40
+    @apply w-full rounded-btn px-3.5 py-2 text-sm
+           border
+           transition-[border-color,box-shadow,background-color] duration-150
+           focus:outline-none
            disabled:opacity-50 disabled:cursor-not-allowed;
+    background-color: var(--surface-input);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .input::placeholder {
+    color: var(--text-faint);
+  }
+  .input:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+  }
+  .input:focus {
+    background-color: var(--surface-input);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
   .input-bordered {
-    @apply border border-base-300;
+    border-color: var(--border);
   }
 
   .input-primary {
-    @apply border-primary/60 focus:border-primary focus:ring-primary/25;
+    border-color: rgb(var(--p) / 0.6);
+  }
+  .input-primary:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
   .input-error {
-    @apply border-error focus:border-error focus:ring-error/20;
+    border-color: rgb(var(--er)) !important;
+  }
+  .input-error:focus {
+    border-color: rgb(var(--er)) !important;
+    box-shadow: 0 0 0 3px rgb(var(--er) / 0.22) !important;
   }
 
   .input-sm {
@@ -429,11 +498,21 @@
   }
 
   .select {
-    @apply w-full rounded-btn bg-base-100 px-3.5 py-2 text-sm text-base-content
-           border border-base-300
-           transition-colors duration-150
-           hover:border-primary/40
-           focus:outline-none focus:bg-base-100 focus:ring-2 focus:ring-primary/20 focus:border-primary;
+    @apply w-full rounded-btn px-3.5 py-2 text-sm
+           border
+           transition-[border-color,box-shadow,background-color] duration-150
+           focus:outline-none;
+    background-color: var(--surface-input);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .select:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+  }
+  .select:focus {
+    background-color: var(--surface-input);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
   .select-sm {
@@ -443,18 +522,25 @@
   /* Custom Toggle Switch */
   .toggle {
     @apply relative inline-flex h-5 w-9 shrink-0 cursor-pointer appearance-none
-           rounded-full border border-base-300 bg-base-300
-           transition-all duration-200 ease-in-out
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/35
+           rounded-full border
+           transition-[border-color,box-shadow,background-color] duration-200 ease-in-out
+           focus:outline-none
            checked:border-primary checked:bg-primary;
+    background-color: var(--surface-input);
+    border-color: var(--border-strong);
+  }
+  .toggle:focus-visible {
+    box-shadow: 0 0 0 2px var(--ring);
   }
   .toggle::after {
     content: '';
     @apply pointer-events-none inline-block h-4 w-4 translate-x-0 transform
-           rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out;
+           rounded-full shadow-xs ring-0 transition duration-200 ease-in-out;
+    background-color: var(--text);
   }
   .toggle:checked::after {
     @apply translate-x-4;
+    background-color: rgb(var(--pc));
   }
   .toggle-secondary:checked {
     @apply border-secondary bg-secondary;
@@ -472,16 +558,24 @@
   .checkbox {
     @apply relative inline-flex shrink-0 cursor-pointer appearance-none
            h-[18px] w-[18px] items-center justify-center rounded-[0.25rem]
-           border border-base-content/30 bg-base-100
+           border
            text-primary
            transition-all duration-150 ease-out
            hover:border-primary
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30
-           disabled:cursor-not-allowed disabled:opacity-45 disabled:border-base-300 disabled:bg-base-200;
+           focus:outline-none
+           disabled:cursor-not-allowed disabled:opacity-45;
+    background-color: var(--surface-input);
+    border-color: var(--border-strong);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 0% 0%;
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3e%3cpolyline points='3.5 8.5 6.5 11.5 12.5 4.5'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%23E8EAF0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3e%3cpolyline points='3.5 8.5 6.5 11.5 12.5 4.5'/%3e%3c/svg%3e");
+  }
+  html.dark .checkbox {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%230C0E18' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3e%3cpolyline points='3.5 8.5 6.5 11.5 12.5 4.5'/%3e%3c/svg%3e");
+  }
+  .checkbox:focus-visible {
+    box-shadow: 0 0 0 2px var(--ring);
   }
 
   .checkbox:checked {
@@ -492,7 +586,10 @@
   .checkbox:indeterminate {
     @apply border-primary bg-primary shadow-[0_2px_4px_0_rgb(var(--p)/0.4)];
     background-size: 75% 75%;
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3e%3cline x1='3.5' y1='8' x2='12.5' y2='8'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%23E8EAF0' stroke-width='2.4' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3e%3cline x1='3.5' y1='8' x2='12.5' y2='8'/%3e%3c/svg%3e");
+  }
+  html.dark .checkbox:indeterminate {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%230C0E18' stroke-width='2.4' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3e%3cline x1='3.5' y1='8' x2='12.5' y2='8'/%3e%3c/svg%3e");
   }
 
   .checkbox-secondary:checked,
@@ -522,7 +619,7 @@
   .checkbox-warning:checked,
   .checkbox-warning:indeterminate {
     @apply border-warning bg-warning shadow-[0_2px_4px_0_rgb(var(--wa)/0.4)];
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%23262b43' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3e%3cpolyline points='3.5 8.5 6.5 11.5 12.5 4.5'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='none' stroke='%23120D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3e%3cpolyline points='3.5 8.5 6.5 11.5 12.5 4.5'/%3e%3c/svg%3e");
   }
   .checkbox-warning {
     @apply hover:border-warning focus-visible:ring-warning/30;
@@ -562,7 +659,8 @@
      ------------------------------------------------------------------------ */
   .alert {
     @apply flex w-full items-start gap-3.5 rounded-box p-4 text-sm
-           border border-base-300 bg-base-100 text-base-content;
+           border bg-base-100 text-base-content;
+    border-color: var(--border);
   }
 
   .alert-info {
@@ -580,7 +678,6 @@
 
   /* ------------------------------------------------------------------------
      6. TABLES (.table, .table-zebra, .table-hover)
-        BeeJir Clean Header & Subtle Row Dividers
      ------------------------------------------------------------------------ */
   .table {
     @apply w-full text-left text-sm border-collapse;
@@ -588,11 +685,18 @@
 
   .table thead th {
     @apply bg-base-200/80 px-5 py-3.5 text-xs font-semibold uppercase tracking-wider
-           text-base-content/70 border-b border-base-300;
+           border-b;
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+  html.dark .table thead th {
+    background-color: var(--surface-1);
   }
 
   .table tbody td {
-    @apply px-5 py-3.5 border-b border-base-300/65 text-base-content/85 align-middle;
+    @apply px-5 py-3.5 border-b align-middle;
+    color: var(--text);
+    border-color: var(--border);
   }
 
   .table tbody tr:last-child td {
@@ -605,6 +709,9 @@
 
   .table-hover tbody tr {
     @apply transition-colors hover:bg-base-200/55;
+  }
+  html.dark .table-hover tbody tr:hover {
+    background-color: var(--surface-raised);
   }
 
   /* ------------------------------------------------------------------------
@@ -649,7 +756,8 @@
      8. LIST GROUP (.list-group, .list-item)
      ------------------------------------------------------------------------ */
   .list-group {
-    @apply flex flex-col rounded-box border border-base-300 bg-base-100 overflow-hidden divide-y divide-base-300/70;
+    @apply flex flex-col rounded-box border bg-base-100 overflow-hidden divide-y divide-base-300/70;
+    border-color: var(--border);
   }
 
   .list-item {
@@ -658,5 +766,8 @@
 
   .list-item-hover {
     @apply hover:bg-base-200/60 cursor-pointer;
+  }
+  html.dark .list-item-hover:hover {
+    background-color: var(--surface-raised);
   }
 }

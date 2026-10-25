@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, watch } from 'vue'
 import {
   UploadCloud,
   FileText,
@@ -11,7 +11,16 @@ import {
   Eye,
   Plus,
   X,
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
+  RotateCcw,
+  Download,
+  FlipHorizontal,
+  RefreshCw,
 } from 'lucide-vue-next'
+import { lockScroll, unlockScroll } from '@/utils/scrollLock'
+import UiTooltip from '@/components/ui/UiTooltip.vue'
 
 export interface UploadedFileItem {
   id: string
@@ -196,9 +205,92 @@ function clearAllFiles() {
   syncFiles()
 }
 
+// Image Tooling state (Zoom, Rotation, Flip, Pan/Drag)
+const zoomLevel = ref(1)
+const rotationAngle = ref(0)
+const isFlippedH = ref(false)
+const panX = ref(0)
+const panY = ref(0)
+const isPanning = ref(false)
+let dragStartX = 0
+let dragStartY = 0
+let initialPanX = 0
+let initialPanY = 0
+
+function resetImageTools() {
+  zoomLevel.value = 1
+  rotationAngle.value = 0
+  isFlippedH.value = false
+  panX.value = 0
+  panY.value = 0
+  isPanning.value = false
+}
+
+function zoomIn() {
+  if (zoomLevel.value < 3) {
+    zoomLevel.value = Math.min(3, +(zoomLevel.value + 0.25).toFixed(2))
+  }
+}
+
+function zoomOut() {
+  if (zoomLevel.value > 0.5) {
+    zoomLevel.value = Math.max(0.5, +(zoomLevel.value - 0.25).toFixed(2))
+    if (zoomLevel.value <= 1) {
+      panX.value = 0
+      panY.value = 0
+    }
+  }
+}
+
+function startPan(e: MouseEvent | TouchEvent) {
+  if (zoomLevel.value <= 1) return
+  isPanning.value = true
+  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+  dragStartX = clientX
+  dragStartY = clientY
+  initialPanX = panX.value
+  initialPanY = panY.value
+}
+
+function onPan(e: MouseEvent | TouchEvent) {
+  if (!isPanning.value) return
+  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+  panX.value = Math.round(initialPanX + (clientX - dragStartX))
+  panY.value = Math.round(initialPanY + (clientY - dragStartY))
+}
+
+function endPan() {
+  isPanning.value = false
+}
+
+function rotateClockwise() {
+  rotationAngle.value = (rotationAngle.value + 90) % 360
+}
+
+function rotateCounterClockwise() {
+  rotationAngle.value = (rotationAngle.value - 90 + 360) % 360
+}
+
+function toggleFlipHorizontal() {
+  isFlippedH.value = !isFlippedH.value
+}
+
+function downloadCurrentFile() {
+  if (!previewImageUrl.value) return
+  const a = document.createElement('a')
+  a.href = previewImageUrl.value
+  a.download = previewImageTitle.value || 'download'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
 function openPreview(file: UploadedFileItem) {
   if (!file.url) return
 
+  resetImageTools()
   previewImageTitle.value = file.name
   if (isImageFile(file)) {
     previewFileType.value = 'image'
@@ -221,14 +313,38 @@ function openPreview(file: UploadedFileItem) {
   }
 }
 
+let isLocked = false
+
+watch(
+  () => previewImageUrl.value,
+  (hasPreview) => {
+    if (hasPreview) {
+      if (!isLocked) {
+        lockScroll()
+        isLocked = true
+      }
+    } else {
+      if (isLocked) {
+        unlockScroll()
+        isLocked = false
+      }
+    }
+  },
+)
+
 function closePreview() {
   previewImageUrl.value = null
   previewFileType.value = null
   previewTextContent.value = ''
+  resetImageTools()
 }
 
 onUnmounted(() => {
   createdUrls.forEach((u) => URL.revokeObjectURL(u))
+  if (isLocked) {
+    unlockScroll()
+    isLocked = false
+  }
 })
 </script>
 
@@ -337,7 +453,7 @@ onUnmounted(() => {
           <!-- Uploading Progress Overlay -->
           <div
             v-if="photo.status === 'uploading'"
-            class="absolute inset-0 bg-slate-950/60 backdrop-blur-2xs flex flex-col items-center justify-center p-3 text-white"
+            class="absolute inset-0 bg-neutral/60 backdrop-blur-2xs flex flex-col items-center justify-center p-3 text-base-content"
           >
             <span class="text-xs font-mono font-bold mb-1.5">{{ photo.progress }}%</span>
             <div class="w-full h-1.5 rounded-full bg-white/25 overflow-hidden">
@@ -351,7 +467,7 @@ onUnmounted(() => {
           <!-- Hover Action Overlay -->
           <div
             v-else
-            class="absolute inset-0 bg-slate-950/65 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2.5 text-white"
+            class="absolute inset-0 bg-neutral/65 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2.5 text-base-content"
           >
             <div class="flex items-center justify-end gap-1.5">
               <button
@@ -365,7 +481,7 @@ onUnmounted(() => {
               </button>
               <button
                 type="button"
-                class="btn btn-xs btn-circle bg-error/85 hover:bg-error border-none text-white h-7 w-7"
+                class="btn btn-xs btn-circle bg-error/85 hover:bg-error border-none text-error-content h-7 w-7"
                 title="Hapus foto"
                 @click.stop="removeFile(photo.id)"
               >
@@ -425,14 +541,9 @@ onUnmounted(() => {
 
           <!-- File Info & Progress -->
           <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between gap-2">
-              <p class="text-xs font-bold text-base-content truncate">
-                {{ item.name }}
-              </p>
-              <span class="text-[11px] font-mono text-base-content/55 shrink-0">
-                {{ formatFileSize(item.size) }}
-              </span>
-            </div>
+            <p class="text-xs font-bold text-base-content truncate">
+              {{ item.name }}
+            </p>
 
             <!-- Progress Bar or Completed Badge -->
             <div v-if="item.status === 'uploading'" class="mt-1.5 flex items-center gap-2">
@@ -449,6 +560,11 @@ onUnmounted(() => {
               <span>Berhasil terupload</span>
             </div>
           </div>
+
+          <!-- File Size (Vertically centered, aligned with icon/thumbnail) -->
+          <span class="text-[11px] font-mono text-base-content/55 shrink-0 px-2 select-none self-center">
+            {{ formatFileSize(item.size) }}
+          </span>
         </div>
 
         <!-- Preview & Remove Actions -->
@@ -478,66 +594,187 @@ onUnmounted(() => {
       {{ hint }}
     </span>
 
-    <!-- Unified File Lightbox Modal (Images, PDF, and Text) -->
-    <Transition
-      enter-active-class="transition duration-150 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-100 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="previewImageUrl"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4"
-        @click="closePreview"
+    <!-- Unified File Lightbox Modal (Images, PDF, and Text) teleported to body with top z-index -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-150 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-100 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
       >
         <div
-          class="relative max-w-3xl w-full max-h-[85vh] flex flex-col rounded-box bg-base-100 border border-base-300 p-4 shadow-2xl"
-          @click.stop
+          v-if="previewImageUrl"
+          class="fixed inset-0 z-[99999] flex items-center justify-center bg-neutral/80 backdrop-blur-xs p-4"
+          @click="closePreview"
         >
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-base-300">
-            <div class="flex items-center gap-2 truncate pr-4">
-              <span class="badge badge-primary badge-xs font-mono uppercase">
-                {{ previewFileType }}
-              </span>
-              <span class="text-xs font-bold text-base-content truncate">{{ previewImageTitle }}</span>
+          <div
+            class="relative max-w-3xl w-full max-h-[85vh] flex flex-col rounded-box bg-[var(--surface-raised)] border border-[var(--border)] p-4 shadow-2xl"
+            @click.stop
+          >
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-base-300">
+              <div class="flex items-center gap-2 truncate pr-4">
+                <span class="badge badge-primary badge-xs font-mono uppercase">
+                  {{ previewFileType }}
+                </span>
+                <span class="text-xs font-bold text-base-content truncate">{{ previewImageTitle }}</span>
+              </div>
+
+              <!-- Top Action Controls (Download & Close) -->
+              <div class="flex items-center gap-1 shrink-0">
+                <UiTooltip text="Unduh Berkas" position="bottom" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/70 hover:text-primary hover:bg-primary/10"
+                    aria-label="Unduh berkas"
+                    @click="downloadCurrentFile"
+                  >
+                    <Download class="h-4 w-4" />
+                  </button>
+                </UiTooltip>
+                <UiTooltip text="Tutup Pratinjau (Esc)" position="bottom" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/70 hover:text-error hover:bg-error/10"
+                    aria-label="Tutup pratinjau"
+                    @click="closePreview"
+                  >
+                    <X class="h-4 w-4" />
+                  </button>
+                </UiTooltip>
+              </div>
             </div>
-            <button
-              type="button"
-              class="btn btn-ghost btn-xs btn-circle h-7 w-7"
-              @click="closePreview"
-            >
-              <X class="h-4 w-4" />
-            </button>
-          </div>
 
-          <!-- Preview Content by File Type -->
-          <div class="overflow-auto flex-1 min-h-[250px] max-h-[70vh] flex items-center justify-center rounded-btn bg-base-200/60 p-2">
-            <!-- Image Preview -->
-            <img
-              v-if="previewFileType === 'image'"
-              :src="previewImageUrl"
-              :alt="previewImageTitle"
-              class="max-h-[68vh] w-full object-contain rounded-btn"
-            />
+            <!-- Preview Content by File Type -->
+            <div class="relative overflow-hidden flex-1 min-h-[300px] max-h-[70vh] flex items-center justify-center rounded-btn bg-base-200/60 p-2">
+              <!-- Image Preview Container with Zoom/Rotate/Pan Transforms -->
+              <div
+                v-if="previewFileType === 'image'"
+                class="flex h-full w-full items-center justify-center overflow-hidden select-none"
+                :class="[
+                  zoomLevel > 1 ? (isPanning ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-default'
+                ]"
+                @mousedown="startPan"
+                @mousemove="onPan"
+                @mouseup="endPan"
+                @mouseleave="endPan"
+                @touchstart.passive="startPan"
+                @touchmove.passive="onPan"
+                @touchend="endPan"
+              >
+                <img
+                  :src="previewImageUrl"
+                  :alt="previewImageTitle"
+                  draggable="false"
+                  class="max-h-[64vh] max-w-full object-contain rounded-btn select-none shadow-md pointer-events-none"
+                  :class="isPanning ? 'transition-none' : 'transition-transform duration-150'"
+                  :style="{
+                    transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel}) rotate(${rotationAngle}deg) scaleX(${isFlippedH ? -1 : 1})`,
+                  }"
+                />
+              </div>
 
-            <!-- PDF Preview via Iframe -->
-            <iframe
-              v-else-if="previewFileType === 'pdf'"
-              :src="previewImageUrl"
-              class="w-full h-[65vh] rounded-btn border border-base-300"
-              title="Pratinjau PDF"
-            />
+              <!-- PDF Preview via Iframe -->
+              <iframe
+                v-else-if="previewFileType === 'pdf'"
+                :src="previewImageUrl"
+                class="w-full h-[65vh] rounded-btn border border-base-300"
+                title="Pratinjau PDF"
+              />
 
-            <!-- Text / Code Preview -->
-            <pre
-              v-else-if="previewFileType === 'text'"
-              class="w-full h-full max-h-[65vh] overflow-auto p-4 font-mono text-xs text-base-content bg-base-100 rounded-btn whitespace-pre-wrap select-text"
-            >{{ previewTextContent || 'Memuat dokumen teks...' }}</pre>
+              <!-- Text / Code Preview -->
+              <pre
+                v-else-if="previewFileType === 'text'"
+                class="w-full h-full max-h-[65vh] overflow-auto p-4 font-mono text-xs text-base-content bg-base-100 rounded-btn whitespace-pre-wrap select-text"
+              >{{ previewTextContent || 'Memuat dokumen teks...' }}</pre>
+
+              <!-- Floating Tooling Toolbar for Image Preview (Zoom In/Out, Rotate, Flip, Reset) -->
+              <div
+                v-if="previewFileType === 'image'"
+                class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-[var(--surface-raised)]/90 backdrop-blur-md border border-[var(--border)] px-3 py-1.5 shadow-xl z-20 text-base-content"
+              >
+                <UiTooltip text="Perkecil (Zoom Out)" position="top" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 hover:bg-base-300/60"
+                    aria-label="Perkecil (Zoom Out)"
+                    :disabled="zoomLevel <= 0.5"
+                    @click="zoomOut"
+                  >
+                    <ZoomOut class="h-3.5 w-3.5" />
+                  </button>
+                </UiTooltip>
+
+                <span class="text-[11px] font-mono font-bold px-1.5 select-none min-w-[42px] text-center">
+                  {{ Math.round(zoomLevel * 100) }}%
+                </span>
+
+                <UiTooltip text="Perbesar (Zoom In)" position="top" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 hover:bg-base-300/60"
+                    aria-label="Perbesar (Zoom In)"
+                    :disabled="zoomLevel >= 3"
+                    @click="zoomIn"
+                  >
+                    <ZoomIn class="h-3.5 w-3.5" />
+                  </button>
+                </UiTooltip>
+
+                <div class="h-4 w-px bg-base-300 mx-1" />
+
+                <UiTooltip text="Putar Kiri 90°" position="top" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 hover:bg-base-300/60"
+                    aria-label="Putar Berlawanan Jarum Jam"
+                    @click="rotateCounterClockwise"
+                  >
+                    <RotateCcw class="h-3.5 w-3.5" />
+                  </button>
+                </UiTooltip>
+
+                <UiTooltip text="Putar Kanan 90°" position="top" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 hover:bg-base-300/60"
+                    aria-label="Putar Searah Jarum Jam"
+                    @click="rotateClockwise"
+                  >
+                    <RotateCw class="h-3.5 w-3.5" />
+                  </button>
+                </UiTooltip>
+
+                <div class="h-4 w-px bg-base-300 mx-1" />
+
+                <UiTooltip text="Balik Horizontal" position="top" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 hover:bg-base-300/60"
+                    :class="isFlippedH ? 'bg-primary/20 text-primary' : ''"
+                    aria-label="Balik Horizontal"
+                    @click="toggleFlipHorizontal"
+                  >
+                    <FlipHorizontal class="h-3.5 w-3.5" />
+                  </button>
+                </UiTooltip>
+
+                <UiTooltip text="Reset Ukuran & Posisi" position="top" teleport>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-circle h-7 w-7 hover:bg-base-300/60"
+                    aria-label="Reset Ukuran & Posisi"
+                    @click="resetImageTools"
+                  >
+                    <RefreshCw class="h-3.5 w-3.5" />
+                  </button>
+                </UiTooltip>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </Teleport>
   </div>
 </template>

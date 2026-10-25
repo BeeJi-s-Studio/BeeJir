@@ -335,9 +335,9 @@ onUnmounted(() => {
     <!-- Trigger Box with Visible Border -->
     <div
       tabindex="0"
-      class="relative w-full min-h-[40px] px-3.5 py-2 rounded-btn border border-base-300 bg-base-100 flex items-center justify-between gap-2 text-sm cursor-pointer select-none transition-all duration-150 hover:border-base-content/40"
+      class="relative w-full min-h-[40px] px-3.5 py-2 form-surface flex items-center justify-between gap-2 text-sm cursor-pointer select-none"
       :class="[
-        isOpen ? 'border-primary ring-2 ring-primary/20 shadow-sm' : '',
+        isOpen ? 'form-surface-active' : '',
         disabled ? 'opacity-50 cursor-not-allowed bg-base-200/50' : '',
         error ? 'border-error ring-1 ring-error/20' : '',
       ]"
@@ -348,7 +348,7 @@ onUnmounted(() => {
         <span v-if="formattedDisplay" class="font-medium text-base-content truncate">
           {{ formattedDisplay }}
         </span>
-        <span v-else class="text-base-content/40 truncate">
+        <span v-else class="text-[var(--text-faint)] truncate">
           {{ placeholder }}
         </span>
       </div>
@@ -363,7 +363,7 @@ onUnmounted(() => {
         <button
           v-if="clearable && modelValue && !disabled"
           type="button"
-          class="btn btn-ghost btn-xs btn-circle h-5 w-5 text-base-content/45 hover:text-base-content"
+          class="btn btn-ghost btn-xs btn-circle h-5 w-5 text-[var(--text-faint)] hover:text-base-content"
           title="Kosongkan tanggal"
           @click="clearDate"
         >
@@ -372,7 +372,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Calendar Popup Floating Modal (Solid bg-base-100, z-[100], Elevated Shadow) -->
+    <!-- Calendar Popup Floating Modal (Solid bg-[var(--surface-raised)], z-[100], Elevated Shadow) -->
     <Transition
       :css="false"
       @enter="(el, done) => animateDropdownIn(el, done)"
@@ -380,15 +380,15 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 top-full mt-2 z-[100] w-76 sm:w-84 rounded-box border border-base-300 bg-base-100 p-4 shadow-2xl select-none dark:bg-base-100 dark:border-base-300 dark:shadow-[0_12px_36px_rgba(0,0,0,0.55)]"
+        class="absolute left-0 top-full mt-2 z-[100] w-76 sm:w-84 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-4 shadow-2xl select-none dark:shadow-[0_12px_36px_rgba(0,0,0,0.55)]"
         @click.stop
         @mousedown.stop
       >
         <!-- Top Navigation Header -->
-        <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-base-300/70">
+        <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-[var(--border)]">
           <button
             type="button"
-            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/70 hover:text-base-content"
+            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-[var(--text-muted)] hover:text-base-content"
             @click.stop="prevMonth"
           >
             <ChevronLeft class="h-4 w-4" />
@@ -398,8 +398,8 @@ onUnmounted(() => {
           <div class="flex items-center gap-1.5">
             <button
               type="button"
-              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 transition-colors"
-              :class="{ 'bg-primary/15 text-primary': viewMode === 'month' }"
+              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06] transition-colors"
+              :class="{ 'bg-[var(--accent-soft)] text-[var(--accent)]': viewMode === 'month' }"
               @click="viewMode = viewMode === 'month' ? 'calendar' : 'month'"
             >
               <span>{{ monthNames[viewMonth] }}</span>
@@ -408,8 +408,8 @@ onUnmounted(() => {
 
             <button
               type="button"
-              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 transition-colors"
-              :class="{ 'bg-primary/15 text-primary': viewMode === 'year' }"
+              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06] transition-colors"
+              :class="{ 'bg-[var(--accent-soft)] text-[var(--accent)]': viewMode === 'year' }"
               @click="viewMode = viewMode === 'year' ? 'calendar' : 'year'"
             >
               <span>{{ viewYear }}</span>
@@ -419,7 +419,7 @@ onUnmounted(() => {
 
           <button
             type="button"
-            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-base-content/70 hover:text-base-content"
+            class="btn btn-ghost btn-xs btn-circle h-7 w-7 text-[var(--text-muted)] hover:text-base-content"
             @click.stop="nextMonth"
           >
             <ChevronRight class="h-4 w-4" />
@@ -436,7 +436,7 @@ onUnmounted(() => {
             :class="
               viewMonth === idx
                 ? 'bg-primary text-primary-content font-bold shadow-xs'
-                : 'text-base-content hover:bg-base-200'
+                : 'text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06]'
             "
             @click="selectMonth(idx)"
           >
@@ -454,7 +454,7 @@ onUnmounted(() => {
             :class="
               viewYear === yr
                 ? 'bg-primary text-primary-content font-bold shadow-xs'
-                : 'text-base-content hover:bg-base-200'
+                : 'text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06]'
             "
             @click="selectYear(yr)"
           >
@@ -469,7 +469,7 @@ onUnmounted(() => {
             <span
               v-for="day in dayNames"
               :key="day"
-              class="text-[10px] font-bold uppercase text-base-content/50 py-1"
+              class="text-[10px] font-bold uppercase text-[var(--text-faint)] py-1"
             >
               {{ day }}
             </span>
@@ -486,10 +486,10 @@ onUnmounted(() => {
                 cell.isSelected
                   ? 'bg-primary text-primary-content font-bold shadow-[0_2px_6px_0_rgb(var(--p)/0.45)]'
                   : cell.isToday
-                    ? 'border border-primary text-primary font-bold bg-primary/10'
+                    ? 'border border-[var(--accent)] text-[var(--accent)] font-bold bg-[var(--accent-soft)]'
                     : cell.isCurrentMonth
-                      ? 'text-base-content hover:bg-base-200'
-                      : 'text-base-content/30 hover:bg-base-200/50',
+                      ? 'text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06]'
+                      : 'text-[var(--text-faint)] opacity-60 hover:bg-base-200/50 dark:hover:bg-white/[0.04]',
               ]"
               @click.stop="selectCell(cell)"
             >
@@ -501,9 +501,9 @@ onUnmounted(() => {
         <!-- OPTIONAL: TIME SELECTOR (Hour & Minute) -->
         <div
           v-if="enableTime && viewMode === 'calendar'"
-          class="mt-3.5 pt-3 border-t border-base-300/70 flex items-center justify-between gap-3 text-xs"
+          class="mt-3.5 pt-3 border-t border-[var(--border)] flex items-center justify-between gap-3 text-xs"
         >
-          <div class="flex items-center gap-1.5 text-base-content/70">
+          <div class="flex items-center gap-1.5 text-[var(--text-muted)]">
             <Clock class="h-4 w-4 text-primary" />
             <span class="font-medium">Waktu:</span>
           </div>
@@ -517,7 +517,7 @@ onUnmounted(() => {
             >
               <option v-for="h in hoursList" :key="h" :value="h">{{ h }}</option>
             </select>
-            <span class="font-bold text-base-content/50">:</span>
+            <span class="font-bold text-[var(--text-faint)]">:</span>
             <!-- Minute Picker -->
             <select
               v-model="selectedMinute"
@@ -530,10 +530,10 @@ onUnmounted(() => {
         </div>
 
         <!-- Calendar Footer (Today Action + Done) -->
-        <div class="mt-3.5 pt-2.5 border-t border-base-300/70 flex items-center justify-between text-xs">
+        <div class="mt-3.5 pt-2.5 border-t border-[var(--border)] flex items-center justify-between text-xs">
           <button
             type="button"
-            class="text-primary font-bold hover:underline cursor-pointer"
+            class="text-[var(--accent)] font-bold hover:underline cursor-pointer"
             @click.stop="selectToday"
           >
             Hari Ini
@@ -546,7 +546,7 @@ onUnmounted(() => {
           >
             Selesai
           </button>
-          <span v-else-if="modelValue" class="font-mono text-[11px] text-base-content/55">
+          <span v-else-if="modelValue" class="font-mono text-[11px] text-[var(--text-muted)]">
             {{ modelValue }}
           </span>
         </div>
@@ -556,7 +556,7 @@ onUnmounted(() => {
     <span v-if="error" class="text-[11px] font-medium text-error">
       {{ error }}
     </span>
-    <span v-else-if="hint" class="text-[11px] text-base-content/60">
+    <span v-else-if="hint" class="text-[11px] text-[var(--text-muted)]">
       {{ hint }}
     </span>
   </div>

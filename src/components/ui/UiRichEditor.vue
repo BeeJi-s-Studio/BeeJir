@@ -114,13 +114,13 @@ const charCount = computed(() => plainText.value.length)
 <template>
   <div class="w-full space-y-1.5">
     <div v-if="label" class="flex items-center justify-between">
-      <span class="text-xs font-semibold text-base-content/80">{{ label }}</span>
-      <span class="badge badge-xs badge-soft badge-secondary font-mono">WYSIWYG Editor</span>
+      <span class="text-xs font-semibold text-[var(--text)]">{{ label }}</span>
+      <span class="badge badge-xs font-mono border-0 bg-[var(--accent-soft)] text-[var(--accent)]">WYSIWYG Editor</span>
     </div>
 
-    <div class="rounded-box border border-base-300/95 dark:border-white/15 bg-base-200/50 dark:bg-base-200/90 overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.06)] dark:shadow-[inset_0_2px_6px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.07)] focus-within:border-primary focus-within:bg-base-100 focus-within:ring-4 focus-within:ring-primary/15 dark:focus-within:ring-primary/25 dark:focus-within:shadow-[inset_0_1px_2px_rgba(0,0,0,0.25),0_0_20px_-2px_rgb(var(--p)/0.4)] transition-all">
+    <div class="rounded-box border border-[var(--border)] bg-[var(--surface-input)] overflow-hidden focus-within:border-[var(--accent)] focus-within:shadow-[0_0_0_3px_var(--ring)] transition-[border-color,box-shadow]">
       <!-- Formatting Toolbar -->
-      <div class="flex flex-wrap items-center gap-1 border-b border-base-300/80 dark:border-white/10 bg-base-200/75 dark:bg-base-300/60 p-2 select-none">
+      <div class="flex flex-wrap items-center gap-1 border-b border-[var(--border)] bg-[var(--surface-1)] p-2 select-none">
         <!-- Text Style Group -->
         <button
           type="button"
@@ -155,7 +155,7 @@ const charCount = computed(() => plainText.value.length)
           <Strikethrough class="h-3.5 w-3.5" />
         </button>
 
-        <div class="h-4 w-px bg-base-300 mx-1" />
+        <div class="h-4 w-px bg-[var(--border)] mx-1" />
 
         <!-- Headings & Blocks -->
         <button
@@ -191,7 +191,7 @@ const charCount = computed(() => plainText.value.length)
           <Code class="h-3.5 w-3.5" />
         </button>
 
-        <div class="h-4 w-px bg-base-300 mx-1" />
+        <div class="h-4 w-px bg-[var(--border)] mx-1" />
 
         <!-- Lists -->
         <button
@@ -211,7 +211,7 @@ const charCount = computed(() => plainText.value.length)
           <ListOrdered class="h-3.5 w-3.5" />
         </button>
 
-        <div class="h-4 w-px bg-base-300 mx-1" />
+        <div class="h-4 w-px bg-[var(--border)] mx-1" />
 
         <!-- Alignment -->
         <button
@@ -239,7 +239,7 @@ const charCount = computed(() => plainText.value.length)
           <AlignRight class="h-3.5 w-3.5" />
         </button>
 
-        <div class="h-4 w-px bg-base-300 mx-1" />
+        <div class="h-4 w-px bg-[var(--border)] mx-1" />
 
         <!-- Link, Undo & Clear -->
         <button
@@ -287,7 +287,7 @@ const charCount = computed(() => plainText.value.length)
         v-show="!showSourceCode"
         ref="editorRef"
         contenteditable="true"
-        class="rich-editor-content p-4 text-sm text-base-content focus:outline-none leading-relaxed overflow-y-auto"
+        class="rich-editor-content p-4 text-sm text-[var(--text)] focus:outline-none leading-relaxed overflow-y-auto"
         :style="{ minHeight }"
         :data-placeholder="placeholder"
         @input="syncFromEditor"
@@ -297,14 +297,14 @@ const charCount = computed(() => plainText.value.length)
       <textarea
         v-if="showSourceCode"
         v-model="rawHtml"
-        class="w-full p-4 font-mono text-xs bg-base-200/40 text-primary focus:outline-none resize-y"
+        class="w-full p-4 font-mono text-xs bg-[var(--surface-input)] text-[var(--accent)] border-t border-[var(--border)] focus:outline-none resize-y"
         :style="{ minHeight }"
         @input="syncFromTextarea"
       />
 
       <!-- Editor Footer Stats -->
-      <div class="flex items-center justify-between px-3.5 py-2 border-t border-base-300/70 bg-base-200/30 text-[11px] text-base-content/55">
-        <span>Mode: <strong class="text-base-content">{{ showSourceCode ? 'HTML Source' : 'Visual WYSIWYG' }}</strong></span>
+      <div class="flex items-center justify-between px-3.5 py-2 border-t border-[var(--border)] bg-[var(--surface-1)] text-[11px] text-[var(--text-muted)]">
+        <span>Mode: <strong class="text-[var(--text)]">{{ showSourceCode ? 'HTML Source' : 'Visual WYSIWYG' }}</strong></span>
         <div class="flex items-center gap-3 font-mono">
           <span>{{ wordCount }} kata</span>
           <span>•</span>
@@ -313,7 +313,7 @@ const charCount = computed(() => plainText.value.length)
       </div>
     </div>
 
-    <span v-if="hint" class="block text-[11px] text-base-content/60">
+    <span v-if="hint" class="block text-[11px] text-[var(--text-muted)]">
       {{ hint }}
     </span>
   </div>
@@ -322,7 +322,7 @@ const charCount = computed(() => plainText.value.length)
 <style scoped>
 .rich-editor-content:empty:before {
   content: attr(data-placeholder);
-  color: rgb(var(--bc) / 0.35);
+  color: var(--text-faint);
   pointer-events: none;
 }
 .rich-editor-content :deep(h2) {
@@ -348,22 +348,24 @@ const charCount = computed(() => plainText.value.length)
   margin: 0.35rem 0;
 }
 .rich-editor-content :deep(blockquote) {
-  border-left: 3px solid rgb(var(--p));
+  border-left: 3px solid var(--accent);
   padding-left: 0.85rem;
   margin: 0.5rem 0;
   font-style: italic;
-  color: rgb(var(--bc) / 0.75);
+  color: var(--text-muted);
 }
 .rich-editor-content :deep(pre) {
-  background: rgb(var(--b2));
+  background: var(--surface-1);
+  border: 1px solid var(--border);
   padding: 0.65rem;
   border-radius: 0.5rem;
   font-family: monospace;
   font-size: 0.8rem;
   margin: 0.5rem 0;
+  color: var(--text);
 }
 .rich-editor-content :deep(a) {
-  color: rgb(var(--p));
+  color: var(--accent);
   text-decoration: underline;
 }
 </style>

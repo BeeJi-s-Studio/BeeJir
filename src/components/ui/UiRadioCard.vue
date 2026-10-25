@@ -86,8 +86,8 @@ function select(option: RadioCardOption) {
       class="group relative flex flex-col justify-between rounded-xl border p-5 sm:p-5.5 transition-all duration-200 cursor-pointer select-none"
       :class="[
         modelValue === opt.value
-          ? 'border-primary bg-primary/[0.04] shadow-sm shadow-primary/10 ring-2 ring-primary/20'
-          : 'border-base-300 bg-base-100 hover:border-base-content/30 hover:bg-base-200/40 hover:shadow-sm',
+          ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm shadow-[var(--ring)] ring-2 ring-[var(--ring)]'
+          : 'border-[var(--border)] bg-[var(--surface-input)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-raised)] hover:shadow-sm',
         (disabled || opt.disabled) && 'opacity-50 cursor-not-allowed pointer-events-none'
       ]"
       @click="select(opt)"
@@ -96,7 +96,7 @@ function select(option: RadioCardOption) {
     >
       <!-- Top Recommended or Custom Badge ribbon if exists -->
       <div v-if="opt.recommended" class="absolute -top-3 right-4">
-        <span class="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-0.5 text-[10px] font-semibold tracking-wide text-primary-content shadow-sm">
+        <span class="inline-flex items-center gap-1 rounded-full bg-[var(--accent)] px-3 py-0.5 text-[10px] font-semibold tracking-wide text-primary-content shadow-sm">
           Recommended
         </span>
       </div>
@@ -110,8 +110,8 @@ function select(option: RadioCardOption) {
             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors"
             :class="
               modelValue === opt.value
-                ? 'border-primary/30 bg-primary/10 text-primary shadow-xs'
-                : 'border-base-300 bg-base-200/70 text-base-content/70 group-hover:border-base-content/20 group-hover:text-base-content'
+                ? 'border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--accent)] shadow-xs'
+                : 'border-[var(--border)] bg-[var(--surface-raised)] text-[var(--text-muted)] group-hover:border-[var(--border-strong)] group-hover:text-[var(--text)]'
             "
           >
             <component :is="opt.icon" class="h-5.5 w-5.5 stroke-[1.8]" />
@@ -123,8 +123,8 @@ function select(option: RadioCardOption) {
               class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-200"
               :class="
                 modelValue === opt.value
-                  ? 'border-primary bg-primary text-primary-content shadow-xs'
-                  : 'border-base-300 bg-base-100 group-hover:border-base-content/40'
+                  ? 'border-[var(--accent)] bg-[var(--accent)] text-primary-content shadow-xs'
+                  : 'border-[var(--border)] bg-[var(--surface-input)] group-hover:border-[var(--border-strong)]'
               "
             >
               <Check v-if="modelValue === opt.value" class="h-3 w-3 stroke-[2.5]" />
@@ -136,8 +136,8 @@ function select(option: RadioCardOption) {
         <div class="mt-4 space-y-1.5">
           <div class="flex flex-wrap items-center gap-2">
             <span
-              class="text-sm sm:text-[15px] font-bold tracking-tight text-base-content transition-colors"
-              :class="modelValue === opt.value && 'text-primary'"
+              class="text-sm sm:text-[15px] font-bold tracking-tight text-[var(--text)] transition-colors"
+              :class="modelValue === opt.value && 'text-[var(--accent)]'"
             >
               {{ opt.title }}
             </span>
@@ -152,11 +152,11 @@ function select(option: RadioCardOption) {
             </span>
           </div>
 
-          <p v-if="opt.subtitle" class="text-xs font-medium text-base-content/70 leading-normal">
+          <p v-if="opt.subtitle" class="text-xs font-medium text-[var(--text-muted)] leading-normal">
             {{ opt.subtitle }}
           </p>
 
-          <p v-if="opt.description" class="pt-1 text-xs text-base-content/65 leading-relaxed">
+          <p v-if="opt.description" class="pt-1 text-xs text-[var(--text-muted)] leading-relaxed">
             {{ opt.description }}
           </p>
         </div>
@@ -165,18 +165,18 @@ function select(option: RadioCardOption) {
       <!-- Footer: Tags or Meta Specifications (e.g. latency, throughput, cost) -->
       <div
         v-if="(opt.tags && opt.tags.length > 0) || opt.meta"
-        class="mt-5 flex items-center justify-between gap-2 border-t border-base-300/60 pt-3.5 text-[11px]"
+        class="mt-5 flex items-center justify-between gap-2 border-t border-[var(--border)] pt-3.5 text-[11px]"
       >
         <div v-if="opt.tags && opt.tags.length > 0" class="flex flex-wrap gap-1.5">
           <span
             v-for="tag in opt.tags"
             :key="tag"
-            class="rounded-md bg-base-200/80 px-2 py-0.5 font-medium text-base-content/75 text-[10.5px] border border-base-300/40"
+            class="rounded-md bg-[var(--surface-raised)] px-2 py-0.5 font-medium text-[var(--text-muted)] text-[10.5px] border border-[var(--border)]"
           >
             {{ tag }}
           </span>
         </div>
-        <div v-if="opt.meta" class="font-mono text-xs font-medium text-base-content/60 ms-auto shrink-0">
+        <div v-if="opt.meta" class="font-mono text-xs font-medium text-[var(--text-muted)] ms-auto shrink-0">
           {{ opt.meta }}
         </div>
       </div>

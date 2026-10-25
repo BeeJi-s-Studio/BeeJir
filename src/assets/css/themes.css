@@ -1,129 +1,211 @@
-﻿/* ==========================================================================
-   BeeJir Custom Theme Engine (BeeJir-Inspired Colorful & Professional)
-   All color variables use space-separated RGB channels (R G B) so Tailwind's
-   alpha modifiers (e.g., bg-primary/15, ring-accent/30) work seamlessly.
+/* ==========================================================================
+   BeeJir Theme Engine: Modern, Clean & Professional Neutral-Tinted Presets
+   - Light Mode: Crisp, high-contrast surface paper with colorful accents
+   - Dark Mode: Calm, low-saturation neutral-tinted dark surfaces (10-20% sat)
+     Elevation hierarchy: bg < surface-1 < surface-2 < surface-raised
+     Recessed input/editor surface: surface-input < surface-2
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   1. LIGHT MODE BASE & PRESETS
+   -------------------------------------------------------------------------- */
 :root,
 [data-theme="daybreak"] {
   color-scheme: light;
-  /* BeeJir Default Light — Royal Indigo (#666cff) + Crisp Slate Paper */
-  --p: 102 108 255;      /* BeeJir Primary Indigo (#666cff) */
+  /* Elevation & Design Tokens */
+  --bg: #f7f7f9;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #f1f3f6;
+  --surface-input: #ffffff;
+  --border: rgba(38, 43, 67, 0.12);
+  --border-strong: rgba(38, 43, 67, 0.22);
+  --text: #262b43;
+  --text-muted: rgba(38, 43, 67, 0.65);
+  --text-faint: rgba(38, 43, 67, 0.45);
+  --accent: #666cff;
+  --accent-hover: #565bdd;
+  --accent-soft: rgba(102, 108, 255, 0.12);
+  --ring: rgba(102, 108, 255, 0.25);
+
+  /* Semantic Channels */
+  --p: 102 108 255;
+  --p-hover: 86 91 221;
   --pc: 255 255 255;
-  --s: 232 62 140;       /* Vibrant Pink/Magenta (#e83e8c) */
+  --s: 232 62 140;
   --sc: 255 255 255;
-  --a: 32 201 151;       /* BeeJir Teal (#20c997) */
+  --a: 32 201 151;
   --ac: 255 255 255;
-  --n: 38 43 67;         /* BeeJir Deep Navy Heading (#262b43) */
+  --n: 38 43 67;
   --nc: 255 255 255;
-  --b1: 255 255 255;     /* Pure Crisp Paper Card Surface (#ffffff) */
-  --b2: 247 247 249;     /* BeeJir Body Canvas (#f7f7f9) */
-  --b3: 230 230 236;     /* Clean Subtle Divider & Border (#e6e6ec) */
-  --bc: 38 43 67;        /* BeeJir Primary Text/Heading (#262b43) */
-  --in: 38 198 249;      /* BeeJir Cyan Info (#26c6f9) */
+  --b1: 255 255 255;
+  --b2: 247 247 249;
+  --b3: 230 230 236;
+  --bc: 38 43 67;
+  --in: 38 198 249;
   --inc: 255 255 255;
-  --su: 40 199 111;      /* Enterprise Crisp Green (#28c76f) */
+  --su: 40 199 111;
   --suc: 255 255 255;
-  --wa: 253 181 40;      /* BeeJir Warm Amber (#fdb528) */
+  --wa: 253 181 40;
   --wac: 38 43 67;
-  --er: 255 77 73;       /* BeeJir Coral Red (#ff4d49) */
+  --er: 255 77 73;
   --erc: 255 255 255;
 
-  /* Professional BeeJir Geometry Defaults */
+  /* Geometry */
   --rounded-box: 0.625rem;
   --rounded-btn: 0.5rem;
   --rounded-badge: 9999px;
 }
 
 [data-theme="midnight"] {
-  color-scheme: dark;
-  /* BeeJir Default Dark — Deep Navy Slate (#282a42 / #30334e) & Indigo (#666cff) */
-  --p: 102 108 255;      /* BeeJir Primary Indigo (#666cff) */
-  --pc: 255 255 255;
-  --s: 232 62 140;       /* Vibrant Pink (#e83e8c) */
-  --sc: 255 255 255;
-  --a: 38 198 249;       /* Vivid Cyan (#26c6f9) */
-  --ac: 255 255 255;
-  --n: 59 64 85;         /* Slate Navy */
-  --nc: 234 234 255;
-  --b1: 48 51 78;        /* BeeJir Dark Paper Surface (#30334e) */
-  --b2: 40 42 66;        /* BeeJir Dark Body Canvas (#282a42) */
-  --b3: 68 71 98;        /* Subtle Dark Card Border (#444762) */
-  --bc: 234 234 255;     /* BeeJir Dark Heading/Text (#eaeaff) */
-  --in: 38 198 249;      /* Cyan (#26c6f9) */
-  --inc: 255 255 255;
-  --su: 40 199 111;      /* Crisp Green (#28c76f) */
-  --suc: 255 255 255;
-  --wa: 253 181 40;      /* Warm Amber (#fdb528) */
-  --wac: 38 43 67;
-  --er: 255 77 73;       /* Coral Red (#ff4d49) */
-  --erc: 255 255 255;
-}
+  color-scheme: light;
+  --bg: #f4f7fc;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #edf2f9;
+  --surface-input: #ffffff;
+  --border: rgba(30, 41, 59, 0.12);
+  --border-strong: rgba(30, 41, 59, 0.22);
+  --text: #1e293b;
+  --text-muted: rgba(30, 41, 59, 0.65);
+  --text-faint: rgba(30, 41, 59, 0.45);
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-soft: rgba(59, 130, 246, 0.12);
+  --ring: rgba(59, 130, 246, 0.25);
 
-[data-theme="aurora"] {
-  color-scheme: dark;
-  /* Botanical Emerald + Cyan + Solar Amber on Professional Forest Slate */
-  --p: 16 185 129;       /* Emerald (#10b981) */
+  --p: 59 130 246;
+  --p-hover: 37 99 235;
   --pc: 255 255 255;
-  --s: 6 182 212;        /* Lagoon Cyan (#06b6d4) */
+  --s: 14 165 233;
   --sc: 255 255 255;
-  --a: 245 158 11;       /* Solar Gold (#f59e0b) */
-  --ac: 15 23 42;
-  --n: 30 58 50;
-  --nc: 240 253 244;
-  --b1: 26 46 41;        /* Clean Forest Slate Card (#1a2e29) */
-  --b2: 19 34 30;        /* Deep Forest Canvas (#13221e) */
-  --b3: 45 77 68;        /* Subtle Forest Border (#2d4d44) */
-  --bc: 236 253 245;     /* Crisp Mint-White Text */
+  --a: 99 102 241;
+  --ac: 255 255 255;
+  --n: 30 41 59;
+  --nc: 255 255 255;
+  --b1: 255 255 255;
+  --b2: 244 247 252;
+  --b3: 226 232 240;
+  --bc: 30 41 59;
   --in: 38 198 249;
   --inc: 255 255 255;
   --su: 40 199 111;
   --suc: 255 255 255;
   --wa: 253 181 40;
-  --wac: 15 23 42;
+  --wac: 30 41 59;
+  --er: 255 77 73;
+  --erc: 255 255 255;
+}
+
+[data-theme="aurora"] {
+  color-scheme: light;
+  --bg: #f5faf8;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #eef6f3;
+  --surface-input: #ffffff;
+  --border: rgba(19, 42, 34, 0.12);
+  --border-strong: rgba(19, 42, 34, 0.22);
+  --text: #132a22;
+  --text-muted: rgba(19, 42, 34, 0.65);
+  --text-faint: rgba(19, 42, 34, 0.45);
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --accent-soft: rgba(16, 185, 129, 0.12);
+  --ring: rgba(16, 185, 129, 0.25);
+
+  --p: 16 185 129;
+  --p-hover: 5 150 105;
+  --pc: 255 255 255;
+  --s: 6 182 212;
+  --sc: 255 255 255;
+  --a: 20 184 166;
+  --ac: 255 255 255;
+  --n: 19 42 34;
+  --nc: 255 255 255;
+  --b1: 255 255 255;
+  --b2: 245 250 248;
+  --b3: 224 238 233;
+  --bc: 19 42 34;
+  --in: 38 198 249;
+  --inc: 255 255 255;
+  --su: 40 199 111;
+  --suc: 255 255 255;
+  --wa: 253 181 40;
+  --wac: 19 42 34;
   --er: 255 77 73;
   --erc: 255 255 255;
 }
 
 [data-theme="nebula"] {
-  color-scheme: dark;
-  /* Royal Violet + Fuchsia + Coral Rose on Deep Velvet Slate */
-  --p: 139 92 246;       /* Electric Violet (#8b5cf6) */
+  color-scheme: light;
+  --bg: #f8f7fc;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #f2f0f9;
+  --surface-input: #ffffff;
+  --border: rgba(43, 31, 62, 0.12);
+  --border-strong: rgba(43, 31, 62, 0.22);
+  --text: #2b1f3e;
+  --text-muted: rgba(43, 31, 62, 0.65);
+  --text-faint: rgba(43, 31, 62, 0.45);
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-soft: rgba(124, 58, 237, 0.12);
+  --ring: rgba(124, 58, 237, 0.25);
+
+  --p: 124 58 237;
+  --p-hover: 109 40 217;
   --pc: 255 255 255;
-  --s: 217 70 239;       /* Fuchsia (#d946ef) */
+  --s: 168 85 247;
   --sc: 255 255 255;
-  --a: 244 63 94;        /* Coral (#f43f5e) */
+  --a: 236 72 153;
   --ac: 255 255 255;
-  --n: 54 41 82;
-  --nc: 250 245 255;
-  --b1: 44 35 68;        /* Velvet Plum Card Surface (#2c2344) */
-  --b2: 33 26 52;        /* Deep Nebula Canvas (#211a34) */
-  --b3: 68 55 102;       /* Subtle Violet Border (#443766) */
-  --bc: 245 243 255;     /* Crisp Lavender-White Text */
+  --n: 43 31 62;
+  --nc: 255 255 255;
+  --b1: 255 255 255;
+  --b2: 248 247 252;
+  --b3: 232 228 242;
+  --bc: 43 31 62;
   --in: 38 198 249;
   --inc: 255 255 255;
   --su: 40 199 111;
   --suc: 255 255 255;
   --wa: 253 181 40;
-  --wac: 15 23 42;
+  --wac: 43 31 62;
   --er: 255 77 73;
   --erc: 255 255 255;
 }
 
 [data-theme="sunset"] {
   color-scheme: light;
-  /* Warm Tangerine + Rose + Violet on Crisp Warm Alabaster */
-  --p: 249 115 22;       /* Orange 500 (#f97316) */
+  --bg: #f9f7f6;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #f4efed;
+  --surface-input: #ffffff;
+  --border: rgba(41, 37, 36, 0.12);
+  --border-strong: rgba(41, 37, 36, 0.22);
+  --text: #292524;
+  --text-muted: rgba(41, 37, 36, 0.65);
+  --text-faint: rgba(41, 37, 36, 0.45);
+  --accent: #f97316;
+  --accent-hover: #ea580c;
+  --accent-soft: rgba(249, 115, 22, 0.12);
+  --ring: rgba(249, 115, 22, 0.25);
+
+  --p: 249 115 22;
+  --p-hover: 234 88 12;
   --pc: 255 255 255;
-  --s: 225 29 72;        /* Rose 600 (#e11d48) */
+  --s: 225 29 72;
   --sc: 255 255 255;
-  --a: 139 92 246;       /* Violet 500 (#8b5cf6) */
+  --a: 139 92 246;
   --ac: 255 255 255;
   --n: 41 37 36;
   --nc: 250 250 249;
   --b1: 255 255 255;
-  --b2: 249 247 246;     /* Clean Warm Gray-Cream Canvas (#f9f7f6) */
-  --b3: 235 229 224;     /* Subtle Warm Border */
+  --b2: 249 247 246;
+  --b3: 235 229 224;
   --bc: 38 35 34;
   --in: 38 198 249;
   --inc: 255 255 255;
@@ -137,18 +219,33 @@
 
 [data-theme="ocean"] {
   color-scheme: light;
-  /* Azure Ocean + Lagoon Cyan + Coral on Crisp Cool Slate */
-  --p: 2 132 199;        /* Sky 600 (#0284c7) */
+  --bg: #f5f8fb;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #edf3f8;
+  --surface-input: #ffffff;
+  --border: rgba(30, 41, 59, 0.12);
+  --border-strong: rgba(30, 41, 59, 0.22);
+  --text: #1e293b;
+  --text-muted: rgba(30, 41, 59, 0.65);
+  --text-faint: rgba(30, 41, 59, 0.45);
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-soft: rgba(2, 132, 199, 0.12);
+  --ring: rgba(2, 132, 199, 0.25);
+
+  --p: 2 132 199;
+  --p-hover: 3 105 161;
   --pc: 255 255 255;
-  --s: 6 182 212;        /* Cyan 500 (#06b6d4) */
+  --s: 6 182 212;
   --sc: 255 255 255;
-  --a: 244 63 94;        /* Coral Rose 500 (#f43f5e) */
+  --a: 244 63 94;
   --ac: 255 255 255;
   --n: 30 41 59;
   --nc: 248 250 252;
   --b1: 255 255 255;
-  --b2: 245 248 251;     /* Clean Cool Slate Canvas (#f5f8fb) */
-  --b3: 226 234 242;     /* Crisp Cool Border */
+  --b2: 245 248 251;
+  --b3: 226 234 242;
   --bc: 30 41 59;
   --in: 38 198 249;
   --inc: 255 255 255;
@@ -162,18 +259,33 @@
 
 [data-theme="matcha"] {
   color-scheme: light;
-  /* Botanical Emerald + Fresh Teal + Amber on Clean Neutral Sage */
-  --p: 5 150 105;        /* Emerald 600 (#059669) */
+  --bg: #f6f9f7;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #edf4ef;
+  --surface-input: #ffffff;
+  --border: rgba(30, 45, 38, 0.12);
+  --border-strong: rgba(30, 45, 38, 0.22);
+  --text: #1e2d26;
+  --text-muted: rgba(30, 45, 38, 0.65);
+  --text-faint: rgba(30, 45, 38, 0.45);
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-soft: rgba(5, 150, 105, 0.12);
+  --ring: rgba(5, 150, 105, 0.25);
+
+  --p: 5 150 105;
+  --p-hover: 4 120 87;
   --pc: 255 255 255;
-  --s: 13 148 136;       /* Teal 600 (#0d9488) */
+  --s: 13 148 136;
   --sc: 255 255 255;
-  --a: 217 119 6;        /* Amber 600 (#d97706) */
+  --a: 217 119 6;
   --ac: 255 255 255;
   --n: 30 45 38;
   --nc: 245 252 248;
   --b1: 255 255 255;
-  --b2: 246 249 247;     /* Clean Neutral Sage Canvas (#f6f9f7) */
-  --b3: 226 235 230;     /* Subtle Sage Border */
+  --b2: 246 249 247;
+  --b3: 226 235 230;
   --bc: 28 42 35;
   --in: 38 198 249;
   --inc: 255 255 255;
@@ -187,18 +299,33 @@
 
 [data-theme="berry"] {
   color-scheme: light;
-  /* Royal Violet + Fuchsia + Amber on Clean Cool Alabaster */
-  --p: 124 58 237;       /* Violet 600 (#7c3aed) */
+  --bg: #f8f7fb;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-raised: #f1eff8;
+  --surface-input: #ffffff;
+  --border: rgba(38, 34, 68, 0.12);
+  --border-strong: rgba(38, 34, 68, 0.22);
+  --text: #262244;
+  --text-muted: rgba(38, 34, 68, 0.65);
+  --text-faint: rgba(38, 34, 68, 0.45);
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-soft: rgba(124, 58, 237, 0.12);
+  --ring: rgba(124, 58, 237, 0.25);
+
+  --p: 124 58 237;
+  --p-hover: 109 40 217;
   --pc: 255 255 255;
-  --s: 217 70 239;       /* Fuchsia 500 (#d946ef) */
+  --s: 217 70 239;
   --sc: 255 255 255;
-  --a: 245 158 11;       /* Amber 500 (#f59e0b) */
+  --a: 245 158 11;
   --ac: 255 255 255;
   --n: 38 34 68;
   --nc: 250 245 255;
   --b1: 255 255 255;
-  --b2: 248 247 251;     /* Clean Lavender-Gray Canvas (#f8f7fb) */
-  --b3: 232 228 242;     /* Subtle Lavender-Gray Border */
+  --b2: 248 247 251;
+  --b3: 232 228 242;
   --bc: 38 34 68;
   --in: 38 198 249;
   --inc: 255 255 255;
@@ -208,4 +335,247 @@
   --wac: 38 34 68;
   --er: 255 77 73;
   --erc: 255 255 255;
+}
+
+/* --------------------------------------------------------------------------
+   2. DARK MODE BASELINE & COMMON TOKENS
+   - Neutral tinted, low saturation (10-20%)
+   - Strict WCAG AA contrast compliance across all presets
+   - Consistent semantic colors across all dark presets
+   -------------------------------------------------------------------------- */
+html.dark {
+  color-scheme: dark;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --text: #E8EAF0;
+  --text-muted: #A0A6B5;
+  --text-faint: #7C8294;
+
+  /* Consistent Desaturated Semantics (Anti-glare on Dark) */
+  --su: 52 211 153;   /* #34D399 */
+  --suc: 12 14 24;
+  --wa: 251 191 36;   /* #FBBF24 */
+  --wac: 18 13 11;
+  --er: 248 113 113;  /* #F87171 */
+  --erc: 255 255 255;
+  --in: 96 165 250;   /* #60A5FA */
+  --inc: 12 14 24;
+
+  /* Fallback geometry */
+  --rounded-box: 0.625rem;
+  --rounded-btn: 0.5rem;
+  --rounded-badge: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   3. THE 8 REDESIGNED DARK THEME PRESETS
+   -------------------------------------------------------------------------- */
+
+/* PRESET 1: Daybreak Indigo (Royal Indigo on Neutral Indigo Slate) */
+html.dark[data-theme="daybreak"],
+html.dark:not([data-theme]) {
+  --bg: #0C0E18;
+  --surface-1: #101322;
+  --surface-2: #121526;
+  --surface-raised: #1A1E34;
+  --surface-input: #0E1020;
+  --accent: #5E61F0;
+  --accent-hover: #818CF8;
+  --accent-soft: rgba(94, 97, 240, 0.15);
+  --ring: rgba(94, 97, 240, 0.30);
+
+  --p: 94 97 240;
+  --p-hover: 129 140 248;
+  --pc: 255 255 255;
+  --s: 129 140 248;
+  --sc: 12 14 24;
+  --a: 56 189 248;
+  --ac: 12 14 24;
+
+  --b1: 18 21 38;    /* #121526 */
+  --b2: 12 14 24;    /* #0C0E18 */
+  --b3: 26 30 52;    /* #1A1E34 */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 2: Midnight Navy (Sapphire Blue on Neutral Deep Navy) */
+html.dark[data-theme="midnight"] {
+  --bg: #0B0F17;
+  --surface-1: #0E1420;
+  --surface-2: #111826;
+  --surface-raised: #182133;
+  --surface-input: #0D1320;
+  --accent: #5B8DEF;
+  --accent-hover: #7AA5F5;
+  --accent-soft: rgba(91, 141, 239, 0.15);
+  --ring: rgba(91, 141, 239, 0.30);
+
+  --p: 91 141 239;
+  --p-hover: 122 165 245;
+  --pc: 11 15 23;
+  --s: 122 165 245;
+  --sc: 11 15 23;
+  --a: 56 189 248;
+  --ac: 11 15 23;
+
+  --b1: 17 24 38;    /* #111826 */
+  --b2: 11 15 23;    /* #0B0F17 */
+  --b3: 24 33 51;    /* #182133 */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 3: Aurora Emerald (Mint Emerald on Botanical Charcoal) */
+html.dark[data-theme="aurora"] {
+  --bg: #0A100E;
+  --surface-1: #0C1512;
+  --surface-2: #0F1816;
+  --surface-raised: #16221F;
+  --surface-input: #0B1311;
+  --accent: #2DD4A0;
+  --accent-hover: #5EEAC0;
+  --accent-soft: rgba(45, 212, 160, 0.15);
+  --ring: rgba(45, 212, 160, 0.30);
+
+  --p: 45 212 160;
+  --p-hover: 94 234 192;
+  --pc: 10 16 14;
+  --s: 94 234 192;
+  --sc: 10 16 14;
+  --a: 20 184 166;
+  --ac: 10 16 14;
+
+  --b1: 15 24 22;    /* #0F1816 */
+  --b2: 10 16 14;    /* #0A100E */
+  --b3: 22 34 31;    /* #16221F */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 4: Cosmic Nebula (Soft Electric Violet on Deep Plum Slate) */
+html.dark[data-theme="nebula"] {
+  --bg: #0D0B14;
+  --surface-1: #110F1A;
+  --surface-2: #14111E;
+  --surface-raised: #1C1829;
+  --surface-input: #0F0D17;
+  --accent: #8B7CF6;
+  --accent-hover: #A399FA;
+  --accent-soft: rgba(139, 124, 246, 0.15);
+  --ring: rgba(139, 124, 246, 0.30);
+
+  --p: 139 124 246;
+  --p-hover: 163 153 250;
+  --pc: 13 11 20;
+  --s: 163 153 250;
+  --sc: 13 11 20;
+  --a: 192 132 252;
+  --ac: 13 11 20;
+
+  --b1: 20 17 30;    /* #14111E */
+  --b2: 13 11 20;    /* #0D0B14 */
+  --b3: 28 24 41;    /* #1C1829 */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 5: Tropical Sunset (Sunset Amber & Tangerine on Warm Espresso) */
+html.dark[data-theme="sunset"] {
+  --bg: #120D0B;
+  --surface-1: #171210;
+  --surface-2: #1A1411;
+  --surface-raised: #241B17;
+  --surface-input: #140F0D;
+  --accent: #FB8C4A;
+  --accent-hover: #FDA574;
+  --accent-soft: rgba(251, 140, 74, 0.15);
+  --ring: rgba(251, 140, 74, 0.30);
+
+  --p: 251 140 74;
+  --p-hover: 253 165 116;
+  --pc: 18 13 11;
+  --s: 253 165 116;
+  --sc: 18 13 11;
+  --a: 244 63 94;
+  --ac: 18 13 11;
+
+  --b1: 26 20 17;    /* #1A1411 */
+  --b2: 18 13 11;    /* #120D0B */
+  --b3: 36 27 23;    /* #241B17 */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 6: Ocean Breeze (Cerulean Sky on Deep Oceanic Slate) */
+html.dark[data-theme="ocean"] {
+  --bg: #090F14;
+  --surface-1: #0C141B;
+  --surface-2: #0F1820;
+  --surface-raised: #16222C;
+  --surface-input: #0B131A;
+  --accent: #2AA9E0;
+  --accent-hover: #5CC8F5;
+  --accent-soft: rgba(42, 169, 224, 0.15);
+  --ring: rgba(42, 169, 224, 0.30);
+
+  --p: 42 169 224;
+  --p-hover: 92 200 245;
+  --pc: 9 15 20;
+  --s: 92 200 245;
+  --sc: 9 15 20;
+  --a: 6 182 212;
+  --ac: 9 15 20;
+
+  --b1: 15 24 32;    /* #0F1820 */
+  --b2: 9 15 20;     /* #090F14 */
+  --b3: 22 34 44;    /* #16222C */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 7: Matcha Forest (Matcha Sage on Earthy Forest Charcoal) */
+html.dark[data-theme="matcha"] {
+  --bg: #0C100B;
+  --surface-1: #0F150E;
+  --surface-2: #121811;
+  --surface-raised: #1A2118;
+  --surface-input: #0E130D;
+  --accent: #8FBF6A;
+  --accent-hover: #A9D488;
+  --accent-soft: rgba(143, 191, 106, 0.15);
+  --ring: rgba(143, 191, 106, 0.30);
+
+  --p: 143 191 106;
+  --p-hover: 169 212 136;
+  --pc: 12 16 11;
+  --s: 169 212 136;
+  --sc: 12 16 11;
+  --a: 74 222 128;
+  --ac: 12 16 11;
+
+  --b1: 18 24 17;    /* #121811 */
+  --b2: 12 16 11;    /* #0C100B */
+  --b3: 26 33 24;    /* #1A2118 */
+  --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* PRESET 8: Berry Violet (Berry Orchid & Lavender on Plum Charcoal) */
+html.dark[data-theme="berry"] {
+  --bg: #100A12;
+  --surface-1: #150E17;
+  --surface-2: #181019;
+  --surface-raised: #221723;
+  --surface-input: #130C15;
+  --accent: #C26BE8;
+  --accent-hover: #D38DF0;
+  --accent-soft: rgba(194, 107, 232, 0.15);
+  --ring: rgba(194, 107, 232, 0.30);
+
+  --p: 194 107 232;
+  --p-hover: 211 141 240;
+  --pc: 16 10 18;
+  --s: 211 141 240;
+  --sc: 16 10 18;
+  --a: 232 121 249;
+  --ac: 16 10 18;
+
+  --b1: 24 16 25;    /* #181019 */
+  --b2: 16 10 18;    /* #100A12 */
+  --b3: 34 23 35;    /* #221723 */
+  --bc: 232 234 240; /* #E8EAF0 */
 }

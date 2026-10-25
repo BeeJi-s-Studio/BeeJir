@@ -149,9 +149,9 @@ function onSliderInput(event: Event) {
 
     <!-- Wrapper styled strictly identical to standard .input -->
     <div
-      class="w-full rounded-btn bg-base-100 text-base-content border border-base-300 transition-colors duration-150 flex items-center hover:border-primary/40 focus-within:!outline-none focus-within:!bg-base-100 focus-within:!ring-2 focus-within:!ring-primary/20 focus-within:!border-primary dark:border-base-300 dark:bg-base-100 dark:hover:border-primary/40"
+      class="w-full form-surface flex items-center focus-within:!outline-none focus-within:!border-[var(--accent)] focus-within:!shadow-[0_0_0_2px_var(--ring)]"
       :class="[
-        error ? '!border-error focus-within:!border-error focus-within:!ring-error/20' : '',
+        error ? '!border-error focus-within:!border-error focus-within:!shadow-[0_0_0_2px_rgb(var(--er)/0.22)]' : '',
         disabled ? 'opacity-50 cursor-not-allowed bg-base-200/50' : '',
         size === 'sm' ? 'h-8 text-xs' : size === 'lg' ? 'h-12 text-base' : 'h-10 text-sm'
       ]"
@@ -163,7 +163,7 @@ function onSliderInput(event: Event) {
         :value="displayValue"
         :placeholder="placeholder"
         :disabled="disabled"
-        class="w-full h-full bg-transparent px-3 text-sm font-mono text-base-content outline-none ring-0 border-0 focus:outline-none focus:ring-0 focus:border-0 placeholder:text-base-content/40 shadow-none"
+        class="w-full h-full bg-transparent px-3 text-sm font-mono text-base-content outline-none ring-0 border-0 focus:outline-none focus:ring-0 focus:border-0 placeholder:text-[var(--text-faint)] shadow-none"
         :class="size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm'"
         @focus="onFocus"
         @input="onInput"
@@ -172,7 +172,7 @@ function onSliderInput(event: Event) {
 
       <!-- Percent Symbol Addon -->
       <div class="pr-3 pl-1 shrink-0 select-none flex items-center gap-1.5">
-        <span class="rounded bg-base-200/80 px-2 py-0.5 text-xs font-bold text-base-content/75 font-mono">
+        <span class="rounded bg-[var(--surface-1)] border border-[var(--border)] px-2 py-0.5 text-xs font-bold text-[var(--text-muted)] font-mono">
           %
         </span>
       </div>
@@ -190,7 +190,7 @@ function onSliderInput(event: Event) {
         class="range range-primary range-xs flex-1"
         @input="onSliderInput"
       />
-      <span class="text-[10px] font-mono text-base-content/50 shrink-0">
+      <span class="text-[10px] font-mono text-[var(--text-muted)] shrink-0">
         {{ min }}% - {{ max }}%
       </span>
     </div>
@@ -199,7 +199,7 @@ function onSliderInput(event: Event) {
     <span v-if="error" class="text-xs font-medium text-error">
       {{ error }}
     </span>
-    <span v-else-if="hint" class="text-xs text-base-content/55">
+    <span v-else-if="hint" class="text-xs text-[var(--text-muted)]">
       {{ hint }}
     </span>
   </div>

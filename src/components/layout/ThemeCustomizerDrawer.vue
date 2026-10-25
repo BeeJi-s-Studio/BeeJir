@@ -65,17 +65,17 @@ async function copyCssConfig() {
     >
       <aside
         v-if="themeStore.customizerOpen"
-        class="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l border-base-300 bg-base-100 text-base-content shadow-2xl"
+        class="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col border-l border-[var(--border)] bg-[var(--surface-1)] text-[var(--text)] shadow-2xl"
       >
         <!-- Header -->
-        <div class="flex items-center justify-between border-b border-base-300/80 px-6 py-4">
+        <div class="flex items-center justify-between border-b border-[var(--border)] px-6 py-4">
           <div class="flex items-center gap-2.5">
-            <div class="flex h-9 w-9 items-center justify-center rounded-btn bg-primary/12 text-primary">
+            <div class="flex h-9 w-9 items-center justify-center rounded-btn bg-[var(--accent-soft)] text-[var(--accent)]">
               <Palette class="h-5 w-5" />
             </div>
             <div>
-              <h2 class="text-base font-extrabold text-base-content">Theme Studio</h2>
-              <p class="text-xs text-base-content/55">
+              <h2 class="text-base font-extrabold text-[var(--text)]">Theme Studio</h2>
+              <p class="text-xs text-[var(--text-muted)]">
                 Adjustable Clean & Colorful Engine
               </p>
             </div>
@@ -94,10 +94,10 @@ async function copyCssConfig() {
           <!-- 1. Theme Presets -->
           <div>
             <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold uppercase tracking-wider text-base-content/60">
+              <span class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
                 1. Preset Palet Tema
               </span>
-              <span class="badge badge-sm badge-soft badge-primary">6 Presets</span>
+              <span class="badge badge-sm badge-soft badge-primary">8 Presets</span>
             </div>
 
             <div class="grid grid-cols-2 gap-2.5">
@@ -105,41 +105,41 @@ async function copyCssConfig() {
                 v-for="preset in themeStore.presets"
                 :key="preset.id"
                 type="button"
-                class="group flex flex-col gap-2 rounded-btn border p-3 text-left transition-all"
+                class="group flex flex-col gap-2 rounded-btn border p-3 text-left transition-all cursor-pointer"
                 :class="
                   themeStore.activeTheme === preset.id
-                    ? 'border-primary bg-primary/8 ring-2 ring-primary/20'
-                    : 'border-base-300 hover:border-primary/40 hover:bg-base-200/50'
+                    ? 'border-[var(--accent)] bg-[var(--accent-soft)] ring-2 ring-[var(--ring)]'
+                    : 'border-[var(--border)] bg-[var(--surface-2)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-raised)]'
                 "
                 @click="themeStore.setTheme(preset.id)"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold text-base-content">
+                  <span class="text-xs font-bold text-[var(--text)]">
                     {{ preset.name }}
                   </span>
                   <span
-                    class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-base-200 text-base-content/60"
+                    class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-[var(--surface-input)] text-[var(--text-muted)]"
                   >
-                    {{ preset.mode }}
+                    {{ themeStore.themeMode }}
                   </span>
                 </div>
 
                 <!-- Color Swatch Bar -->
                 <div
-                  class="flex items-center gap-1.5 rounded-md border border-base-300/80 p-1.5"
-                  :style="{ backgroundColor: preset.preview.bg }"
+                  class="flex items-center gap-1.5 rounded-md border border-[var(--border)] p-1.5"
+                  :style="{ backgroundColor: themeStore.isDark ? preset.preview.bg : preset.lightPreview.bg }"
                 >
                   <span
                     class="h-4 flex-1 rounded-xs"
-                    :style="{ backgroundColor: preset.preview.primary }"
+                    :style="{ backgroundColor: themeStore.isDark ? preset.preview.primary : preset.lightPreview.primary }"
                   />
                   <span
                     class="h-4 flex-1 rounded-xs"
-                    :style="{ backgroundColor: preset.preview.secondary }"
+                    :style="{ backgroundColor: themeStore.isDark ? preset.preview.secondary : preset.lightPreview.secondary }"
                   />
                   <span
                     class="h-4 flex-1 rounded-xs"
-                    :style="{ backgroundColor: preset.preview.accent }"
+                    :style="{ backgroundColor: themeStore.isDark ? preset.preview.accent : preset.lightPreview.accent }"
                   />
                 </div>
               </button>

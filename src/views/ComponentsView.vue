@@ -58,6 +58,25 @@ import UiSpinner from '@/components/ui/UiSpinner.vue'
 import UiEmptyState from '@/components/ui/UiEmptyState.vue'
 import UiDropdown, { type DropdownItem } from '@/components/ui/UiDropdown.vue'
 import UiTooltip from '@/components/ui/UiTooltip.vue'
+import UiAccordion, { type AccordionItem } from '@/components/ui/UiAccordion.vue'
+import UiCarousel, { type CarouselSlide } from '@/components/ui/UiCarousel.vue'
+import UiVideoPlayer from '@/components/ui/UiVideoPlayer.vue'
+import UiTabs, { type TabItem } from '@/components/ui/UiTabs.vue'
+import UiCodeBlock from '@/components/ui/UiCodeBlock.vue'
+import UiAvatar from '@/components/ui/UiAvatar.vue'
+import UiChatMessage, { type MessageRole, type MessageStatus, type MessageAuthor } from '@/components/ui/UiChatMessage.vue'
+import UiMessageScroll from '@/components/ui/UiMessageScroll.vue'
+import {
+  HelpCircle as HelpIcon,
+  Layers as LayersIcon,
+  ShieldCheck,
+  Video as VideoIcon,
+  SlidersHorizontal,
+  Folder,
+  Code,
+  Terminal,
+  Send,
+} from 'lucide-vue-next'
 import UiPopover from '@/components/ui/UiPopover.vue'
 import type { ColorVariant } from '@/types/theme'
 import type { TableColumn } from '@/types/table'
@@ -425,6 +444,263 @@ const demoDropdownItems: DropdownItem[] = [
   { divider: true },
   { label: 'Hapus Permanen', value: 'delete', icon: Trash2, danger: true },
 ]
+
+// Accordion Demo Data
+const activeAccordionId = ref<string | number>('acc-1')
+const activeMultiAccordionIds = ref<(string | number)[]>(['multi-1', 'multi-2'])
+const demoAccordionItems: AccordionItem[] = [
+  {
+    id: 'acc-1',
+    title: 'Bagaimana cara mengganti preset tema di BeeJir?',
+    content: 'BeeJir menyediakan 8 preset warna bawaan (Daybreak, Midnight, Aurora, Nebula, Sunset, Ocean, Matcha, Berry) yang didukung mode terang & gelap. Anda dapat mengganti tema langsung melalui theme switcher di pojok kanan atas atau lewat API useThemeStore().',
+    icon: Palette,
+    badge: 'Populer',
+    badgeVariant: 'primary',
+  },
+  {
+    id: 'acc-2',
+    title: 'Apakah seluruh komponen mendukung TypeScript dan aksesibilitas?',
+    content: 'Ya, seluruh pustaka komponen BeeJir dibangun 100% menggunakan TypeScript strictly-typed (diverifikasi via vue-tsc) dan dilengkapi atribut ARIA yang tepat untuk navigasi keyboard dan screen reader.',
+    icon: ShieldCheck,
+    badge: 'WCAG AA',
+    badgeVariant: 'success',
+  },
+  {
+    id: 'acc-3',
+    title: 'Bagaimana cara menambahkan validasi form kustom?',
+    content: 'Anda dapat menggabungkan komponen form BeeJir dengan library validasi standar Vue seperti VeeValidate atau Zod, atau menggunakan reactive state bawaan Vue 3 dengan properti error dan hint yang telah disediakan.',
+    icon: HelpIcon,
+  },
+]
+
+const demoSeparatedAccordionItems: AccordionItem[] = [
+  {
+    id: 'multi-1',
+    title: 'Arsitektur CSS & Design Tokens Modular',
+    content: 'Semua token warna, kelengkungan sudut (--rounded-btn, --rounded-box), dan shadow diatur melalui variabel CSS murni yang bereaksi otomatis saat tema diganti.',
+    icon: LayersIcon,
+  },
+  {
+    id: 'multi-2',
+    title: 'Komponen Video Player dengan Kontrol Kustom',
+    content: 'Dilengkapi tombol putar/jeda terpusat, pengatur kecepatan putar (0.5x - 2x), pengatur volume slider, timeline scrubber, mode layar penuh, dan pintasan lompat 10 detik.',
+    icon: VideoIcon,
+  },
+  {
+    id: 'multi-3',
+    title: 'Carousel Responsif dengan Swipe Gesture',
+    content: 'Mendukung autoplay interval, navigasi panah, dot indicators, touch swipe untuk perangkat mobile, serta pratinjau thumbnail interaktif.',
+    icon: SlidersHorizontal,
+  },
+]
+
+// Carousel Demo Data
+const activeSlideIndex = ref(0)
+const demoCarouselSlides: CarouselSlide[] = [
+  {
+    id: 'c1',
+    title: 'Infrastruktur Cloud Berkecepatan Tinggi',
+    description: 'Monitor performa server microservices dan jaringan global dengan latensi di bawah 20ms.',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'c2',
+    title: 'Analitik Data Cerdas & Visualisasi Real-Time',
+    description: 'Grafik interaktif dan metrik performa bisnis yang terintegrasi secara modular.',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'c3',
+    title: 'Desain Modern & Aksesibilitas Optimal',
+    description: 'Dibuat dengan Tailwind CSS & DaisyUI semantik berstandar kontras WCAG AA.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+  },
+]
+
+// Tabs Demo Data (Attached variant, Pills, Underline)
+const attachedTab = ref('code')
+const demoTabItems: TabItem[] = [
+  { id: 'code', label: 'AppConfig.ts', icon: Code, badge: 'TypeScript', badgeVariant: 'primary' },
+  { id: 'env', label: '.env.production', icon: Terminal, badge: 'Protected', badgeVariant: 'warning' },
+  { id: 'output', label: 'Dist Assets', icon: Folder, badge: '3 Files', badgeVariant: 'info' },
+]
+
+const pillsTab = ref('profile')
+const demoPillTabs: TabItem[] = [
+  { id: 'profile', label: 'Profil Akun', icon: Settings },
+  { id: 'notifications', label: 'Notifikasi', badge: 3, badgeVariant: 'error' },
+  { id: 'integrations', label: 'Webhook API' },
+]
+
+// CodeBlock Showcase Data (Programming, Database, Markdown)
+const activeCodeLang = ref('sql')
+const codeSnippets: Record<string, { code: string; language: string; filename: string; highlightLines?: number[] }> = {
+  sql: {
+    language: 'sql',
+    filename: 'queries/analytics_rollup.sql',
+    highlightLines: [5, 6, 7],
+    code: `-- Analisis pendapatan bulanan per departemen dengan window function
+WITH monthly_metrics AS (
+  SELECT
+    DATE_TRUNC('month', o.created_at) AS report_month,
+    d.department_name,
+    SUM(o.amount_usd) AS gross_revenue,
+    COUNT(DISTINCT o.customer_id) AS active_accounts,
+    RANK() OVER (PARTITION BY DATE_TRUNC('month', o.created_at) ORDER BY SUM(o.amount_usd) DESC) as dept_rank
+  FROM enterprise_orders o
+  INNER JOIN departments d ON o.department_id = d.id
+  WHERE o.status = 'COMPLETED'
+    AND o.created_at >= NOW() - INTERVAL '6 MONTH'
+  GROUP BY 1, 2
+)
+SELECT * FROM monthly_metrics WHERE dept_rank <= 3;`,
+  },
+  typescript: {
+    language: 'typescript',
+    filename: 'services/clusterManager.ts',
+    highlightLines: [8, 9],
+    code: `import { ref, computed } from 'vue'
+
+export interface ClusterNode {
+  id: string
+  region: 'ap-southeast-3' | 'us-east-1'
+  loadAvg: number
+  status: 'healthy' | 'degraded' | 'offline'
+}
+
+export async function pingNodes(nodes: ClusterNode[]): Promise<boolean> {
+  const healthyCount = nodes.filter((n) => n.status === 'healthy').length
+  return (healthyCount / nodes.length) >= 0.8
+}`,
+  },
+  python: {
+    language: 'python',
+    filename: 'pipeline/fastapi_agent.py',
+    highlightLines: [6],
+    code: `from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI(title="BeeJir Intelligent Inference API", version="0.4.0")
+
+class InferencePayload(BaseModel):
+    prompt: str
+    temperature: float = 0.7
+    max_tokens: int = 2048
+
+@app.post("/v1/agent/complete")
+async def execute_reasoning(payload: InferencePayload):
+    # Streaming LLM inference with grounding checks
+    return {"status": "ok", "response": f"Processed {len(payload.prompt)} chars"}`,
+  },
+  markdown: {
+    language: 'markdown',
+    filename: 'README.md',
+    highlightLines: [3, 7],
+    code: `# BeeJir Admin Template
+
+Clean & colorful open-source Vue 3 + Tailwind CSS admin dashboard.
+
+## 🚀 Quick Start
+
+\`\`\`bash
+# Install dependencies with Bun
+bun install
+
+# Start Vite hot-reloading development server
+bun run dev
+\`\`\`
+
+> [!NOTE]
+> Semua komponen didesain 100% type-safe dengan **strict TypeScript**.`,
+  },
+}
+
+interface DemoChatMessageItem {
+  id: number
+  role: MessageRole
+  author?: MessageAuthor
+  timestamp?: string
+  status?: MessageStatus
+  content: string
+}
+
+// Chat Demo State (Messages & Interactive input)
+const chatInputText = ref('')
+const messageScrollRef = ref<InstanceType<typeof UiMessageScroll> | null>(null)
+const demoChatMessages = ref<DemoChatMessageItem[]>([
+  {
+    id: 1,
+    role: 'system',
+    content: 'Enkripsi end-to-end aktif. Sesi percakapan kolaboratif dimulai.',
+  },
+  {
+    id: 2,
+    role: 'assistant',
+    author: {
+      name: 'Sarah Jenkins',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+      status: 'online',
+    },
+    timestamp: '14:20',
+    content: 'Halo tim! Apakah modul verifikasi wizard dan preview file sudah siap untuk di-review ke staging?',
+  },
+  {
+    id: 3,
+    role: 'user',
+    author: {
+      name: 'Arif Budiman (Anda)',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    },
+    timestamp: '14:22',
+    status: 'read',
+    content: 'Sudah selesai Sarah! Seluruh tooling gambar (zoom, pan drag, rotate, flip) dan body scroll lock sudah lolos pengujian browser.',
+  },
+  {
+    id: 4,
+    role: 'assistant',
+    author: {
+      name: 'Sarah Jenkins',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+      status: 'online',
+    },
+    timestamp: '14:23',
+    content: 'Luar biasa cepat! Mari kita push ke branch release v0.4.0 sekarang 🚀',
+  },
+])
+
+function sendDemoChatMessage() {
+  const text = chatInputText.value.trim()
+  if (!text) return
+
+  demoChatMessages.value.push({
+    id: Date.now(),
+    role: 'user',
+    author: {
+      name: 'Arif Budiman (Anda)',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    },
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    status: 'sent',
+    content: text,
+  })
+
+  chatInputText.value = ''
+
+  // Simulate auto-reply from peer/assistant
+  setTimeout(() => {
+    demoChatMessages.value.push({
+      id: Date.now() + 1,
+      role: 'assistant',
+      author: {
+        name: 'Sarah Jenkins',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+        status: 'online',
+      },
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      content: `Pesan diterima: "${text}". Auto-scrolling berjalan lancar`,
+    })
+  }, 900)
+}
 </script>
 
 <template>
@@ -1470,6 +1746,366 @@ const demoDropdownItems: DropdownItem[] = [
             </UiButton>
           </template>
         </UiEmptyState>
+      </UiCard>
+
+      <!-- 19. Video Player Component -->
+      <UiCard
+        title="19. Video Player (<UiVideoPlayer>)"
+        subtitle="Pemutar video kustom dengan kontrol scrubber, pengatur kecepatan putar (0.5x - 2x), volume, skip 10s, dan fullscreen"
+        accent-top="primary"
+        class="lg:col-span-2"
+      >
+        <div class="max-w-3xl mx-auto space-y-3">
+          <UiVideoPlayer
+            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            poster="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80"
+            title="BeeJir Architecture & Interactive Demo (Big Buck Bunny Sample)"
+          />
+          <div class="flex flex-wrap items-center justify-between text-xs text-base-content/70 px-1 pt-1">
+            <span>Mendukung keyboard space (play/pause), slider volume hover, dan overlay responsif.</span>
+            <span class="badge badge-sm badge-outline font-mono">Aspect: 16/9</span>
+          </div>
+        </div>
+      </UiCard>
+
+      <!-- 20. Accordion Component -->
+      <UiCard
+        title="20. Accordion (<UiAccordion>)"
+        subtitle="Komponen lipat konten dengan transisi CSS Grid, mode single/multiple expand, dan badge/icon"
+        accent-top="secondary"
+      >
+        <div class="space-y-4">
+          <div class="text-xs font-semibold text-base-content/70 uppercase tracking-wider">
+            Mode Single Expand (Default)
+          </div>
+          <UiAccordion
+            v-model="activeAccordionId"
+            :items="demoAccordionItems"
+          />
+
+          <div class="text-xs font-semibold text-base-content/70 uppercase tracking-wider pt-2">
+            Mode Multiple Expand (Separated)
+          </div>
+          <UiAccordion
+            v-model="activeMultiAccordionIds"
+            :items="demoSeparatedAccordionItems"
+            variant="separated"
+            multiple
+          />
+        </div>
+      </UiCard>
+
+      <!-- 21. Carousel Component -->
+      <UiCard
+        title="21. Carousel (<UiCarousel>)"
+        subtitle="Slider gambar/konten interaktif dengan tombol navigasi, indikator dot, swipe gesture mobile, dan thumbnails"
+        accent-top="accent"
+      >
+        <div class="space-y-4">
+          <UiCarousel
+            v-model="activeSlideIndex"
+            :slides="demoCarouselSlides"
+            autoplay
+            :interval="6000"
+            show-thumbnails
+          />
+          <div class="flex items-center justify-between text-xs text-base-content/70 pt-1">
+            <span>Slide aktif: <strong>#{{ activeSlideIndex + 1 }}</strong> dari {{ demoCarouselSlides.length }}</span>
+            <span class="badge badge-xs badge-primary font-mono">Autoplay: Aktif (6s)</span>
+          </div>
+        </div>
+      </UiCard>
+
+      <!-- 22. Tabs Component (Attached variant & Pills) -->
+      <UiCard
+        title="22. Tabs with Attached Content (<UiTabs>)"
+        subtitle="Pilihan tab yang menempel (attached) langsung dengan container kontennya, lengkap dengan varian underline & pills"
+        accent-top="primary"
+        class="lg:col-span-2"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Attached Tabs (Tab menyatu dengan box konten) -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-xs font-semibold text-base-content/70 uppercase tracking-wider">
+              <span>Attached Variant (variant="attached")</span>
+              <span class="badge badge-xs badge-primary">Menyatu dengan Konten</span>
+            </div>
+
+            <UiTabs
+              v-model="attachedTab"
+              :items="demoTabItems"
+              variant="attached"
+            >
+              <template #code>
+                <div class="font-mono text-xs space-y-2">
+                  <div class="text-base-content/60">// Konfigurasi aplikasi frontend</div>
+                  <pre class="bg-base-300/40 p-3 rounded-btn text-primary leading-relaxed overflow-x-auto">export const appConfig = {
+  appName: 'BeeJir Admin',
+  version: '0.4.0',
+  themePreset: 'ocean',
+  features: {
+    attachedTabs: true,
+    videoPlayer: true,
+  }
+}</pre>
+                </div>
+              </template>
+
+              <template #env>
+                <div class="font-mono text-xs space-y-2">
+                  <div class="text-warning">// Environment Variables</div>
+                  <pre class="bg-base-300/40 p-3 rounded-btn text-base-content/90 leading-relaxed overflow-x-auto">VITE_APP_BASE_URL=https://api.beejir.id
+VITE_ENABLE_ANALYTICS=true
+VITE_STORAGE_DRIVER=s3
+VITE_AUTH_PROVIDER=oauth2</pre>
+                </div>
+              </template>
+
+              <template #output>
+                <div class="text-xs space-y-2">
+                  <div class="text-base-content/70">Ringkasan berkas hasil build aset terdistribusi:</div>
+                  <ul class="space-y-1 font-mono text-[11px] text-base-content/85">
+                    <li class="flex justify-between py-1 border-b border-base-300/60">
+                      <span>dist/index.html</span>
+                      <span class="text-success font-semibold">0.98 kB</span>
+                    </li>
+                    <li class="flex justify-between py-1 border-b border-base-300/60">
+                      <span>dist/assets/index.js</span>
+                      <span class="text-info font-semibold">165.3 kB</span>
+                    </li>
+                    <li class="flex justify-between py-1">
+                      <span>dist/assets/index.css</span>
+                      <span class="text-accent font-semibold">102.1 kB</span>
+                    </li>
+                  </ul>
+                </div>
+              </template>
+            </UiTabs>
+          </div>
+
+          <!-- Other Variants: Underline & Pills -->
+          <div class="space-y-6">
+            <div class="space-y-3">
+              <div class="text-xs font-semibold text-base-content/70 uppercase tracking-wider">
+                Underline Variant (variant="underline")
+              </div>
+              <UiTabs
+                v-model="pillsTab"
+                :items="demoPillTabs"
+                variant="underline"
+              >
+                <template #profile>
+                  <p class="text-xs text-base-content/80 leading-relaxed">
+                    Kelola preferensi akun, foto profil pengguna, serta informasi dasar organisasi Anda.
+                  </p>
+                </template>
+                <template #notifications>
+                  <p class="text-xs text-base-content/80 leading-relaxed">
+                    Pengaturan pemberitahuan email, push notifikasi web browser, dan alert audit keamanan server.
+                  </p>
+                </template>
+                <template #integrations>
+                  <p class="text-xs text-base-content/80 leading-relaxed">
+                    Daftar webhook keluar (outbound webhooks) yang dikonfigurasi untuk bot Discord dan Slack tim.
+                  </p>
+                </template>
+              </UiTabs>
+            </div>
+
+            <div class="space-y-3">
+              <div class="text-xs font-semibold text-base-content/70 uppercase tracking-wider">
+                Boxed Segmented Variant (variant="boxed")
+              </div>
+              <UiTabs
+                v-model="pillsTab"
+                :items="demoPillTabs"
+                variant="boxed"
+              >
+                <template #profile>
+                  <div class="rounded-btn bg-base-200/50 p-3 text-xs text-base-content/70 border border-base-300">
+                    Tab saat ini: <strong class="text-primary">Profil Akun</strong>
+                  </div>
+                </template>
+                <template #notifications>
+                  <div class="rounded-btn bg-base-200/50 p-3 text-xs text-base-content/70 border border-base-300">
+                    Tab saat ini: <strong class="text-primary">Notifikasi (3 Tertunda)</strong>
+                  </div>
+                </template>
+                <template #integrations>
+                  <div class="rounded-btn bg-base-200/50 p-3 text-xs text-base-content/70 border border-base-300">
+                    Tab saat ini: <strong class="text-primary">Webhook API</strong>
+                  </div>
+                </template>
+              </UiTabs>
+            </div>
+          </div>
+        </div>
+      </UiCard>
+
+      <!-- 23. Syntax Highlighted Code Block Component -->
+      <UiCard
+        title="23. Code Block (<UiCodeBlock>)"
+        subtitle="Syntax highlighter modern berbasis Highlight.js yang mendukung berbagai bahasa pemrograman, query database SQL, dan Markdown"
+        accent-top="secondary"
+        class="lg:col-span-2"
+      >
+        <div class="space-y-4">
+          <!-- Language selector pills -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-[var(--border)]">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-xs font-semibold text-base-content/70 mr-1 select-none">Pilih Contoh:</span>
+              <button
+                type="button"
+                class="btn btn-xs h-7 px-3 rounded-btn font-mono"
+                :class="activeCodeLang === 'sql' ? 'btn-primary' : 'btn-ghost text-base-content/70'"
+                @click="activeCodeLang = 'sql'"
+              >
+                SQL / Database
+              </button>
+              <button
+                type="button"
+                class="btn btn-xs h-7 px-3 rounded-btn font-mono"
+                :class="activeCodeLang === 'typescript' ? 'btn-primary' : 'btn-ghost text-base-content/70'"
+                @click="activeCodeLang = 'typescript'"
+              >
+                TypeScript
+              </button>
+              <button
+                type="button"
+                class="btn btn-xs h-7 px-3 rounded-btn font-mono"
+                :class="activeCodeLang === 'python' ? 'btn-primary' : 'btn-ghost text-base-content/70'"
+                @click="activeCodeLang = 'python'"
+              >
+                Python FastAPI
+              </button>
+              <button
+                type="button"
+                class="btn btn-xs h-7 px-3 rounded-btn font-mono"
+                :class="activeCodeLang === 'markdown' ? 'btn-primary' : 'btn-ghost text-base-content/70'"
+                @click="activeCodeLang = 'markdown'"
+              >
+                Markdown (GFM)
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs text-base-content/60">
+              <span class="badge badge-xs badge-success">Copy Clipboard</span>
+              <span class="badge badge-xs badge-info">Line Highlight</span>
+              <span class="badge badge-xs badge-outline">Line Numbers</span>
+            </div>
+          </div>
+
+          <!-- CodeBlock Render -->
+          <UiCodeBlock
+            :key="activeCodeLang"
+            :code="codeSnippets[activeCodeLang].code"
+            :language="codeSnippets[activeCodeLang].language"
+            :filename="codeSnippets[activeCodeLang].filename"
+            :highlight-lines="codeSnippets[activeCodeLang].highlightLines"
+            max-height="340px"
+          />
+        </div>
+      </UiCard>
+
+      <!-- 24. Avatar Component (<UiAvatar>) -->
+      <UiCard
+        title="24. Avatar System (<UiAvatar>)"
+        subtitle="Avatar profil fleksibel dengan fallback inisial otomatis, ragam ukuran (xs s/d 2xl), bentuk, border ring, dan status dot online/busy/away/offline"
+        accent-top="primary"
+      >
+        <div class="space-y-6">
+          <!-- Size Progression -->
+          <div class="space-y-2">
+            <div class="text-xs font-semibold text-base-content/70 uppercase tracking-wider">
+              Ukuran (xs, sm, md, lg, xl, 2xl)
+            </div>
+            <div class="flex flex-wrap items-end gap-3.5 pt-1">
+              <UiAvatar size="xs" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" name="Arif" status="online" />
+              <UiAvatar size="sm" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" name="Sarah" status="away" />
+              <UiAvatar size="md" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" name="Budi" status="busy" bordered />
+              <UiAvatar size="lg" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80" name="Laras" status="online" />
+              <UiAvatar size="xl" src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=200&q=80" name="Dimas" status="offline" />
+            </div>
+          </div>
+
+          <!-- Fallback Initials & Shapes -->
+          <div class="space-y-2">
+            <div class="text-xs font-semibold text-base-content/70 uppercase tracking-wider">
+              Fallback Inisial Huruf & Bentuk (Circle, Rounded, Square)
+            </div>
+            <div class="flex flex-wrap items-center gap-3 pt-1">
+              <UiAvatar name="Arif Pratama" variant="primary" shape="circle" size="md" status="online" />
+              <UiAvatar name="Larasati Dewi" variant="secondary" shape="rounded" size="md" status="away" />
+              <UiAvatar name="Bima Sakti" variant="accent" shape="square" size="md" status="busy" />
+              <UiAvatar name="Fajar Nugroho" variant="info" shape="rounded" size="md" />
+              <UiAvatar name="Eka Saputra" variant="success" shape="circle" size="md" />
+              <UiAvatar name="Wulan Sari" variant="warning" shape="circle" size="md" />
+              <UiAvatar name="Rian Hidayat" variant="error" shape="rounded" size="md" />
+            </div>
+          </div>
+        </div>
+      </UiCard>
+
+      <UiCard
+        title="25. Chat Message & Auto-Scrolling (<UiChatMessage> & <UiMessageScroll>)"
+        subtitle="Sistem percakapan Chat dengan auto-scrolling ke bawah, floating scroll button jika scroll ke atas, status dibaca, dan avatar peer"
+        accent-top="secondary"
+        class="lg:col-span-2"
+      >
+        <div class="max-w-2xl mx-auto rounded-box border border-[var(--border)] bg-base-100/70 overflow-hidden shadow-md flex flex-col h-[460px]">
+          <!-- Chat Feed Header -->
+          <div class="p-3.5 border-b border-[var(--border)] bg-[var(--surface-raised)] flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+              <UiAvatar
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+                name="Sarah Jenkins"
+                status="online"
+                size="sm"
+              />
+              <div>
+                <h4 class="text-xs font-bold text-base-content leading-tight">Sarah Jenkins</h4>
+                <p class="text-[10px] text-success font-medium">Aktif Sekarang</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Message Scrolling Area -->
+          <div class="flex-1 min-h-0 bg-base-200/40 relative">
+            <UiMessageScroll ref="messageScrollRef">
+              <UiChatMessage
+                v-for="msg in demoChatMessages"
+                :key="msg.id"
+                :role="msg.role"
+                :author="msg.author"
+                :timestamp="msg.timestamp"
+                :status="msg.status"
+                :content="msg.content"
+              />
+            </UiMessageScroll>
+          </div>
+
+          <!-- Interactive Input Form -->
+          <form
+            class="p-2.5 border-t border-[var(--border)] bg-[var(--surface-raised)] flex items-center gap-2 shrink-0"
+            @submit.prevent="sendDemoChatMessage"
+          >
+            <input
+              v-model="chatInputText"
+              type="text"
+              placeholder="Tulis pesan Anda lalu tekan Enter..."
+              class="input input-sm flex-1 bg-base-100 border-base-300 focus:border-primary text-xs"
+            />
+            <button
+              type="submit"
+              class="btn btn-sm btn-primary gap-1.5 h-8 px-3 shrink-0"
+              :disabled="!chatInputText.trim()"
+            >
+              <Send class="h-3.5 w-3.5" />
+              <span class="hidden sm:inline text-xs">Kirim</span>
+            </button>
+          </form>
+        </div>
       </UiCard>
     </div>
 
