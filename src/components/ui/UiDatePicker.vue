@@ -372,7 +372,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Calendar Popup Floating Modal (Solid bg-[var(--surface-raised)], z-[100], Elevated Shadow) -->
+    <!-- Calendar Popup Floating Modal (Solid bg-[var(--surface-overlay)], z-[100], Elevated Shadow) -->
     <Transition
       :css="false"
       @enter="(el, done) => animateDropdownIn(el, done)"
@@ -380,7 +380,7 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 top-full mt-2 z-[100] w-76 sm:w-84 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-4 shadow-2xl select-none dark:shadow-[0_12px_36px_rgba(0,0,0,0.55)]"
+        class="absolute left-0 top-full mt-2 z-[100] w-76 sm:w-84 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] p-4 shadow-2xl select-none dark:shadow-[0_12px_36px_rgba(0,0,0,0.55)]"
         @click.stop
         @mousedown.stop
       >
@@ -398,7 +398,7 @@ onUnmounted(() => {
           <div class="flex items-center gap-1.5">
             <button
               type="button"
-              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06] transition-colors"
+              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06] transition-colors"
               :class="{ 'bg-[var(--accent-soft)] text-[var(--accent)]': viewMode === 'month' }"
               @click="viewMode = viewMode === 'month' ? 'calendar' : 'month'"
             >
@@ -408,7 +408,7 @@ onUnmounted(() => {
 
             <button
               type="button"
-              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06] transition-colors"
+              class="inline-flex items-center gap-1 px-2 py-1 rounded-btn text-xs font-bold text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06] transition-colors"
               :class="{ 'bg-[var(--accent-soft)] text-[var(--accent)]': viewMode === 'year' }"
               @click="viewMode = viewMode === 'year' ? 'calendar' : 'year'"
             >
@@ -436,7 +436,7 @@ onUnmounted(() => {
             :class="
               viewMonth === idx
                 ? 'bg-primary text-primary-content font-bold shadow-xs'
-                : 'text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06]'
+                : 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]'
             "
             @click="selectMonth(idx)"
           >
@@ -454,7 +454,7 @@ onUnmounted(() => {
             :class="
               viewYear === yr
                 ? 'bg-primary text-primary-content font-bold shadow-xs'
-                : 'text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06]'
+                : 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]'
             "
             @click="selectYear(yr)"
           >
@@ -488,8 +488,8 @@ onUnmounted(() => {
                   : cell.isToday
                     ? 'border border-[var(--accent)] text-[var(--accent)] font-bold bg-[var(--accent-soft)]'
                     : cell.isCurrentMonth
-                      ? 'text-base-content hover:bg-base-200 dark:hover:bg-white/[0.06]'
-                      : 'text-[var(--text-faint)] opacity-60 hover:bg-base-200/50 dark:hover:bg-white/[0.04]',
+                      ? 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]'
+                      : 'text-[var(--text-faint)] opacity-60 hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.04]',
               ]"
               @click.stop="selectCell(cell)"
             >

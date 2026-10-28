@@ -386,7 +386,7 @@ function getInitials(name: string) {
             >
               <div
                 v-if="showPageSizeMenu"
-                class="absolute left-0 top-full mt-1.5 z-[100] w-36 rounded-box border border-base-300 bg-base-100 p-1.5 shadow-xl"
+                class="absolute left-0 top-full mt-1.5 z-[100] w-36 rounded-panel border border-base-300 bg-base-100 p-1.5 shadow-xl"
               >
                 <div class="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-base-content/45">
                   Rows Per Page
@@ -551,7 +551,7 @@ function getInitials(name: string) {
                 </div>
               </td>
               <td>
-                <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium" :class="statusBadgeMap[user.status]">
+                <span class="badge px-2.5 py-0.5 text-xs font-medium" :class="statusBadgeMap[user.status]">
                   {{ user.status }}
                 </span>
               </td>
@@ -590,9 +590,13 @@ function getInitials(name: string) {
         <UiEmptyState
           title="Tidak Ada Pengguna Ditemukan"
           description="Coba sesuaikan kata kunci pencarian atau reset filter untuk melihat seluruh daftar pengguna."
-          action-label="Reset Filter"
-          @action="resetFilters"
-        />
+        >
+          <template #actions>
+            <button type="button" class="btn btn-primary btn-sm" @click="resetFilters">
+              Reset Filter
+            </button>
+          </template>
+        </UiEmptyState>
       </div>
 
       <!-- 4. Pagination Footer -->
@@ -612,7 +616,7 @@ function getInitials(name: string) {
 
         <div class="flex items-center gap-1">
           <button
-            class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
+            class="btn btn-xs btn-square bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
             :disabled="currentPage <= 1"
             @click="currentPage--"
           >
@@ -621,7 +625,7 @@ function getInitials(name: string) {
           <button
             v-for="p in totalPages"
             :key="p"
-            class="btn btn-xs h-7 min-w-7 rounded-lg font-medium"
+            class="btn btn-xs h-7 min-w-7 rounded-btn font-medium"
             :class="
               p === currentPage
                 ? 'btn-primary'
@@ -632,7 +636,7 @@ function getInitials(name: string) {
             {{ p }}
           </button>
           <button
-            class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
+            class="btn btn-xs btn-square bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
             :disabled="currentPage >= totalPages"
             @click="currentPage++"
           >
@@ -646,7 +650,7 @@ function getInitials(name: string) {
     <UiModal
       v-model="showAddModal"
       title="Add New User"
-      description="Daftarkan anggota tim baru beserta peran dan departemennya."
+      subtitle="Daftarkan anggota tim baru beserta peran dan departemennya."
     >
       <form class="space-y-4" @submit.prevent="handleAddUser">
         <div class="form-control">

@@ -412,7 +412,7 @@ onUnmounted(() => {
       @drop="handleDrop"
     >
       <div
-        class="flex h-12 w-12 items-center justify-center rounded-full mb-3 transition-transform"
+        class="flex h-12 w-12 items-center justify-center rounded-field mb-3 transition-transform"
         :class="isDragging ? 'bg-primary text-primary-content scale-110' : 'bg-primary/12 text-primary'"
       >
         <UploadCloud class="h-6 w-6" />
@@ -507,7 +507,7 @@ onUnmounted(() => {
           "
           @click="triggerFileDialog"
         >
-          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/12 text-primary">
+          <div class="flex h-10 w-10 items-center justify-center rounded-field bg-primary/12 text-primary">
             <Plus class="h-5 w-5" />
           </div>
           <span class="text-xs font-extrabold">Tambah Foto</span>
@@ -610,7 +610,7 @@ onUnmounted(() => {
           @click="closePreview"
         >
           <div
-            class="relative max-w-3xl w-full max-h-[85vh] flex flex-col rounded-box bg-[var(--surface-raised)] border border-[var(--border)] p-4 shadow-2xl"
+            class="relative max-w-3xl w-full max-h-[85vh] flex flex-col rounded-panel bg-[var(--surface-overlay)] border border-[var(--border)] p-4 shadow-2xl"
             @click.stop
           >
             <div class="flex items-center justify-between pb-3 mb-3 border-b border-base-300">
@@ -692,7 +692,7 @@ onUnmounted(() => {
               <!-- Floating Tooling Toolbar for Image Preview (Zoom In/Out, Rotate, Flip, Reset) -->
               <div
                 v-if="previewFileType === 'image'"
-                class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-[var(--surface-raised)]/90 backdrop-blur-md border border-[var(--border)] px-3 py-1.5 shadow-xl z-20 text-base-content"
+                class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-btn bg-[var(--surface-overlay)] backdrop-blur-md border border-[var(--border)] px-3 py-1.5 shadow-xl z-20 text-base-content"
               >
                 <UiTooltip text="Perkecil (Zoom Out)" position="top" teleport>
                   <button

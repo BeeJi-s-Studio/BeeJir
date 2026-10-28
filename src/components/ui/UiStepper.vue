@@ -120,7 +120,7 @@ function nextStep() {
                 idx === currentStep
                   ? 'bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent)] shadow-[0_0_14px_-2px_var(--ring)]'
                   : idx < currentStep
-                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent)]/30'
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--ring)]'
                     : isStepAccessible(idx)
                       ? 'bg-[var(--surface-input)] text-[var(--text-muted)] border border-[var(--border)] group-hover:bg-[var(--surface-raised)] group-hover:text-[var(--text)]'
                       : 'bg-[var(--surface-input)] text-[var(--text-faint)] border border-[var(--border)]',

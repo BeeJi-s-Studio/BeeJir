@@ -173,7 +173,7 @@ function submitProject() {
           Inisialisasi proyek enterprise baru melalui panduan bertahap yang terstruktur.
         </p>
       </div>
-      <span class="badge badge-soft badge-primary gap-1.5 rounded-full px-3 py-1 text-xs font-medium self-start sm:self-auto">
+      <span class="badge badge-soft badge-primary gap-1.5 px-3 py-1 text-xs font-medium self-start sm:self-auto">
         <Sparkles class="h-3.5 w-3.5" />
         Step {{ currentStep + 1 }} of {{ steps.length }}
       </span>
@@ -275,7 +275,7 @@ function submitProject() {
           <div class="pt-1">
             <UiSelectTag
               v-model="projectForm.techTags"
-              :suggestions="techSuggestions"
+              :options="techSuggestions"
               label="Tech Stack & Infrastruktur"
               placeholder="Tambah teknologi (contoh: Vue 3, Docker)..."
               :max-tags="10"
@@ -297,7 +297,7 @@ function submitProject() {
             </div>
             <div class="form-control">
               <label class="label"><span class="label-text">Otomasi & Kepatuhan</span></label>
-              <div class="flex flex-col gap-3 rounded-lg border border-[var(--border)] p-3.5 bg-[var(--surface-input)]">
+              <div class="flex flex-col gap-3 rounded-box border border-[var(--border)] p-3.5 bg-[var(--surface-input)]">
                 <label class="flex cursor-pointer items-center justify-between text-xs font-medium text-[var(--text)]">
                   <span>Aktifkan Pipeline CI/CD Otomatis</span>
                   <input v-model="projectForm.enableCiCd" type="checkbox" class="toggle toggle-primary toggle-sm" />
@@ -312,7 +312,7 @@ function submitProject() {
 
           <UiSelectTag
             v-model="projectForm.members"
-            :suggestions="memberSuggestions"
+            :options="memberSuggestions"
             label="Undang Anggota Tim (Email)"
             placeholder="Ketik email anggota lalu tekan Enter..."
           />
@@ -336,23 +336,25 @@ function submitProject() {
           <UiAlert
             variant="success"
             title="Siap Diinisialisasi"
-            description="Seluruh parameter wajib telah terpenuhi. Sistem akan otomatis membuat repositori Git dan kanal notifikasi tim."
-          />
+          >
+            Seluruh parameter wajib telah terpenuhi. Sistem akan otomatis membuat repositori Git dan
+            kanal notifikasi tim.
+          </UiAlert>
 
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div class="rounded-lg border border-[var(--border)] bg-[var(--surface-input)] p-4 space-y-2.5">
+            <div class="rounded-box border border-[var(--border)] bg-[var(--surface-input)] p-4 space-y-2.5">
               <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-faint)]">
                 Identitas Proyek
               </h4>
               <div class="text-sm space-y-1.5 text-[var(--text)]">
                 <p><span class="text-[var(--text-muted)]">Nama:</span> <strong class="font-semibold">{{ projectForm.name }}</strong></p>
-                <p><span class="text-[var(--text-muted)]">Kode:</span> <span class="badge badge-soft badge-primary rounded-full text-xs font-mono">{{ projectForm.code }}</span></p>
+                <p><span class="text-[var(--text-muted)]">Kode:</span> <span class="badge badge-soft badge-primary text-xs font-mono">{{ projectForm.code }}</span></p>
                 <p><span class="text-[var(--text-muted)]">Target Rilis:</span> {{ projectForm.targetDate || '-' }}</p>
                 <p><span class="text-[var(--text-muted)]">Estimasi Anggaran:</span> {{ projectForm.budgetRange }}</p>
               </div>
             </div>
 
-            <div class="rounded-lg border border-[var(--border)] bg-[var(--surface-input)] p-4 space-y-2.5">
+            <div class="rounded-box border border-[var(--border)] bg-[var(--surface-input)] p-4 space-y-2.5">
               <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-faint)]">
                 Infrastruktur & Tim
               </h4>
@@ -365,7 +367,7 @@ function submitProject() {
             </div>
           </div>
 
-          <div class="rounded-lg border border-[var(--border)] p-4 bg-[var(--surface-input)]">
+          <div class="rounded-box border border-[var(--border)] p-4 bg-[var(--surface-input)]">
             <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-faint)] mb-2.5">
               Tech Stack Terpilih
             </h4>
@@ -373,7 +375,7 @@ function submitProject() {
               <span
                 v-for="tag in projectForm.techTags"
                 :key="tag"
-                class="badge badge-soft badge-primary rounded-full px-2.5 py-0.5 text-xs font-medium"
+                class="badge badge-soft badge-primary px-2.5 py-0.5 text-xs font-medium"
               >
                 {{ tag }}
               </span>

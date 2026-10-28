@@ -1,16 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, any>">
 import type { TableColumn } from '@/types/table'
 
-export interface UiTableProps {
-  columns?: TableColumn[]
-  items?: Record<string, any>[]
+export interface UiTableProps<T = Record<string, any>> {
+  columns?: TableColumn<T>[]
+  items?: T[]
   zebra?: boolean
   hoverable?: boolean
   bordered?: boolean
   compact?: boolean
 }
 
-withDefaults(defineProps<UiTableProps>(), {
+withDefaults(defineProps<UiTableProps<T>>(), {
   columns: () => [],
   items: () => [],
   zebra: true,

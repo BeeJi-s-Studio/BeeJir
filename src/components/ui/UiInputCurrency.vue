@@ -424,7 +424,7 @@ onUnmounted(() => {
           v-if="allowChangeCurrency"
           type="button"
           :disabled="disabled"
-          class="flex h-full items-center gap-1.5 rounded-l-btn border-r border-[var(--border)] bg-[var(--surface-1)] px-3 text-xs font-bold text-base-content transition-colors hover:bg-[var(--surface-raised)] focus:outline-none"
+          class="flex h-full items-center gap-1.5 rounded-l-field border-r border-[var(--border)] bg-[var(--surface-1)] px-3 text-xs font-bold text-base-content transition-colors hover:bg-[var(--surface-raised)] focus:outline-none"
           :class="isDropdownOpen && 'bg-[var(--surface-raised)] text-[var(--accent)] border-primary/40'"
           title="Klik untuk memilih mata uang atau cari negara"
           @click="toggleDropdown"
@@ -443,7 +443,7 @@ onUnmounted(() => {
         </button>
         <span
           v-else
-          class="flex h-full items-center gap-1.5 rounded-l-btn border-r border-[var(--border)] bg-[var(--surface-1)] px-3.5 text-xs font-bold text-base-content/85 select-none font-mono"
+          class="flex h-full items-center gap-1.5 rounded-l-field border-r border-[var(--border)] bg-[var(--surface-1)] px-3.5 text-xs font-bold text-base-content/85 select-none font-mono"
         >
           <span
             class="fi rounded-xs shadow-2xs shrink-0 text-sm"
@@ -463,7 +463,7 @@ onUnmounted(() => {
         >
           <div
             v-if="isDropdownOpen"
-            class="absolute left-0 top-full mt-1.5 w-64 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-2 shadow-2xl z-[100]"
+            class="absolute left-0 top-full mt-1.5 w-64 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] p-2 shadow-2xl z-[100]"
           >
             <!-- Search Box Inside Dropdown -->
             <div class="relative mb-2">
@@ -473,7 +473,7 @@ onUnmounted(() => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari negara / valuta..."
-                class="w-full rounded-lg bg-[var(--surface-input)] pl-8 pr-7 py-1.5 text-xs text-base-content placeholder:text-[var(--text-faint)] focus:outline-none border border-[var(--border)] focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_var(--ring)] transition-[border-color,box-shadow]"
+                class="w-full rounded-field bg-[var(--surface-input)] pl-8 pr-7 py-1.5 text-xs text-base-content placeholder:text-[var(--text-faint)] focus:outline-none border border-[var(--border)] focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_var(--ring)] transition-[border-color,box-shadow]"
               />
               <button
                 v-if="searchQuery"
@@ -495,11 +495,11 @@ onUnmounted(() => {
                 v-for="curr in filteredCurrencies"
                 :key="curr.code"
                 type="button"
-                class="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer select-none"
+                class="flex w-full items-center justify-between rounded-btn px-2.5 py-2 text-xs transition-colors cursor-pointer select-none"
                 :class="
                   activeCurrencyCode === curr.code
                     ? 'bg-[var(--accent-soft)] font-bold text-[var(--accent)]'
-                    : 'text-base-content hover:bg-base-200/70 dark:hover:bg-white/[0.06]'
+                    : 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]'
                 "
                 @click="selectCurrency(curr)"
               >

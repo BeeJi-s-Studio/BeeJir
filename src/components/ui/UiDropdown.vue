@@ -112,7 +112,7 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen"
-        class="absolute top-full mt-2 z-[100] rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-1.5 shadow-xl"
+        class="absolute top-full mt-2 z-[100] rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] p-1.5 shadow-xl"
         :class="[align === 'right' ? 'right-0' : 'left-0', widthClass]"
         @click.stop
       >
@@ -131,7 +131,7 @@ onUnmounted(() => {
                 item.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
                 item.danger
                   ? 'text-error hover:bg-error/12'
-                  : 'text-base-content hover:bg-base-200/80 dark:hover:bg-white/[0.06]',
+                  : 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]',
               ]"
               @click="handleSelect(item)"
             >

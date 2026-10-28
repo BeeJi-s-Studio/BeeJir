@@ -99,10 +99,10 @@ const widthClass = {
       >
         <div
           ref="modalBoxRef"
-          class="card card-bordered w-full shadow-2xl"
+          class="card card-bordered max-h-[calc(100dvh-2rem)] w-full overflow-hidden shadow-2xl"
           :class="widthClass[maxWidth]"
         >
-          <div class="flex items-start justify-between gap-4 border-b border-base-300/70 px-6 py-4">
+          <div class="flex shrink-0 items-start justify-between gap-4 border-b border-base-300/70 px-6 py-4">
             <div>
               <h3 v-if="title" class="text-lg font-bold text-base-content">
                 {{ title }}
@@ -121,13 +121,13 @@ const widthClass = {
             </button>
           </div>
 
-          <div class="p-6">
+          <div class="min-h-0 flex-1 overflow-y-auto p-6">
             <slot />
           </div>
 
           <div
             v-if="$slots.footer"
-            class="flex items-center justify-end gap-2 border-t border-base-300/70 bg-base-200/40 px-6 py-3.5 rounded-b-box"
+            class="flex shrink-0 items-center justify-end gap-2 border-t border-base-300/70 bg-base-200/40 px-6 py-3.5 rounded-b-box"
           >
             <slot name="footer" :close="close" />
           </div>

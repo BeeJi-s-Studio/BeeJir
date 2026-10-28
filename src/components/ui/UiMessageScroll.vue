@@ -119,7 +119,7 @@ onUnmounted(() => {
       >
         <button
           type="button"
-          class="btn btn-circle btn-sm shadow-xl bg-[var(--surface-raised)]/95 backdrop-blur-md border border-[var(--border)] text-base-content hover:bg-[var(--surface-raised)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center relative cursor-pointer"
+          class="btn btn-circle btn-sm shadow-xl bg-[var(--surface-overlay)] backdrop-blur-md border border-[var(--border)] text-base-content hover:bg-[var(--surface-raised)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center relative cursor-pointer"
           aria-label="Scroll to bottom"
           @click="scrollToBottom(true)"
         >

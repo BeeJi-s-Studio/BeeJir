@@ -99,7 +99,7 @@ const positionClasses = computed(() => {
     >
       <div
         v-if="isOpen"
-        class="absolute z-50 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-4 shadow-xl text-left"
+        class="absolute z-50 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] p-4 shadow-xl text-left"
         :class="[positionClasses, widthClass]"
         @click.stop
       >

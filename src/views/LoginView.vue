@@ -114,14 +114,14 @@ function handleSubmit() {
         <!-- Floating Top-Left Stat Card (Total Profit Sparkline) -->
         <div class="card absolute -left-8 -top-10 z-20 w-52 p-4 hidden xl:block animate-fade-in">
           <div class="flex items-center justify-between mb-2">
-            <div class="flex h-9 w-9 items-center justify-center rounded-lg avatar-soft-success">
+            <div class="flex h-9 w-9 items-center justify-center avatar-soft-success">
               <TrendingUp class="h-5 w-5" />
             </div>
             <span class="text-xs font-semibold text-success">+38.2%</span>
           </div>
           <p class="text-xs text-base-content/55">Total Sales</p>
           <h4 class="text-xl font-bold text-base-content mt-0.5">Rp 134,8 Jt</h4>
-          <span class="badge badge-soft badge-secondary rounded-full mt-2 text-[0.6875rem]">Last Six Month</span>
+          <span class="badge badge-soft badge-secondary mt-2 text-[0.6875rem]">Last Six Month</span>
         </div>
 
         <!-- Main Center CRM Preview Card -->
@@ -131,7 +131,7 @@ function handleSubmit() {
               <h5 class="card-title">BeeJir Enterprise CRM Analytics</h5>
               <p class="card-subtitle">Real-time performance & multi-theme workspace</p>
             </div>
-            <span class="badge badge-soft badge-primary rounded-full px-3 py-1 text-xs font-medium">
+            <span class="badge badge-soft badge-primary px-3 py-1 text-xs font-medium">
               Live v2.4
             </span>
           </div>
@@ -139,7 +139,7 @@ function handleSubmit() {
           <!-- Simulated Weekly Overview & Project Progress inside Cover -->
           <div class="grid grid-cols-12 gap-6 items-center">
             <div class="col-span-7 space-y-3">
-              <div class="flex items-end justify-between gap-2.5 h-36 px-3 pt-4 pb-2 rounded-lg bg-base-200/60">
+              <div class="flex items-end justify-between gap-2.5 h-36 px-3 pt-4 pb-2 rounded-box bg-base-200/60">
                 <div
                   v-for="(h, idx) in [42, 60, 48, 92, 65, 54, 76]"
                   :key="idx"
@@ -163,7 +163,7 @@ function handleSubmit() {
             </div>
 
             <!-- Donut Ring Preview -->
-            <div class="col-span-5 flex flex-col items-center justify-center p-4 rounded-lg bg-base-200/40">
+            <div class="col-span-5 flex flex-col items-center justify-center p-4 rounded-box bg-base-200/40">
               <div class="relative flex h-28 w-28 items-center justify-center">
                 <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90">
                   <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" class="text-base-300" stroke-width="10" />
@@ -201,7 +201,7 @@ function handleSubmit() {
         <!-- Floating Bottom-Right Card (Total Orders) -->
         <div class="card absolute -bottom-8 -right-6 z-20 w-52 p-4 hidden xl:block animate-fade-in">
           <div class="flex items-center justify-between mb-2">
-            <div class="flex h-9 w-9 items-center justify-center rounded-lg avatar-soft-primary">
+            <div class="flex h-9 w-9 items-center justify-center avatar-soft-primary">
               <ShoppingCart class="h-5 w-5" />
             </div>
             <span class="text-xs font-semibold text-success">+22%</span>
@@ -317,7 +317,7 @@ function handleSubmit() {
         <div class="flex items-center justify-center gap-3">
           <button
             type="button"
-            class="btn btn-sm btn-square rounded-full bg-[#4267B2]/15 text-[#4267B2] border-transparent hover:bg-[#4267B2]/25 shadow-none"
+            class="btn btn-sm btn-square bg-[#4267B2]/15 text-[#4267B2] border-transparent hover:bg-[#4267B2]/25 shadow-none"
             title="Facebook"
             @click="handleSubmit"
           >
@@ -325,7 +325,7 @@ function handleSubmit() {
           </button>
           <button
             type="button"
-            class="btn btn-sm btn-square rounded-full bg-[#1DA1F2]/15 text-[#1DA1F2] border-transparent hover:bg-[#1DA1F2]/25 shadow-none"
+            class="btn btn-sm btn-square bg-[#1DA1F2]/15 text-[#1DA1F2] border-transparent hover:bg-[#1DA1F2]/25 shadow-none"
             title="Twitter / X"
             @click="handleSubmit"
           >
@@ -333,7 +333,7 @@ function handleSubmit() {
           </button>
           <button
             type="button"
-            class="btn btn-sm btn-square rounded-full bg-base-content/10 text-base-content border-transparent hover:bg-base-content/20 shadow-none"
+            class="btn btn-sm btn-square bg-base-content/10 text-base-content border-transparent hover:bg-base-content/20 shadow-none"
             title="GitHub"
             @click="handleSubmit"
           >
@@ -341,7 +341,7 @@ function handleSubmit() {
           </button>
           <button
             type="button"
-            class="btn btn-sm btn-square rounded-full bg-[#DB4437]/15 text-[#DB4437] border-transparent hover:bg-[#DB4437]/25 shadow-none"
+            class="btn btn-sm btn-square bg-[#DB4437]/15 text-[#DB4437] border-transparent hover:bg-[#DB4437]/25 shadow-none"
             title="Google"
             @click="handleSubmit"
           >

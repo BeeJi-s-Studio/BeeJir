@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, any>">
 import { ref, computed, watch } from 'vue'
 import {
   Search,
@@ -29,7 +29,7 @@ export interface UiDataTableProps<T = Record<string, any>> {
   exportTitle?: string
 }
 
-const props = withDefaults(defineProps<UiDataTableProps>(), {
+const props = withDefaults(defineProps<UiDataTableProps<T>>(), {
   selectable: true,
   searchable: true,
   pageSizeOptions: () => [5, 10, 25, 50],
@@ -401,7 +401,7 @@ function handleExportCSV() {
             v-for="size in pageSizeOptions"
             :key="size"
             type="button"
-            class="rounded px-2 py-0.5 text-[11px] font-semibold transition-all"
+            class="rounded-btn px-2 py-0.5 text-[11px] font-semibold transition-all"
             :class="
               pageSize === size
                 ? 'bg-primary text-primary-content shadow-xs'
@@ -418,7 +418,7 @@ function handleExportCSV() {
       <div class="flex items-center gap-1 self-end sm:self-auto">
         <button
           type="button"
-          class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
+          class="btn btn-xs btn-square bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
           :disabled="currentPage <= 1"
           @click="currentPage--"
         >
@@ -429,7 +429,7 @@ function handleExportCSV() {
           v-for="p in totalPages"
           :key="p"
           type="button"
-          class="btn btn-xs h-7 min-w-7 rounded-lg font-medium"
+          class="btn btn-xs h-7 min-w-7 rounded-btn font-medium"
           :class="
             p === currentPage
               ? 'btn-primary'
@@ -442,7 +442,7 @@ function handleExportCSV() {
 
         <button
           type="button"
-          class="btn btn-xs btn-square rounded-lg bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
+          class="btn btn-xs btn-square bg-base-200/70 border-transparent text-base-content/70 hover:bg-primary/15 hover:text-primary shadow-none"
           :disabled="currentPage >= totalPages"
           @click="currentPage++"
         >

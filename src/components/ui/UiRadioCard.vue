@@ -83,7 +83,7 @@ function select(option: RadioCardOption) {
       :aria-checked="modelValue === opt.value"
       :aria-disabled="disabled || opt.disabled"
       tabindex="0"
-      class="group relative flex flex-col justify-between rounded-xl border p-5 sm:p-5.5 transition-all duration-200 cursor-pointer select-none"
+      class="group relative flex flex-col justify-between rounded-box border p-5 sm:p-5.5 transition-all duration-200 cursor-pointer select-none"
       :class="[
         modelValue === opt.value
           ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm shadow-[var(--ring)] ring-2 ring-[var(--ring)]'
@@ -96,7 +96,7 @@ function select(option: RadioCardOption) {
     >
       <!-- Top Recommended or Custom Badge ribbon if exists -->
       <div v-if="opt.recommended" class="absolute -top-3 right-4">
-        <span class="inline-flex items-center gap-1 rounded-full bg-[var(--accent)] px-3 py-0.5 text-[10px] font-semibold tracking-wide text-primary-content shadow-sm">
+        <span class="inline-flex items-center gap-1 rounded-badge bg-[var(--accent)] px-3 py-0.5 text-[10px] font-semibold tracking-wide text-primary-content shadow-sm">
           Recommended
         </span>
       </div>
@@ -107,10 +107,10 @@ function select(option: RadioCardOption) {
           <!-- Icon / Avatar Box -->
           <div
             v-if="opt.icon"
-            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors"
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-field border transition-colors"
             :class="
               modelValue === opt.value
-                ? 'border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--accent)] shadow-xs'
+                ? 'border-[var(--ring)] bg-[var(--accent-soft)] text-[var(--accent)] shadow-xs'
                 : 'border-[var(--border)] bg-[var(--surface-raised)] text-[var(--text-muted)] group-hover:border-[var(--border-strong)] group-hover:text-[var(--text)]'
             "
           >

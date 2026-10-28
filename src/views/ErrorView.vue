@@ -77,12 +77,12 @@ const currentError = computed(() => errorConfigs[activeCode.value])
 
     <div class="relative z-10 w-full max-w-lg space-y-6">
       <!-- Switcher Pills for Previewing 404 / 403 / 500 -->
-      <div class="inline-flex items-center gap-1.5 rounded-full bg-base-100 p-1.5 shadow-sm border border-base-300/80">
+      <div class="inline-flex items-center gap-1.5 rounded-btn bg-base-100 p-1.5 shadow-sm border border-base-300/80">
         <button
           v-for="code in (['404', '403', '500'] as ErrorCode[])"
           :key="code"
           type="button"
-          class="rounded-full px-4 py-1 text-xs font-semibold transition-all"
+          class="rounded-btn px-4 py-1 text-xs font-semibold transition-all"
           :class="
             activeCode === code
               ? 'bg-primary text-primary-content shadow-[0_2px_6px_0_rgb(var(--p)/0.45)]'
@@ -110,12 +110,12 @@ const currentError = computed(() => errorConfigs[activeCode.value])
       <!-- Clean Illustration Card -->
       <div class="card mx-auto max-w-sm p-6 flex flex-col items-center">
         <div
-          class="flex h-20 w-20 items-center justify-center rounded-2xl mb-4"
+          class="flex h-20 w-20 items-center justify-center rounded-box mb-4"
           :class="currentError.avatarClass"
         >
           <component :is="currentError.icon" class="h-10 w-10" />
         </div>
-        <span class="badge badge-soft badge-primary rounded-full px-3 py-1 text-xs font-mono">
+        <span class="badge badge-soft badge-primary px-3 py-1 text-xs font-mono">
           {{ currentError.badge }}
         </span>
         <p class="mt-2 text-xs text-base-content/50">

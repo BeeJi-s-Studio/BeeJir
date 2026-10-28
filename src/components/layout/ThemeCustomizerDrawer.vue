@@ -249,6 +249,7 @@ async function copyCssConfig() {
                 :key="scale"
                 type="button"
                 class="btn btn-sm"
+                :title="themeStore.radiusOptions[scale].label"
                 :class="
                   themeStore.radiusScale === scale
                     ? 'btn-primary'

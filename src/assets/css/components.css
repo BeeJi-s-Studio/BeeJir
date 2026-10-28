@@ -23,16 +23,18 @@
            shadow-sm hover:bg-primary/90 hover:border-primary/90;
   }
   html.dark .btn-primary {
-    background-image: linear-gradient(180deg, var(--accent-hover) 0%, var(--accent) 100%);
+    background-image: none;
+    background-color: var(--accent);
     border-color: var(--accent);
     color: rgb(var(--pc));
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: none;
   }
   html.dark .btn-primary:hover:not(:disabled) {
     background-image: none;
     background-color: var(--accent-hover);
     border-color: var(--accent-hover);
     color: rgb(var(--pc));
+    box-shadow: none;
   }
 
   .btn-secondary {
@@ -249,8 +251,7 @@
     background-color: var(--surface-2);
   }
   html.dark .card {
-    background-color: var(--surface-2);
-    border: 1px solid var(--border);
+    background-color: var(--surface-card);
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45), 0 4px 10px -3px rgba(0, 0, 0, 0.35);
   }
 
@@ -292,7 +293,7 @@
      2B. BEEJIR SOFT TINT AVATARS (.avatar-soft-*)
      ------------------------------------------------------------------------ */
   .avatar-soft {
-    @apply inline-flex items-center justify-center shrink-0 rounded-btn font-semibold select-none;
+    @apply inline-flex items-center justify-center shrink-0 rounded-field font-semibold select-none;
   }
   .avatar-soft-primary {
     background-color: var(--accent-soft);
@@ -430,7 +431,7 @@
         Recessed Input Surface (--surface-input), Border (--border), Focus Ring (--ring)
      ------------------------------------------------------------------------ */
   .form-surface {
-    @apply rounded-btn border text-base-content
+    @apply rounded-field border text-base-content
            transition-[border-color,box-shadow,background-color] duration-150;
     background-color: var(--surface-input);
     border-color: var(--border);
@@ -448,7 +449,7 @@
   }
 
   .input {
-    @apply w-full rounded-btn px-3.5 py-2 text-sm
+    @apply w-full rounded-field px-3.5 py-2 text-sm
            border
            transition-[border-color,box-shadow,background-color] duration-150
            focus:outline-none
@@ -497,8 +498,50 @@
     @apply px-4 py-2.5 text-base;
   }
 
+  .textarea {
+    @apply w-full rounded-field px-3.5 py-2.5 text-sm leading-relaxed
+           border
+           transition-[border-color,box-shadow,background-color] duration-150
+           focus:outline-none
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    background-color: var(--surface-input);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .textarea::placeholder {
+    color: var(--text-faint);
+  }
+  .textarea:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+  }
+  .textarea:focus {
+    background-color: var(--surface-input);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  .textarea-bordered {
+    border-color: var(--border);
+  }
+
+  .textarea-error {
+    border-color: rgb(var(--er));
+  }
+  .textarea-error:focus {
+    border-color: rgb(var(--er));
+    box-shadow: 0 0 0 3px rgb(var(--er) / 0.22);
+  }
+
+  .textarea-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .textarea-lg {
+    @apply px-4 py-3 text-base;
+  }
+
   .select {
-    @apply w-full rounded-btn px-3.5 py-2 text-sm
+    @apply w-full rounded-field px-3.5 py-2 text-sm
            border
            transition-[border-color,box-shadow,background-color] duration-150
            focus:outline-none;

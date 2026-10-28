@@ -21,6 +21,9 @@ import {
   ShoppingCart,
   PieChart,
   AlertTriangle,
+  Package,
+  MessagesSquare,
+  BarChart3,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 
@@ -89,6 +92,41 @@ const shortcuts = [
     to: '/components',
     icon: Layers,
     variant: 'info',
+  },
+  {
+    title: 'Product Catalog',
+    subtitle: 'Inventory & Pricing',
+    to: '/products',
+    icon: Package,
+    variant: 'primary',
+  },
+  {
+    title: 'Orders',
+    subtitle: 'Invoices & Refunds',
+    to: '/orders',
+    icon: ShoppingCart,
+    variant: 'warning',
+  },
+  {
+    title: 'Support Inbox',
+    subtitle: 'Live Conversations',
+    to: '/inbox',
+    icon: MessagesSquare,
+    variant: 'success',
+  },
+  {
+    title: 'Analytics',
+    subtitle: 'Revenue & Funnels',
+    to: '/analytics',
+    icon: BarChart3,
+    variant: 'info',
+  },
+  {
+    title: 'Settings',
+    subtitle: 'Workspace & Billing',
+    to: '/settings',
+    icon: Settings,
+    variant: 'error',
   },
 ]
 
@@ -217,7 +255,7 @@ function markAsRead(id: string) {
           >
             <div
               v-if="showPresetMenu"
-              class="absolute right-0 mt-2.5 w-60 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-2 shadow-xl"
+              class="absolute right-0 mt-2.5 w-60 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] p-2 shadow-xl"
             >
               <div class="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-faint)]">
                 Theme Presets
@@ -231,13 +269,13 @@ function markAsRead(id: string) {
                   :class="
                     themeStore.activeTheme === preset.id
                       ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold'
-                      : 'text-[var(--text)] hover:bg-base-200 dark:hover:bg-white/[0.06]'
+                      : 'text-[var(--text)] hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]'
                   "
                   @click="themeStore.setTheme(preset.id); showPresetMenu = false"
                 >
                   <div class="flex items-center gap-2.5">
                     <div
-                      class="flex items-center gap-0.5 rounded-full border border-[var(--border-strong)] p-1"
+                      class="flex items-center gap-0.5 rounded-btn border border-[var(--border-strong)] p-1"
                       :style="{ backgroundColor: themeStore.isDark ? preset.preview.bg : preset.lightPreview.bg }"
                     >
                       <span
@@ -310,7 +348,7 @@ function markAsRead(id: string) {
           >
             <div
               v-if="showShortcuts"
-              class="absolute right-0 mt-2.5 w-72 sm:w-80 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] shadow-xl overflow-hidden"
+              class="absolute right-0 mt-2.5 w-72 sm:w-80 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] shadow-xl overflow-hidden"
             >
               <div class="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
                 <h6 class="text-sm font-semibold text-base-content">Shortcuts</h6>
@@ -321,11 +359,11 @@ function markAsRead(id: string) {
                   v-for="sc in shortcuts"
                   :key="sc.to"
                   :to="sc.to"
-                  class="flex flex-col items-center justify-center p-4 text-center hover:bg-base-200/60 dark:hover:bg-white/[0.06] transition-colors"
+                  class="flex flex-col items-center justify-center p-4 text-center hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06] transition-colors"
                   @click="showShortcuts = false"
                 >
                   <div
-                    class="flex h-11 w-11 items-center justify-center rounded-full mb-2"
+                    class="flex h-11 w-11 items-center justify-center rounded-field mb-2"
                     :class="`avatar-soft-${sc.variant}`"
                   >
                     <component :is="sc.icon" class="h-5 w-5" />
@@ -369,7 +407,7 @@ function markAsRead(id: string) {
           >
             <div
               v-if="showNotifications"
-              class="absolute right-0 mt-2.5 w-80 sm:w-96 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] shadow-xl overflow-hidden"
+              class="absolute right-0 mt-2.5 w-80 sm:w-96 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] shadow-xl overflow-hidden"
             >
               <div class="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
                 <h6 class="text-sm font-semibold text-base-content">Notification</h6>
@@ -395,7 +433,7 @@ function markAsRead(id: string) {
                 <div
                   v-for="item in notifications"
                   :key="item.id"
-                  class="flex items-start gap-3.5 px-4 py-3 transition-colors cursor-pointer hover:bg-base-200/55 dark:hover:bg-white/[0.06]"
+                  class="flex items-start gap-3.5 px-4 py-3 transition-colors cursor-pointer hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]"
                   @click="markAsRead(item.id)"
                 >
                   <div
@@ -467,7 +505,7 @@ function markAsRead(id: string) {
           >
             <div
               v-if="showUserMenu"
-              class="absolute right-0 mt-2.5 w-56 rounded-box border border-[var(--border)] bg-[var(--surface-raised)] py-2 shadow-xl"
+              class="absolute right-0 mt-2.5 w-56 rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] px-1 py-2 shadow-xl"
             >
               <div class="flex items-center gap-3 px-4 py-2 border-b border-[var(--border)] mb-1">
                 <div class="relative flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary font-semibold text-xs">
@@ -483,7 +521,7 @@ function markAsRead(id: string) {
               <div class="px-1.5 space-y-0.5">
                 <RouterLink
                   to="/profile"
-                  class="flex items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content transition-colors"
+                  class="flex items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06] hover:text-base-content transition-colors"
                   @click="showUserMenu = false"
                 >
                   <User class="h-4 w-4 text-base-content/60" />
@@ -491,7 +529,7 @@ function markAsRead(id: string) {
                 </RouterLink>
                 <RouterLink
                   to="/users"
-                  class="flex items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content transition-colors"
+                  class="flex items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06] hover:text-base-content transition-colors"
                   @click="showUserMenu = false"
                 >
                   <Users class="h-4 w-4 text-base-content/60" />
@@ -499,7 +537,7 @@ function markAsRead(id: string) {
                 </RouterLink>
                 <button
                   type="button"
-                  class="flex w-full items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-base-200 dark:hover:bg-white/[0.06] hover:text-base-content transition-colors cursor-pointer"
+                  class="flex w-full items-center gap-2.5 rounded-btn px-3 py-2 text-xs text-base-content/80 hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06] hover:text-base-content transition-colors cursor-pointer"
                   @click="showUserMenu = false; themeStore.customizerOpen = true"
                 >
                   <Settings class="h-4 w-4 text-base-content/60" />

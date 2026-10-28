@@ -44,10 +44,10 @@ const bubbleVariantClasses = computed(() => {
     return 'bg-base-200/80 text-base-content/70 border border-base-300 text-center text-xs mx-auto rounded-box p-3'
   }
   if (isRightAligned.value) {
-    return 'bg-primary text-primary-content rounded-2xl rounded-br-xs shadow-xs'
+    return 'bg-primary text-primary-content rounded-box rounded-br-xs shadow-xs'
   }
   // Assistant / Peer bubble
-  return 'bg-[var(--surface-raised)] text-base-content border border-[var(--border)] rounded-2xl rounded-bl-xs shadow-xs'
+  return 'bg-[var(--surface-raised)] text-base-content border border-[var(--border)] rounded-box rounded-bl-xs shadow-xs'
 })
 </script>
 

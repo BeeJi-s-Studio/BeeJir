@@ -686,7 +686,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
                   </div>
                   <!-- Gantt Pill Bar -->
                   <div
-                    class="relative z-10 h-6 rounded-full px-3 flex items-center text-[0.75rem] font-medium truncate transition-all hover:scale-[1.02]"
+                    class="relative z-10 h-6 rounded-btn px-3 flex items-center text-[0.75rem] font-medium truncate transition-all hover:scale-[1.02]"
                     :class="item.badgeBg"
                     :style="{ marginLeft: `${item.startCol}%`, width: `${item.widthCol}%` }"
                   >
@@ -731,7 +731,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
                 :key="proj.title"
                 class="flex items-center gap-3.5"
               >
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg" :class="proj.avatarClass">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-field" :class="proj.avatarClass">
                   <component :is="proj.icon" class="h-5 w-5" />
                 </div>
                 <div class="min-w-0 flex-1">
@@ -846,7 +846,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
             class="flex items-center justify-between gap-3"
           >
             <div class="flex items-center gap-3 min-w-0">
-              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold" :class="item.avatarBg">
+              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field text-xs font-bold" :class="item.avatarBg">
                 {{ item.short }}
               </div>
               <div class="min-w-0">
@@ -857,7 +857,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
 
             <div class="flex items-center gap-2.5 shrink-0">
               <span class="text-sm font-semibold text-base-content">{{ item.visits }}</span>
-              <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium" :class="item.badgeClass">
+              <span class="badge px-2.5 py-0.5 text-xs font-medium" :class="item.badgeClass">
                 {{ item.change }}
               </span>
             </div>
@@ -889,7 +889,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
             class="flex items-center justify-between gap-3"
           >
             <div class="flex items-center gap-3 min-w-0">
-              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-semibold" :class="meet.avatarClass">
+              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-field text-xs font-semibold" :class="meet.avatarClass">
                 {{ meet.initials }}
               </div>
               <div class="min-w-0">
@@ -901,7 +901,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
               </div>
             </div>
 
-            <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0" :class="meet.badgeClass">
+            <span class="badge px-2.5 py-0.5 text-xs font-medium shrink-0" :class="meet.badgeClass">
               {{ meet.tag }}
             </span>
           </li>
@@ -931,7 +931,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
         <div class="my-4">
           <div class="flex items-center gap-2">
             <h3 class="text-2xl font-bold text-base-content">24,895</h3>
-            <span class="badge badge-soft badge-success rounded-full px-2.5 py-0.5 text-xs font-medium">
+            <span class="badge badge-soft badge-success px-2.5 py-0.5 text-xs font-medium">
               +42%
             </span>
           </div>
@@ -1004,7 +1004,7 @@ function handleCardAction(widgetName: string, item: DropdownItem) {
                   </div>
                 </td>
                 <td>
-                  <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium" :class="statusBadgeMap[u.status]">
+                  <span class="badge px-2.5 py-0.5 text-xs font-medium" :class="statusBadgeMap[u.status]">
                     {{ u.status }}
                   </span>
                 </td>

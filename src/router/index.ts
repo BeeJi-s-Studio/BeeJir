@@ -6,6 +6,14 @@ import ProjectWizardView from '@/views/ProjectWizardView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import LoginView from '@/views/LoginView.vue'
 import ErrorView from '@/views/ErrorView.vue'
+import ProductsView from '@/views/ProductsView.vue'
+import ProductDetailView from '@/views/ProductDetailView.vue'
+import ProductEditorView from '@/views/ProductEditorView.vue'
+import OrdersView from '@/views/OrdersView.vue'
+import InboxView from '@/views/InboxView.vue'
+import AnalyticsView from '@/views/AnalyticsView.vue'
+import SettingsView from '@/views/SettingsView.vue'
+import OnboardingView from '@/views/OnboardingView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +55,87 @@ const router = createRouter({
       meta: {
         title: 'Users & Data Management',
         subtitle: 'Contoh tabel data dengan filter, pencarian, dan modal CRUD',
+      },
+    },
+    {
+      path: '/products',
+      name: 'products',
+      component: ProductsView,
+      meta: {
+        title: 'Product Catalog',
+        subtitle: 'Katalog produk dengan filter lanjutan, DataTable, dan form CRUD lengkap',
+      },
+    },
+    {
+      path: '/products/new',
+      name: 'product-new',
+      component: ProductEditorView,
+      meta: {
+        title: 'Tambah Produk Baru',
+        subtitle: 'Lengkapi atribut katalog, harga, stok, dan media produk baru',
+      },
+    },
+    {
+      path: '/products/:id/edit',
+      name: 'product-edit',
+      component: ProductEditorView,
+      meta: {
+        title: 'Edit Produk',
+        subtitle: 'Perbarui atribut katalog, harga, stok, dan media produk',
+      },
+    },
+    {
+      path: '/products/:id',
+      name: 'product-detail',
+      component: ProductDetailView,
+      meta: {
+        title: 'Product Detail',
+        subtitle: 'Halaman detail produk dengan galeri, ulasan, Q&A, dokumen, dan pengaturan harga',
+      },
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: OrdersView,
+      meta: {
+        title: 'Orders & Invoices',
+        subtitle: 'Manajemen pesanan, fulfillment, pembayaran, dan proses refund multi-kanal',
+      },
+    },
+    {
+      path: '/inbox',
+      name: 'inbox',
+      component: InboxView,
+      meta: {
+        title: 'Support Inbox',
+        subtitle: 'Ruang kerja support dengan percakapan real-time, catatan internal, dan riwayat pesanan',
+      },
+    },
+    {
+      path: '/analytics',
+      name: 'analytics',
+      component: AnalyticsView,
+      meta: {
+        title: 'Analytics & Insights',
+        subtitle: 'Performa pendapatan, kanal akuisisi, funnel konversi, dan laporan terjadwal',
+      },
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsView,
+      meta: {
+        title: 'Workspace Settings',
+        subtitle: 'Konfigurasi workspace, billing, notifikasi, keamanan, dan integrasi API',
+      },
+    },
+    {
+      path: '/onboarding',
+      name: 'onboarding',
+      component: OnboardingView,
+      meta: {
+        title: 'Workspace Onboarding',
+        layout: 'blank',
       },
     },
     {

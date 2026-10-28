@@ -37,6 +37,7 @@ import UiCard from '@/components/ui/UiCard.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiBadge from '@/components/ui/UiBadge.vue'
 import UiInput from '@/components/ui/UiInput.vue'
+import UiTextarea from '@/components/ui/UiTextarea.vue'
 import UiAlert from '@/components/ui/UiAlert.vue'
 import UiModal from '@/components/ui/UiModal.vue'
 import UiSelectTag from '@/components/ui/UiSelectTag.vue'
@@ -99,6 +100,8 @@ const demoModalOpen = ref(false)
 const loadingDemo = ref(false)
 const sampleName = ref('BeeJir Open Source')
 const sampleEmail = ref('hello@beejir.dev')
+const sampleNotes = ref('Rilis v0.3 menambahkan DataTable generik, Textarea auto-grow, dan perbaikan kontras dark mode.')
+const sampleAutoGrow = ref('')
 const togglePrimary = ref(true)
 const toggleSecondary = ref(true)
 const toggleAccent = ref(false)
@@ -201,7 +204,14 @@ const simpleColumns: TableColumn[] = [
   { key: 'version', label: 'Versi', align: 'right' },
 ]
 
-const simpleItems = [
+const simpleItems: Array<{
+  name: string
+  category: string
+  status: string
+  version: string
+  variant: ColorVariant
+}> = [
+  { name: 'UiTextarea', category: 'Form Controls', status: 'Baru Dirilis', version: 'v0.3.0', variant: 'primary' },
   { name: 'UiSelectTag', category: 'Form Controls', status: 'Baru Dirilis', version: 'v0.2.0', variant: 'primary' },
   { name: 'UiDataTable', category: 'Data Display', status: 'Stabil', version: 'v0.2.0', variant: 'success' },
   { name: 'UiToastContainer', category: 'Feedback & Toast', status: 'Baru Dirilis', version: 'v0.2.0', variant: 'accent' },
@@ -217,7 +227,17 @@ const dataTableColumns: TableColumn[] = [
   { key: 'status', label: 'Status Pengerjaan', sortable: true },
 ]
 
-const dataTableItems = ref([
+const dataTableItems = ref<
+  Array<{
+    id: number
+    task: string
+    assignee: string
+    priority: string
+    budget: string
+    status: string
+    variant: ColorVariant
+  }>
+>([
   { id: 101, task: 'Rancang Searchable Tag Select', assignee: 'Arif Pratama', priority: 'High', budget: 'Rp 3.500.000', status: 'Selesai', variant: 'success' },
   { id: 102, task: 'Buat Sistem Floating Toast', assignee: 'Larasati Dewi', priority: 'High', budget: 'Rp 2.800.000', status: 'Selesai', variant: 'success' },
   { id: 103, task: 'Redesign Alert & Glow Effect', assignee: 'Dimas Anggara', priority: 'Medium', budget: 'Rp 1.500.000', status: 'Selesai', variant: 'success' },
@@ -1247,6 +1267,37 @@ function sendDemoChatMessage() {
               <Search class="h-4 w-4" />
             </template>
           </UiInput>
+
+          <!-- Theme-Aligned Textarea -->
+          <div class="pt-2 border-t border-base-300/70 space-y-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-base-content/50 block">
+              Textarea Bertema (&lt;UiTextarea&gt;)
+            </span>
+            <UiTextarea
+              v-model="sampleNotes"
+              label="Catatan Rilis"
+              placeholder="Tulis ringkasan perubahan rilis..."
+              hint="Mengikuti radius, surface input, dan focus ring dari tema aktif."
+              :rows="3"
+              :maxlength="280"
+              show-count
+            />
+            <UiTextarea
+              v-model="sampleAutoGrow"
+              label="Auto-Grow dengan Batas Tinggi"
+              placeholder="Ketik pesan panjang — tinggi field mengikuti isi hingga 5 baris..."
+              :rows="1"
+              :max-rows="5"
+              auto-grow
+              :maxlength="2000"
+              show-count
+            />
+            <UiTextarea
+              model-value="Draf pesan yang gagal divalidasi."
+              label="State Validasi Error"
+              error="Pesan tidak boleh berisi tautan mencurigakan."
+            />
+          </div>
 
           <!-- Modern Select Option in Form -->
           <UiSelect

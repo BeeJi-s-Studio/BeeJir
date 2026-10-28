@@ -12,6 +12,12 @@ import {
   UserCircle,
   LogIn,
   ShieldAlert,
+  Package,
+  ShoppingCart,
+  MessagesSquare,
+  BarChart3,
+  Settings,
+  Rocket,
 } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme'
 import type { ColorVariant } from '@/types/theme'
@@ -50,13 +56,49 @@ const mainNav: NavItem[] = [
   },
 ]
 
+const demoNav: NavItem[] = [
+  {
+    label: 'Product Catalog',
+    to: '/products',
+    icon: Package,
+    badge: '12',
+    badgeVariant: 'primary',
+  },
+  {
+    label: 'Orders & Invoices',
+    to: '/orders',
+    icon: ShoppingCart,
+  },
+  {
+    label: 'Support Inbox',
+    to: '/inbox',
+    icon: MessagesSquare,
+    badge: '5',
+    badgeVariant: 'error',
+  },
+  {
+    label: 'Analytics & Insights',
+    to: '/analytics',
+    icon: BarChart3,
+  },
+  {
+    label: 'Workspace Settings',
+    to: '/settings',
+    icon: Settings,
+  },
+  {
+    label: 'Setup Onboarding',
+    to: '/onboarding',
+    icon: Rocket,
+  },
+]
+
 const pagesNav: NavItem[] = [
   {
     label: 'User Profile',
     to: '/profile',
     icon: UserCircle,
-  },
-  {
+  },  {
     label: 'Auth Cover Login',
     to: '/login',
     icon: LogIn,
@@ -167,7 +209,7 @@ function isActive(path: string): boolean {
       <button
         v-show="!themeStore.sidebarCollapsed"
         type="button"
-        class="hidden lg:inline-flex h-7 w-7 items-center justify-center rounded-full text-base-content/55 hover:bg-base-200 hover:text-base-content transition-colors cursor-pointer"
+        class="hidden lg:inline-flex h-7 w-7 items-center justify-center rounded-btn text-base-content/55 hover:bg-base-200 hover:text-base-content transition-colors cursor-pointer"
         title="Collapse Menu"
         @click="themeStore.sidebarCollapsed = true"
       >
@@ -188,7 +230,7 @@ function isActive(path: string): boolean {
     <div v-if="themeStore.sidebarCollapsed" class="hidden lg:flex justify-center pb-2">
       <button
         type="button"
-        class="h-7 w-7 flex items-center justify-center rounded-full text-base-content/55 hover:bg-base-200 hover:text-primary transition-colors cursor-pointer"
+        class="h-7 w-7 flex items-center justify-center rounded-btn text-base-content/55 hover:bg-base-200 hover:text-primary transition-colors cursor-pointer"
         title="Expand Menu"
         @click="themeStore.sidebarCollapsed = false"
       >
@@ -226,7 +268,7 @@ function isActive(path: string): boolean {
                 class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
                 :class="[
                   isActive(item.to)
-                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
                     : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
                 ]"
                 @click="themeStore.mobileSidebarOpen = false"
@@ -246,7 +288,7 @@ function isActive(path: string): boolean {
               class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
               :class="[
                 isActive(item.to)
-                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
                   : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
               ]"
               @click="themeStore.mobileSidebarOpen = false"
@@ -261,7 +303,7 @@ function isActive(path: string): boolean {
               </span>
               <span
                 v-if="item.badge"
-                class="badge badge-xs rounded-full font-semibold"
+                class="badge badge-xs font-semibold"
                 :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
               >
                 {{ item.badge }}
@@ -271,7 +313,77 @@ function isActive(path: string): boolean {
         </nav>
       </div>
 
-      <!-- Group 2: Pages & Auth -->
+      <!-- Group 2: Commerce & Workspace Demo Pages -->
+      <div>
+        <div
+          v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
+          class="flex items-center gap-2 px-3 mb-2 text-[11px] font-medium uppercase tracking-wider text-[var(--text-faint)]"
+        >
+          <span>Commerce &amp; Workspace</span>
+          <span class="h-px flex-1 bg-[var(--border)]" />
+        </div>
+
+        <nav class="space-y-1">
+          <template v-for="item in demoNav" :key="item.to">
+            <!-- Collapsed state with right tooltip -->
+            <UiTooltip
+              v-if="themeStore.sidebarCollapsed && !themeStore.mobileSidebarOpen"
+              :text="item.label"
+              position="right"
+              teleport
+              class="w-full flex justify-center"
+            >
+              <RouterLink
+                :to="item.to"
+                class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
+                :class="[
+                  isActive(item.to)
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
+                    : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+                ]"
+                @click="themeStore.mobileSidebarOpen = false"
+              >
+                <component
+                  :is="item.icon"
+                  class="h-[19px] w-[19px] shrink-0"
+                  :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+                />
+              </RouterLink>
+            </UiTooltip>
+
+            <!-- Expanded state -->
+            <RouterLink
+              v-else
+              :to="item.to"
+              class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
+              :class="[
+                isActive(item.to)
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
+                  : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
+              ]"
+              @click="themeStore.mobileSidebarOpen = false"
+            >
+              <component
+                :is="item.icon"
+                class="h-[19px] w-[19px] shrink-0"
+                :class="isActive(item.to) ? 'text-[var(--accent)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'"
+              />
+              <span class="flex-1 truncate">
+                {{ item.label }}
+              </span>
+              <span
+                v-if="item.badge"
+                class="badge badge-xs font-semibold"
+                :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
+              >
+                {{ item.badge }}
+              </span>
+            </RouterLink>
+          </template>
+        </nav>
+      </div>
+
+      <!-- Group 3: Pages & Auth -->
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
@@ -296,7 +408,7 @@ function isActive(path: string): boolean {
                 class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
                 :class="[
                   isActive(item.to)
-                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
                     : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
                 ]"
                 @click="themeStore.mobileSidebarOpen = false"
@@ -316,7 +428,7 @@ function isActive(path: string): boolean {
               class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
               :class="[
                 isActive(item.to)
-                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
                   : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
               ]"
               @click="themeStore.mobileSidebarOpen = false"
@@ -331,7 +443,7 @@ function isActive(path: string): boolean {
               </span>
               <span
                 v-if="item.badge"
-                class="badge badge-xs rounded-full font-semibold"
+                class="badge badge-xs font-semibold"
                 :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
               >
                 {{ item.badge }}
@@ -341,7 +453,7 @@ function isActive(path: string): boolean {
         </nav>
       </div>
 
-      <!-- Group 3: Components & Theme -->
+      <!-- Group 4: Components & Theme -->
       <div>
         <div
           v-show="!themeStore.sidebarCollapsed || themeStore.mobileSidebarOpen"
@@ -366,7 +478,7 @@ function isActive(path: string): boolean {
                 class="group relative flex items-center justify-center h-10 w-10 rounded-btn text-[14px] transition-colors duration-150 border"
                 :class="[
                   isActive(item.to)
-                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
                     : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
                 ]"
                 @click="themeStore.mobileSidebarOpen = false"
@@ -386,7 +498,7 @@ function isActive(path: string): boolean {
               class="group relative flex items-center justify-start gap-3 px-3.5 py-2 w-full rounded-btn text-[14px] transition-colors duration-150 border"
               :class="[
                 isActive(item.to)
-                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--accent)]/30 shadow-xs'
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-semibold border-[var(--ring)] shadow-xs'
                   : 'text-[var(--text-muted)] border-transparent hover:bg-[var(--surface-raised)] hover:text-[var(--text)]',
               ]"
               @click="themeStore.mobileSidebarOpen = false"
@@ -401,7 +513,7 @@ function isActive(path: string): boolean {
               </span>
               <span
                 v-if="item.badge"
-                class="badge badge-xs rounded-full font-semibold"
+                class="badge badge-xs font-semibold"
                 :class="`badge-soft badge-${item.badgeVariant || 'primary'}`"
               >
                 {{ item.badge }}

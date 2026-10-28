@@ -176,8 +176,8 @@ function updatePassword() {
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-12 sm:-mt-10 relative z-10">
           <div class="flex flex-col sm:flex-row sm:items-end gap-5">
             <!-- Avatar Box -->
-            <div class="h-28 w-28 rounded-xl bg-base-100 p-1.5 shadow-md shrink-0">
-              <div class="flex h-full w-full items-center justify-center rounded-lg bg-primary text-3xl font-bold text-primary-content">
+            <div class="h-28 w-28 rounded-box bg-base-100 p-1.5 shadow-md shrink-0">
+              <div class="flex h-full w-full items-center justify-center rounded-field bg-primary text-3xl font-bold text-primary-content">
                 AB
               </div>
             </div>
@@ -307,7 +307,7 @@ function updatePassword() {
               <span
                 v-for="skill in profile.skills"
                 :key="skill"
-                class="badge badge-soft badge-primary rounded-full px-2.5 py-0.5 text-xs font-medium"
+                class="badge badge-soft badge-primary px-2.5 py-0.5 text-xs font-medium"
               >
                 {{ skill }}
               </span>
@@ -372,7 +372,7 @@ function updatePassword() {
                   </div>
                 </div>
                 <button
-                  class="btn btn-xs btn-square rounded-lg"
+                  class="btn btn-xs btn-square"
                   :class="conn.connected ? 'btn-primary' : 'bg-primary/15 text-primary border-transparent hover:bg-primary/25 shadow-none'"
                   @click="conn.connected = !conn.connected"
                 >
@@ -400,7 +400,7 @@ function updatePassword() {
                     <p class="text-xs text-base-content/55">{{ team.members }}</p>
                   </div>
                 </div>
-                <span class="badge rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0" :class="team.badgeClass">
+                <span class="badge px-2.5 py-0.5 text-xs font-medium shrink-0" :class="team.badgeClass">
                   {{ team.tag }}
                 </span>
               </li>
@@ -466,7 +466,7 @@ function updatePassword() {
 
         <UiSelectTag
           v-model="profile.skills"
-          :suggestions="skillSuggestions"
+          :options="skillSuggestions"
           label="Skills & Competencies"
           placeholder="Ketik keahlian lalu tekan Enter..."
           :max-tags="8"
@@ -534,9 +534,9 @@ function updatePassword() {
         class="lg:col-span-5"
       >
         <div class="space-y-4">
-          <div class="flex items-center justify-between rounded-lg border border-base-300/80 p-3.5">
+          <div class="flex items-center justify-between rounded-box border border-base-300/80 p-3.5">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-lg avatar-soft-primary">
+              <div class="flex h-10 w-10 items-center justify-center rounded-field avatar-soft-primary">
                 <Smartphone class="h-5 w-5" />
               </div>
               <div>
@@ -547,9 +547,9 @@ function updatePassword() {
             <input v-model="security.twoFactor" type="checkbox" class="toggle toggle-primary" />
           </div>
 
-          <div class="flex items-center justify-between rounded-lg border border-base-300/80 p-3.5">
+          <div class="flex items-center justify-between rounded-box border border-base-300/80 p-3.5">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-lg avatar-soft-info">
+              <div class="flex h-10 w-10 items-center justify-center rounded-field avatar-soft-info">
                 <Mail class="h-5 w-5" />
               </div>
               <div>

@@ -168,10 +168,15 @@ export const THEME_PRESETS: ThemePreset[] = [
 const RADIUS_MAP: Record<RadiusScale, { box: string; btn: string; badge: string; label: string }> = {
   none: { box: '0rem', btn: '0rem', badge: '0.25rem', label: 'Sharp (0px)' },
   sm: { box: '0.375rem', btn: '0.25rem', badge: '0.375rem', label: 'Small' },
-  md: { box: '0.625rem', btn: '0.5rem', badge: '9999px', label: 'Medium (Default)' },
-  lg: { box: '1rem', btn: '0.625rem', badge: '9999px', label: 'Large' },
+  md: { box: '0.625rem', btn: '0.5rem', badge: '0.5rem', label: 'Medium (Default)' },
+  lg: { box: '1rem', btn: '0.625rem', badge: '0.625rem', label: 'Large' },
   full: { box: '1.5rem', btn: '9999px', badge: '9999px', label: 'Pill / Full' },
 }
+
+const RADIUS_DERIVED = {
+  field: 'min(var(--rounded-btn), 0.75rem)',
+  panel: 'min(var(--rounded-box), 0.875rem)',
+} as const
 
 /**
  * Converts a #RRGGBB hex string into space-separated RGB channels: "R G B"
@@ -355,6 +360,8 @@ export const useThemeStore = defineStore('beejir-theme', () => {
     root.style.setProperty('--rounded-box', radius.box)
     root.style.setProperty('--rounded-btn', radius.btn)
     root.style.setProperty('--rounded-badge', radius.badge)
+    root.style.setProperty('--rounded-field', RADIUS_DERIVED.field)
+    root.style.setProperty('--rounded-panel', RADIUS_DERIVED.panel)
 
     // Apply or clear custom color overrides
     if (customColors.value.enabled) {
@@ -470,6 +477,8 @@ export const useThemeStore = defineStore('beejir-theme', () => {
   --rounded-box: ${radius.box};
   --rounded-btn: ${radius.btn};
   --rounded-badge: ${radius.badge};
+  --rounded-field: ${RADIUS_DERIVED.field};
+  --rounded-panel: ${RADIUS_DERIVED.panel};
 }`
     }
 
@@ -481,6 +490,8 @@ export const useThemeStore = defineStore('beejir-theme', () => {
   --rounded-box: ${radius.box};
   --rounded-btn: ${radius.btn};
   --rounded-badge: ${radius.badge};
+  --rounded-field: ${RADIUS_DERIVED.field};
+  --rounded-panel: ${RADIUS_DERIVED.panel};
 }`
   }
 

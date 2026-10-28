@@ -348,7 +348,7 @@ const aspectRatioClass = computed(() => {
             <!-- Speed popover -->
             <div
               v-if="showSpeedMenu"
-              class="absolute bottom-full right-0 mb-2 py-1 bg-neutral/95 backdrop-blur-md rounded-box border border-neutral-content/10 shadow-2xl min-w-[100px] z-30"
+              class="absolute bottom-full right-0 mb-2 py-1 bg-neutral/95 backdrop-blur-md rounded-panel border border-neutral-content/10 shadow-2xl min-w-[100px] z-30"
             >
               <div class="text-[10px] uppercase font-bold text-neutral-content/50 px-3 py-1">
                 Kecepatan

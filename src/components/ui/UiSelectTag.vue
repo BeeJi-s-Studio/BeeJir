@@ -270,7 +270,7 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 right-0 top-full mt-1.5 z-[100] max-h-60 overflow-y-auto rounded-box border border-[var(--border)] bg-[var(--surface-raised)] p-1.5 shadow-xl"
+        class="absolute left-0 right-0 top-full mt-1.5 z-[100] max-h-60 overflow-y-auto rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] p-1.5 shadow-xl"
       >
         <!-- Create New Tag Option -->
         <button
@@ -294,8 +294,8 @@ onUnmounted(() => {
             :class="[
               isSelected(opt.value)
                 ? 'bg-[var(--accent-soft)] text-[var(--accent)]'
-                : 'text-base-content hover:bg-base-200/70 dark:hover:bg-white/[0.06]',
-              activeIndex === idx ? 'ring-1 ring-primary/40 bg-base-200 dark:bg-white/[0.06]' : '',
+                : 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]',
+              activeIndex === idx ? 'ring-1 ring-primary/40 bg-[var(--surface-raised)] dark:bg-white/[0.06]' : '',
             ]"
             @click="selectOption(opt)"
           >

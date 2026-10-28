@@ -415,7 +415,7 @@ const sizeClasses = computed(() => {
     >
       <div
         v-if="isOpen && !disabled"
-        class="absolute left-0 right-0 top-full mt-1.5 z-[100] rounded-box border border-[var(--border)] bg-[var(--surface-raised)] shadow-xl overflow-hidden"
+        class="absolute left-0 right-0 top-full mt-1.5 z-[100] rounded-panel border border-[var(--border)] bg-[var(--surface-overlay)] shadow-xl overflow-hidden"
         @click.stop
         @mousedown.stop
       >
@@ -434,7 +434,7 @@ const sizeClasses = computed(() => {
               v-model="searchQuery"
               type="text"
               placeholder="Cari pilihan..."
-              class="w-full rounded-btn border border-[var(--border)] bg-[var(--surface-input)] pl-8 pr-3 py-1.5 text-xs text-base-content placeholder:text-[var(--text-faint)] focus:outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_var(--ring)] transition-[border-color,box-shadow]"
+              class="w-full rounded-field border border-[var(--border)] bg-[var(--surface-input)] pl-8 pr-3 py-1.5 text-xs text-base-content placeholder:text-[var(--text-faint)] focus:outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_2px_var(--ring)] transition-[border-color,box-shadow]"
               @keydown="handleKeyDown"
             />
           </div>
@@ -452,8 +452,8 @@ const sizeClasses = computed(() => {
               opt.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
               isOptionSelected(opt)
                 ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-bold'
-                : 'text-base-content hover:bg-base-200/70 dark:hover:bg-white/[0.06]',
-              activeIndex === idx ? 'ring-1 ring-primary/40 bg-base-200 dark:bg-white/[0.06]' : '',
+                : 'text-base-content hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]',
+              activeIndex === idx ? 'ring-1 ring-primary/40 bg-[var(--surface-raised)] dark:bg-white/[0.06]' : '',
             ]"
             @click="selectOption(opt)"
           >
@@ -528,7 +528,7 @@ const sizeClasses = computed(() => {
                   :key="`page-${p}`"
                   type="button"
                   class="h-5 min-w-5 px-1.5 rounded text-[10px] font-bold transition-colors cursor-pointer"
-                  :class="currentPage === p ? 'bg-primary text-primary-content shadow-xs' : 'text-[var(--text-muted)] hover:bg-base-200 dark:hover:bg-white/[0.06]'"
+                  :class="currentPage === p ? 'bg-primary text-primary-content shadow-xs' : 'text-[var(--text-muted)] hover:bg-[var(--surface-raised)] dark:hover:bg-white/[0.06]'"
                   @click.stop="goToPage(p, $event)"
                   @mousedown.stop.prevent
                 >

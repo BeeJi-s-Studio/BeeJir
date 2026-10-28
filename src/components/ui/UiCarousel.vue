@@ -203,7 +203,7 @@ const aspectRatioClass = computed(() => {
     <template v-if="arrows && totalSlides > 1">
       <button
         type="button"
-        class="absolute left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-[var(--surface-raised)]/80 backdrop-blur-md border border-[var(--border)] text-base-content hover:bg-[var(--surface-raised)] shadow-md transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-20"
+        class="absolute left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-[var(--surface-overlay)] backdrop-blur-md border border-[var(--border)] text-base-content hover:bg-[var(--surface-raised)] shadow-md transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-20"
         :disabled="!loop && currentIndex === 0"
         aria-label="Previous Slide"
         @click.stop="prev"
@@ -213,7 +213,7 @@ const aspectRatioClass = computed(() => {
 
       <button
         type="button"
-        class="absolute right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-[var(--surface-raised)]/80 backdrop-blur-md border border-[var(--border)] text-base-content hover:bg-[var(--surface-raised)] shadow-md transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-20"
+        class="absolute right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-[var(--surface-overlay)] backdrop-blur-md border border-[var(--border)] text-base-content hover:bg-[var(--surface-raised)] shadow-md transition-opacity opacity-0 group-hover:opacity-100 disabled:opacity-20"
         :disabled="!loop && currentIndex === totalSlides - 1"
         aria-label="Next Slide"
         @click.stop="next"
@@ -225,7 +225,7 @@ const aspectRatioClass = computed(() => {
     <!-- Dot Indicators -->
     <div
       v-if="indicators && totalSlides > 1"
-      class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md"
+      class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-btn bg-black/40 backdrop-blur-md"
     >
       <button
         v-for="(_, idx) in totalSlides"
@@ -250,7 +250,7 @@ const aspectRatioClass = computed(() => {
       v-for="(slide, idx) in slides"
       :key="slide.id ?? idx"
       type="button"
-      class="relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all"
+      class="relative shrink-0 w-16 h-12 rounded-field overflow-hidden border-2 transition-all"
       :class="[
         currentIndex === idx
           ? 'border-primary ring-2 ring-primary/20 scale-105'

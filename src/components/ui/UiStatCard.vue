@@ -79,7 +79,7 @@ const avatarSoftClass = computed(() => {
         </p>
         <span
           v-if="badgeText || description"
-          class="badge badge-xs bg-base-200 text-base-content/65 font-medium rounded-full"
+          class="badge badge-xs bg-base-200 text-base-content/65 font-medium"
         >
           {{ badgeText || description }}
         </span>

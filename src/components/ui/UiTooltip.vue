@@ -87,7 +87,7 @@ const positionClasses = computed(() => {
 
 const variantClasses = computed(() => {
   const map: Record<ColorVariant, string> = {
-    neutral: 'bg-[var(--surface-raised)] text-base-content border border-[var(--border)] shadow-xl',
+    neutral: 'bg-[var(--surface-overlay)] text-base-content border border-[var(--border)] shadow-xl',
     primary: 'bg-primary text-primary-content shadow-lg',
     secondary: 'bg-secondary text-secondary-content shadow-lg',
     accent: 'bg-accent text-accent-content shadow-lg',

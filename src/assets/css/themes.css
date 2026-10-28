@@ -18,6 +18,9 @@
   --surface-2: #ffffff;
   --surface-raised: #f1f3f6;
   --surface-input: #ffffff;
+  /* Overlay panels (dropdown, select, date picker, popover) float above cards,
+     so they stay paper white in light mode instead of the tinted raised tone. */
+  --surface-overlay: #ffffff;
   --border: rgba(38, 43, 67, 0.12);
   --border-strong: rgba(38, 43, 67, 0.22);
   --text: #262b43;
@@ -54,7 +57,9 @@
   /* Geometry */
   --rounded-box: 0.625rem;
   --rounded-btn: 0.5rem;
-  --rounded-badge: 9999px;
+  --rounded-badge: 0.5rem;
+  --rounded-field: min(var(--rounded-btn), 0.75rem);
+  --rounded-panel: min(var(--rounded-box), 0.875rem);
 }
 
 [data-theme="midnight"] {
@@ -364,7 +369,9 @@ html.dark {
   /* Fallback geometry */
   --rounded-box: 0.625rem;
   --rounded-btn: 0.5rem;
-  --rounded-badge: 9999px;
+  --rounded-badge: 0.5rem;
+  --rounded-field: min(var(--rounded-btn), 0.75rem);
+  --rounded-panel: min(var(--rounded-box), 0.875rem);
 }
 
 /* --------------------------------------------------------------------------
@@ -377,6 +384,7 @@ html.dark:not([data-theme]) {
   --bg: #0C0E18;
   --surface-1: #101322;
   --surface-2: #121526;
+  --surface-card: #171B2E;
   --surface-raised: #1A1E34;
   --surface-input: #0E1020;
   --accent: #5E61F0;
@@ -403,6 +411,7 @@ html.dark[data-theme="midnight"] {
   --bg: #0B0F17;
   --surface-1: #0E1420;
   --surface-2: #111826;
+  --surface-card: #151D2D;
   --surface-raised: #182133;
   --surface-input: #0D1320;
   --accent: #5B8DEF;
@@ -429,6 +438,7 @@ html.dark[data-theme="aurora"] {
   --bg: #0A100E;
   --surface-1: #0C1512;
   --surface-2: #0F1816;
+  --surface-card: #131D1A;
   --surface-raised: #16221F;
   --surface-input: #0B1311;
   --accent: #2DD4A0;
@@ -455,6 +465,7 @@ html.dark[data-theme="nebula"] {
   --bg: #0D0B14;
   --surface-1: #110F1A;
   --surface-2: #14111E;
+  --surface-card: #191528;
   --surface-raised: #1C1829;
   --surface-input: #0F0D17;
   --accent: #8B7CF6;
@@ -481,6 +492,7 @@ html.dark[data-theme="sunset"] {
   --bg: #120D0B;
   --surface-1: #171210;
   --surface-2: #1A1411;
+  --surface-card: #201814;
   --surface-raised: #241B17;
   --surface-input: #140F0D;
   --accent: #FB8C4A;
@@ -507,6 +519,7 @@ html.dark[data-theme="ocean"] {
   --bg: #090F14;
   --surface-1: #0C141B;
   --surface-2: #0F1820;
+  --surface-card: #131D26;
   --surface-raised: #16222C;
   --surface-input: #0B131A;
   --accent: #2AA9E0;
@@ -533,6 +546,7 @@ html.dark[data-theme="matcha"] {
   --bg: #0C100B;
   --surface-1: #0F150E;
   --surface-2: #121811;
+  --surface-card: #171E15;
   --surface-raised: #1A2118;
   --surface-input: #0E130D;
   --accent: #8FBF6A;
@@ -559,6 +573,7 @@ html.dark[data-theme="berry"] {
   --bg: #100A12;
   --surface-1: #150E17;
   --surface-2: #181019;
+  --surface-card: #1D1421;
   --surface-raised: #221723;
   --surface-input: #130C15;
   --accent: #C26BE8;
@@ -578,4 +593,9 @@ html.dark[data-theme="berry"] {
   --b2: 16 10 18;    /* #100A12 */
   --b3: 34 23 35;    /* #221723 */
   --bc: 232 234 240; /* #E8EAF0 */
+}
+
+/* Overlay panels inherit the elevated dark surface (lighter than cards in dark mode) */
+html.dark {
+  --surface-overlay: var(--surface-raised);
 }

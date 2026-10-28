@@ -358,7 +358,7 @@ const charCount = computed(() => plainText.value.length)
   background: var(--surface-1);
   border: 1px solid var(--border);
   padding: 0.65rem;
-  border-radius: 0.5rem;
+  border-radius: var(--rounded-btn);
   font-family: monospace;
   font-size: 0.8rem;
   margin: 0.5rem 0;

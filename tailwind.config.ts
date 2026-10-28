@@ -89,7 +89,9 @@ export default {
         xs: '0.125rem',
         box: 'var(--rounded-box, 0.625rem)',
         btn: 'var(--rounded-btn, 0.5rem)',
-        badge: 'var(--rounded-badge, 9999px)',
+        badge: 'var(--rounded-badge, 0.5rem)',
+        field: 'var(--rounded-field, 0.5rem)',
+        panel: 'var(--rounded-panel, 0.625rem)',
       },
       backdropBlur: {
         xs: '2px',
